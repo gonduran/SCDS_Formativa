@@ -1,0 +1,63 @@
+/* El body debe ocupar todo el alto de la página */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f4;
+}
+
+/* Contenedor flexible para centrar el login-container */
+.login-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 60px - 60px); /* Restamos la altura del header y del footer */
+    padding: 20px;
+}
+
+/* Estilos para centrar el login-container */
+.login-container {
+    background-color: #ffffff;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    border-radius: 10px;
+    width: 300px; /* Asegúrate de que el ancho no cambie */
+    text-align: center;
+}
+
+h1 {
+    margin-bottom: 20px;
+    color: #343a40;
+}
+
+.form-group {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+/* Ajuste de los campos de entrada */
+input[type="text"],
+input[type="password"] {
+    width: 100%; /* Ocupará todo el ancho del contenedor */
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box; /* Asegura que el padding se incluya dentro del ancho */
+}
+
+button {
+    width: 100%;
+    padding: 10px;
+    background-color: #343a40;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #23272b;
+}
