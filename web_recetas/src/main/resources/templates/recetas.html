@@ -4,13 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Recetas</title>
+    <link rel="stylesheet" href="/css/styles.css">
     <link rel="stylesheet" href="/css/recetas.css">
 </head>
 <body>
+
+    <div th:replace="fragments/header :: header"></div>
+
     <div class="recetas-container">
         <h1>Detalles de la receta</h1>
         <p>Ingredientes: ...</p>
         <p>Instrucciones: ...</p>
     </div>
+
+    <div th:replace="fragments/footer :: footer"></div>
+
 </body>
 </html>

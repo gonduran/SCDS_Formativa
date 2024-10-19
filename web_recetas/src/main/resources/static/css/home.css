@@ -114,11 +114,6 @@ nav a:hover {
     border-radius: 0 0 10px 10px;
 }
 
-.ads-banner img {
-    max-width: 100%;
-    margin-bottom: 15px;
-}
-
 .clearfix::after {
     content: "";
     display: table;
@@ -131,4 +126,23 @@ footer {
     padding: 10px;
     text-align: center;
     margin-top: 20px;
+}
+
+.ads-banner {
+    text-align: center;
+    margin: 40px 0;
+}
+
+.sponsors {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+.sponsors img {
+    max-width: 100%;
+    height: auto;
+    width: 400px;
+    object-fit: contain;
 }
