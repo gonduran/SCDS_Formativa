@@ -8,7 +8,7 @@
 </head>
 <body>
 
-    <div th:replace="fragments/header :: header"></div>
+    <div th:replace="~{fragments/header :: header}"></div>
 
     <section class="hero">
         <div class="hero-content">
@@ -20,45 +20,21 @@
     <div class="container">
         <section class="recent-recipes clearfix">
             <h2>Recetas Recientes</h2>
-            <div class="recipe-card">
-                <img src="/images/receta1.jpg" alt="Receta 1">
-                <h3>Pollo al Coñac</h3>
-                <p>Delicioso pollo al coñac con arroz blanco y ensalada fresca.</p>
-                <a href="#">Ver receta</a>
-            </div>
-            <div class="recipe-card">
-                <img src="/images/receta2.jpg" alt="Receta 2">
-                <h3>Charquicán</h3>
-                <p>Delicioso guiso tradicional de la gastronomía de Chile.</p>
-                <a href="#">Ver receta</a>
-            </div>
-            <div class="recipe-card">
-                <img src="/images/receta3.jpg" alt="Receta 3">
-                <h3>Sushi Japonés</h3>
-                <p>Sushi tradicional japonés con pescado fresco y arroz.</p>
-                <a href="#">Ver receta</a>
+            <div th:each="receta, stat : ${recetas}" th:if="${stat.index < 3}" class="recipe-card">
+                <img th:src="@{${receta.imagen}}" th:alt="${receta.nombre}">
+                <h3 th:text="${receta.nombre}"></h3>
+                <p th:text="${receta.descripcion}"></p>
+                <a th:href="@{/recetas/{id}(id=${receta.id})}">Ver receta</a>
             </div>
         </section>
 
         <section class="popular-recipes clearfix">
             <h2>Recetas Populares</h2>
-            <div class="recipe-card">
-                <img src="/images/receta4.jpg" alt="Receta 4">
-                <h3>Pizza Italiana</h3>
-                <p>Pizza con masa fina, tomate, mozzarella y albahaca fresca.</p>
-                <a href="#">Ver receta</a>
-            </div>
-            <div class="recipe-card">
-                <img src="/images/receta5.jpg" alt="Receta 5">
-                <h3>Falafel</h3>
-                <p>Bolas crujientes de garbanzo con una salsa de yogur.</p>
-                <a href="#">Ver receta</a>
-            </div>
-            <div class="recipe-card">
-                <img src="/images/receta6.jpg" alt="Receta 6">
-                <h3>Enchiladas Verdes</h3>
-                <p>Enchiladas rellenas de pollo con una salsa verde casera.</p>
-                <a href="#">Ver receta</a>
+            <div th:each="receta, stat : ${recetas}" th:if="${stat.index >= 3}" class="recipe-card">
+                <img th:src="@{${receta.imagen}}" th:alt="${receta.nombre}">
+                <h3 th:text="${receta.nombre}"></h3>
+                <p th:text="${receta.descripcion}"></p>
+                <a th:href="@{/recetas/{id}(id=${receta.id})}">Ver receta</a>
             </div>
         </section>
 
@@ -71,7 +47,7 @@
         </section>
     </div>
 
-    <div th:replace="fragments/footer :: footer"></div>
+    <div th:replace="~{fragments/footer :: footer}"></div>
 
 </body>
 </html>

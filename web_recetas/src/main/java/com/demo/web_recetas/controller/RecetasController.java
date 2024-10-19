@@ -16,7 +16,7 @@ public class RecetasController {
 
     @GetMapping("/recetas")
     public String recetas(Model model) {
-        model.addAttribute("recetas", recetasService.getRecetas());
+        model.addAttribute("recetas", recetasService.buscarRecetaPorId(1L));
         return "recetas";
     }
 }

@@ -9,7 +9,7 @@
 </head>
 <body>
 
-    <div th:replace="fragments/header :: header"></div>
+    <div th:replace="~{fragments/header :: header}"></div>
 
     <div class="recetas-container">
         <h1>Detalles de la receta</h1>
@@ -17,7 +17,7 @@
         <p>Instrucciones: ...</p>
     </div>
 
-    <div th:replace="fragments/footer :: footer"></div>
+    <div th:replace="~{fragments/footer :: footer}"></div>
 
 </body>
 </html>

@@ -9,19 +9,19 @@
 </head>
 <body>
 
-    <div th:replace="fragments/header :: header"></div>
+    <div th:replace="~{fragments/header :: header}"></div>
 
     <div class="login-wrapper">
         <div class="login-container">
             <h1>Iniciar Sesión</h1>
             <form th:action="@{/login}" method="post">
                 <div class="form-group">
-                    <label>Usuario:</label>
-                    <input type="text" name="username" />
+                    <label for="username">Usuario:</label>
+                    <input type="text" name="username" id="username" autocomplete="off"/>
                 </div>
                 <div class="form-group">
-                    <label>Contraseña:</label>
-                    <input type="password" name="password" />
+                    <label for="password">Contraseña:</label>
+                    <input type="password" name="password" id="password" autocomplete="off"/>
                 </div>
                 <div class="form-group">
                     <button type="submit">Ingresar</button>
@@ -30,7 +30,7 @@
         </div>
     </div>
 
-    <div th:replace="fragments/footer :: footer"></div>
+    <div th:replace="~{fragments/footer :: footer}"></div>
 
 </body>
 </html>
