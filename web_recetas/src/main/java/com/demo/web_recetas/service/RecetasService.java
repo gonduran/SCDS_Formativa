@@ -24,13 +24,13 @@ public class RecetasService {
             "1 cebolla picada finamente", "3/4 taza (180 ml) de coñac", "2 tazas (400 ml) de vino blanco", "500 ml de Caldo de Pollo Casero"),
             "Francia",
             "Precalentar una olla amplia a fuego medio-alto. Agregar el aceite y las presas de pollo y dorar por todos los lados hasta dorar. Trabajar en tandas para que se pueda dorar bien. Salpimentar.\r\n" + //
-                                "Añadir la cebolla y el orégano, y más aceite en caso de ser necesario. Cocinar por 5 minutos o hasta que esté translúcida.\r\n" + //
-                                "Agregar el coñac, una vez caliente, encender con un fósforo y flambear * hasta que se apague el fuego. Se debe ser muy cuidadoso (sobre todo no hay que tener prendida la campana), ya que se enciende la preparación.\r\n" + //
-                                "Verter el vino y dejar que evapore hasta la mitad.\r\n" + //
-                                "Agregar el caldo, el pollo y esperar que hierva a fuego medio. Desde ese momento, reducir el fuego hasta tener un hervor ligero y tapar.\r\n" + //
-                                "Cocinar por 20-30 min o hasta que esté cocido el pollo.\r\n" + //
-                                "Servir caliente acompañado de papas fritas o arroz.\r\n" + //
-                                "*Flambear: Tipo de cocción donde se rocía la preparación con un alcohol y una vez que esté caliente se enciende con fuego para evaporar el alcohol dejando el aroma y sabor en el plato.",
+            "Añadir la cebolla y el orégano, y más aceite en caso de ser necesario. Cocinar por 5 minutos o hasta que esté translúcida.\r\n" + //
+            "Agregar el coñac, una vez caliente, encender con un fósforo y flambear * hasta que se apague el fuego. Se debe ser muy cuidadoso (sobre todo no hay que tener prendida la campana), ya que se enciende la preparación.\r\n" + //
+            "Verter el vino y dejar que evapore hasta la mitad.\r\n" + //
+            "Agregar el caldo, el pollo y esperar que hierva a fuego medio. Desde ese momento, reducir el fuego hasta tener un hervor ligero y tapar.\r\n" + //
+            "Cocinar por 20-30 min o hasta que esté cocido el pollo.\r\n" + //
+            "Servir caliente acompañado de papas fritas o arroz.\r\n" + //
+            "*Flambear: Tipo de cocción donde se rocía la preparación con un alcohol y una vez que esté caliente se enciende con fuego para evaporar el alcohol dejando el aroma y sabor en el plato.",
             "/images/receta1.jpg"
         ));
         recetas.add(new Receta(
