@@ -7,6 +7,14 @@ body {
 }
 
 /* Contenedor de búsqueda */
+.search-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 60px - 60px);
+    padding: 20px;
+}
+
 .search-container {
     width: 80%;
     margin: auto;
