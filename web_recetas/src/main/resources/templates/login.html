@@ -12,6 +12,14 @@
     <div th:replace="~{fragments/header :: header}"></div>
 
     <div class="login-wrapper">
+        <div class="messages">
+            <div th:if="${param.error}" class="error-message">
+                Nombre de usuario y contraseña no válidos.
+            </div>
+            <div th:if="${param.logout}" class="logout-message">
+                Se ha cerrado la sesión.
+            </div>
+        </div>
         <div class="login-container">
             <h1>Iniciar Sesión</h1>
             <form th:action="@{/login}" method="post">

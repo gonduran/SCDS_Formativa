@@ -3,18 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Recetas</title>
-    <link rel="stylesheet" href="/css/styles.css">
-    <link rel="stylesheet" href="/css/recetas.css">
+    <title th:text="${receta.nombre}">Detalle de la Receta</title>
+    <link rel="stylesheet" href="/css/styles.css"> <!-- Estilos generales -->
+    <link rel="stylesheet" href="/css/recetas.css"> <!-- Estilos específicos para recetas -->
 </head>
 <body>
 
     <div th:replace="~{fragments/header :: header}"></div>
 
-    <div class="recetas-container">
-        <h1>Detalles de la receta</h1>
-        <p>Ingredientes: ...</p>
-        <p>Instrucciones: ...</p>
+    <!-- Contenedor principal de la receta -->
+    <div class="recipe-container">
+        <!-- Primera fila: imagen y título/descripción -->
+        <div class="recipe-header">
+            <!-- Imagen -->
+            <div class="recipe-image">
+                <img th:src="@{${receta.imagen}}" alt="${receta.nombre}">
+            </div>
+            <!-- Título y Descripción -->
+            <div class="recipe-info">
+                <h1 th:text="${receta.nombre}"></h1>
+                <p th:text="${receta.descripcion}"></p>
+            </div>
+        </div>
+
+        <!-- Segunda fila: ingredientes y preparación -->
+        <div class="recipe-details">
+            <div class="ingredients">
+                <h2>Ingredientes</h2>
+                <ul>
+                    <li th:each="ingrediente : ${receta.ingredientes}" th:text="${ingrediente}"></li>
+                </ul>
+            </div>
+
+            <div class="preparation">
+                <h2>Preparación</h2>
+                <p th:text="${receta.detallePreparacion}"></p>
+            </div>
+        </div>
     </div>
 
     <div th:replace="~{fragments/footer :: footer}"></div>

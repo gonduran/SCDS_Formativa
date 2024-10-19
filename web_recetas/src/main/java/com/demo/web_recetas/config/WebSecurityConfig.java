@@ -14,6 +14,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.context.annotation.Description;
 
 @Configuration
+@EnableWebSecurity
 public class WebSecurityConfig {
 
     @Bean
@@ -26,9 +27,13 @@ public class WebSecurityConfig {
             )
             .formLogin((form) -> form
                 .loginPage("/login")
+                .failureUrl("/login?error=true")
                 .permitAll()
             )
-            .logout((logout) -> logout.permitAll());
+            .logout((logout) -> logout
+                .logoutSuccessUrl("/login?logout=true")
+                .permitAll()
+            );
         
         return http.build();
     }

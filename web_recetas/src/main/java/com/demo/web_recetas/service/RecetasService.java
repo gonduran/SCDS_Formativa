@@ -81,7 +81,7 @@ public class RecetasService {
         return recetas;
     }
 
-    public Optional<Receta> buscarRecetaPorId(Long id) {
+    public Optional<Receta> obtenerRecetaPorId(Long id) {
         return recetas.stream()
             .filter(receta -> receta.getId().equals(id))
             .findFirst();
