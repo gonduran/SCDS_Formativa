@@ -1,0 +1,73 @@
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(to bottom, #ffffff, #a4d8d4af); 
+}
+
+/* Contenedor principal de la receta */
+.recipe-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-top: 100px; /* Asegura que no se superponga con el header */
+    padding-bottom: 20px;
+}
+
+/* Primera fila: imagen y descripción */
+.recipe-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 40px;
+}
+
+.recipe-image img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    max-height: 400px; /* Limitar la altura de la imagen */
+}
+
+.recipe-info {
+    flex: 1;
+    padding-left: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.recipe-info h1 {
+    font-size: 2.5em;
+    margin-bottom: 20px;
+}
+
+.recipe-info p {
+    font-size: 1.2em;
+    line-height: 1.6;
+    color: #555;
+}
+
+/* Segunda fila: ingredientes y preparación */
+.recipe-details {
+    display: flex;
+    justify-content: space-between;
+}
+
+.ingredients, .preparation {
+    width: 45%; /* Cada una ocupa el 45% del ancho */
+}
+
+.ingredients ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.ingredients ul li {
+    margin-bottom: 10px;
+    font-size: 1.2em;
+}
+
+.preparation p {
+    line-height: 1.6;
+    font-size: 1.2em;
+    color: #555;
+}

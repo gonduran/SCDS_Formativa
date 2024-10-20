@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recetas</title>
+    <link rel="stylesheet" href="/css/home.css">
+</head>
+<body>
+
+    <div th:replace="~{fragments/header :: header}"></div>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Bienvenido a Recetas</h1>
+            <p>Descubre y comparte las mejores recetas del mundo.</p>
+        </div>
+    </section>
+
+    <div class="container">
+        <section class="recent-recipes clearfix">
+            <h2>Recetas Recientes</h2>
+            <div th:each="receta, stat : ${recetas}" th:if="${stat.index < 3}" class="recipe-card">
+                <img th:src="@{${receta.imagen}}" th:alt="${receta.nombre}">
+                <h3 th:text="${receta.nombre}"></h3>
+                <p th:text="${receta.descripcion}"></p>
+                <a th:href="@{/recetas/{id}(id=${receta.id})}">Ver receta</a>
+            </div>
+        </section>
+
+        <section class="popular-recipes clearfix">
+            <h2>Recetas Populares</h2>
+            <div th:each="receta, stat : ${recetas}" th:if="${stat.index >= 3}" class="recipe-card">
+                <img th:src="@{${receta.imagen}}" th:alt="${receta.nombre}">
+                <h3 th:text="${receta.nombre}"></h3>
+                <p th:text="${receta.descripcion}"></p>
+                <a th:href="@{/recetas/{id}(id=${receta.id})}">Ver receta</a>
+            </div>
+        </section>
+
+        <section class="ads-banner">
+            <h2>Patrocinadores</h2>
+            <div class="sponsors">
+                <img src="/images/banner-anuncio1.jpg" alt="Anuncio 1">
+                <img src="/images/banner-anuncio2.jpg" alt="Anuncio 2">
+            </div>
+        </section>
+    </div>
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
+
+</body>
+</html>
