@@ -1,0 +1,36 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: recetas_mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: recetas
+      MYSQL_USER: recetas_usu
+      MYSQL_PASSWORD: Recetas202410#
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - recetas_network
+
+  backend:
+    build: .
+    container_name: recetas_backend
+    depends_on:
+      - mysql
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/recetas
+      SPRING_DATASOURCE_USERNAME: recetas_usu
+      SPRING_DATASOURCE_PASSWORD: Recetas202410#
+    networks:
+      - recetas_network
+
+volumes:
+  mysql_data:
+
+networks:
+  recetas_network:
+    driver: bridge
