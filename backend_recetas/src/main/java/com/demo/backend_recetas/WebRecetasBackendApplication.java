@@ -1,13 +1,13 @@
-package com.example.backend_recetas;
+package com.demo.backend_recetas;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class BackendRecetasApplication {
+public class WebRecetasBackendApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(BackendRecetasApplication.class, args);
+		SpringApplication.run(WebRecetasBackendApplication.class, args);
 	}
 
 }

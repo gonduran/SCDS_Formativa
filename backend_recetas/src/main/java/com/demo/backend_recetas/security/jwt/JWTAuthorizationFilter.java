@@ -1,4 +1,4 @@
-package com.example.backend_recetas.jwt;
+package com.demo.backend_recetas.security.jwt;
 
 import io.jsonwebtoken.*;
 import jakarta.servlet.FilterChain;
@@ -11,41 +11,45 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import static com.demo.backend_recetas.security.Constants.*;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import javax.crypto.SecretKey;
-
-import static com.example.backend_recetas.jwt.Constants.*;
 
 @Component
 public class JWTAuthorizationFilter extends OncePerRequestFilter {
 
     private Claims setSigningKey(HttpServletRequest request) {
-        String jwtToken = request.getHeader(HEADER_AUTHORIZACION_KEY).replace(TOKEN_BEARER_PREFIX, "");
-
+        String jwtToken = request.getHeader(HEADER_AUTHORIZACION_KEY)
+                .replace(TOKEN_BEARER_PREFIX, "");
+        
         return Jwts.parser()
                 .verifyWith((SecretKey) getSigningKey(SUPER_SECRET_KEY))
                 .build()
                 .parseSignedClaims(jwtToken)
                 .getPayload();
-
     }
 
     private void setAuthentication(Claims claims) {
-        List<?> authorities = (List<?>) claims.get("authorities");
-
-        List<SimpleGrantedAuthority> simpleGrantedAuthorities = authorities.stream()
-                .map(auth -> new SimpleGrantedAuthority(auth.toString()))
-                .collect(Collectors.toList());
-
-        UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
-                claims.getSubject(),
-                null,
-                simpleGrantedAuthorities);
-
-        SecurityContextHolder.getContext().setAuthentication(auth);
+        try {
+            @SuppressWarnings("unchecked")
+            List<String> authorities = (List<String>) claims.get("authorities");
+            
+            if (authorities != null) {
+                List<SimpleGrantedAuthority> auth = authorities.stream()
+                        .map(SimpleGrantedAuthority::new)
+                        .collect(Collectors.toList());
+                
+                UsernamePasswordAuthenticationToken authenticationToken =
+                        new UsernamePasswordAuthenticationToken(claims.getSubject(), null, auth);
+                
+                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+            }
+        } catch (Exception e) {
+            SecurityContextHolder.clearContext();
+        }
     }
 
     private boolean isJWTValid(HttpServletRequest request, HttpServletResponse res) {
@@ -56,8 +60,10 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) 
-            throws ServletException, IOException {
+    protected void doFilterInternal(
+            @SuppressWarnings("null") HttpServletRequest request,
+            @SuppressWarnings("null") HttpServletResponse response,
+            @SuppressWarnings("null") FilterChain filterChain) throws ServletException, IOException {
         try {
             if (isJWTValid(request, response)) {
                 Claims claims = setSigningKey(request);
@@ -76,5 +82,4 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
             return;
         }
     }
-
 }

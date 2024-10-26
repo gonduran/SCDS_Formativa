@@ -1,10 +1,10 @@
-package com.example.backend_recetas;
+package com.demo.backend_recetas;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class BackendRecetasApplicationTests {
+public class WebRecetasBackendApplicationTests {
 
 	@Test
 	void contextLoads() {

@@ -1,4 +1,4 @@
-package com.example.backend_recetas.jwt;
+package com.demo.backend_recetas.security;
 
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -7,7 +7,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.Key;
 
 public class Constants {
-
+    
     // Spring Security
     public static final String LOGIN_URL = "/login";
     public static final String HEADER_AUTHORIZACION_KEY = "Authorization";
