@@ -1,12 +1,3 @@
-# Usamos una imagen oficial de mysql
-#FROM mysql/mysql-server:latest
-
-# Define environment variables 
-#ENV MYSQL_ROOT_PASSWORD=p4ssw0rd
-#ENV MYSQL_DATABASE=db_recetas_web
-#ENV MYSQL_USER=user_recetas_web
-#ENV MYSQL_PASSWORD=p4ssw0rd_recetas_web
-
 # Usamos una imagen base con Java 17
 FROM eclipse-temurin:17-jdk-focal AS buildstage 
 
@@ -32,4 +23,4 @@ COPY --from=buildstage /app/target/backend_recetas-0.0.1-SNAPSHOT.jar /app/app.j
 EXPOSE 8081
 
 # Ejecutar el servicio
-ENTRYPOINT [ "java", "-jar","/app/app.jar" ]
+ENTRYPOINT [ "java", "-jar","app.jar" ]
