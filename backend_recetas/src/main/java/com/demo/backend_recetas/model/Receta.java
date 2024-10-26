@@ -22,7 +22,7 @@ public class Receta {
 
     private String paisOrigen;
 
-    @Column(length = 1000)
+    @Column(length = 3000)
     private String detallePreparacion;
     private String imagen;
 
