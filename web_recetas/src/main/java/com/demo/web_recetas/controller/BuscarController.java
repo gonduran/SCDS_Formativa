@@ -1,5 +1,6 @@
 package com.demo.web_recetas.controller;
 
+import com.demo.web_recetas.integration.TokenStore;
 import com.demo.web_recetas.model.Receta;
 import com.demo.web_recetas.service.RecetasService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,13 @@ import java.util.stream.Collectors;
 @Controller
 public class BuscarController {
 
+    private TokenStore tokenStore; 
+
+    public BuscarController(TokenStore tokenStore, RecetasService recetasService) {
+        this.tokenStore = tokenStore;
+        this.recetasService = recetasService;
+    }
+
     @Autowired
     private RecetasService recetasService;
 
@@ -22,23 +30,12 @@ public class BuscarController {
         List<Receta> recetasFiltradas = null;
 
         if (searchQuery != null && !searchQuery.trim().isEmpty()) {
-            // Convertir el término de búsqueda a minúsculas para búsqueda insensible a mayúsculas/minúsculas
-            String searchLower = searchQuery.toLowerCase();
-            
-            // Filtrar recetas por varios campos: nombre, descripción, tipo de cocina, país de origen, y otros campos
-            recetasFiltradas = recetasService.obtenerRecetas().stream()
-                .filter(receta -> 
-                    receta.getNombre().toLowerCase().contains(searchLower) ||
-                    receta.getDescripcion().toLowerCase().contains(searchLower) ||
-                    receta.getTipoCocina().toLowerCase().contains(searchLower) ||
-                    receta.getPaisOrigen().toLowerCase().contains(searchLower)
-                )
-                .collect(Collectors.toList());
+            // Llama al método del servicio para buscar las recetas en el backend
+            recetasFiltradas = recetasService.buscarRecetas(searchQuery);
         }
 
-        // Añadir recetas filtradas al modelo (si existen)
         model.addAttribute("recetasFiltradas", recetasFiltradas);
-        model.addAttribute("searchQuery", searchQuery); // Para mantener el valor en el input
+        model.addAttribute("searchQuery", searchQuery);
         return "buscar";
     }
 }

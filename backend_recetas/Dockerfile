@@ -20,7 +20,7 @@ FROM eclipse-temurin:17-jdk-focal
 COPY --from=buildstage /app/target/backend_recetas-0.0.1-SNAPSHOT.jar /app/app.jar
 
 # Exponer el puerto del servicio
-EXPOSE 8080
+EXPOSE 8081
 
 # Ejecutar el servicio
 CMD [ "java", "-jar", "/app/app.jar" ]
