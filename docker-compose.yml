@@ -15,16 +15,27 @@ services:
       - recetas_network
 
   backend:
-    build: .
+    image: recetas_backend
+    build:
+      context: ./backend_recetas
     container_name: recetas_backend
     depends_on:
       - mysql
     ports:
-      - "8081:8080"
+      - "8081:8081"
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/db_recetas_web
       SPRING_DATASOURCE_USERNAME: user_recetas_web
       SPRING_DATASOURCE_PASSWORD: p4ssw0rd_recetas_web
+    networks:
+      - recetas_network
+
+  frontend:
+    image: web_recetas
+    build:
+      context: ./web_recetas
+    ports:
+      - "8080:8080"
     networks:
       - recetas_network
 

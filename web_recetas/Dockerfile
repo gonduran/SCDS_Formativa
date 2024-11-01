@@ -1,16 +1,27 @@
 # Usar una imagen base de JDK para construir la aplicación
-# FROM openjdk:17-jdk-alpine
-# Usa una imagen base con Java 17
-FROM eclipse-temurin:17-jdk-focal
+# Usamos una imagen base con Java 17
+FROM eclipse-temurin:17-jdk-focal AS buildstage 
 
-# Crear un directorio en la imagen Docker donde se alojará la aplicación
+RUN apt-get update && apt-get install -y maven
+
+# Directorio de trabajo en el contenedor
 WORKDIR /app
 
-# Copiar el archivo JAR de la aplicación desde el host al contenedor Docker
-COPY target/web_recetas-0.0.1-SNAPSHOT.jar app.jar
+# Copiar el archivo pom.xml primero para aprovechar la caché de Docker
+COPY pom.xml .
+
+# Copiar el código fuente
+COPY src /app/src
+
+RUN mvn clean package -DskipTests
+
+FROM eclipse-temurin:17-jdk-focal
+
+# Copia el archivo jar al contenedor
+COPY --from=buildstage /app/target/web_recetas-0.0.1-SNAPSHOT.jar /app/app.jar
 
 # Exponer el puerto 8080 (puerto típico de Spring Boot)
 EXPOSE 8080
 
 # Comando para ejecutar la aplicación
-ENTRYPOINT ["java", "-jar", "app.jar"]
+CMD ["java", "-jar", "/app/app.jar"]

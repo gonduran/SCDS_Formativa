@@ -1,3 +1,4 @@
+# Usar una imagen base de JDK para construir la aplicación
 # Usamos una imagen base con Java 17
 FROM eclipse-temurin:17-jdk-focal AS buildstage 
 
