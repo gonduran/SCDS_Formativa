@@ -7,16 +7,10 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder; 
 import org.springframework.security.config.annotation.web.builders.HttpSecurity; 
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.User; 
-import org.springframework.security.core.userdetails.UserDetails; 
-import org.springframework.security.core.userdetails.UserDetailsService; 
-import org.springframework.security.provisioning.InMemoryUserDetailsManager; 
 import org.springframework.security.web.SecurityFilterChain;
 import com.demo.web_recetas.integration.CustomAuthenticationProvider;
 import org.springframework.security.crypto.password.PasswordEncoder; 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder; 
-import org.springframework.context.annotation.Description;
 import org.springframework.session.web.http.CookieSerializer;
 import org.springframework.session.web.http.DefaultCookieSerializer;
  
@@ -52,46 +46,32 @@ public class WebSecurityConfig {
             )
             .logout((logout) -> logout
                 .logoutSuccessUrl("/login?logout=true")
+                .invalidateHttpSession(true)
+                .deleteCookies("JSESSIONID")
+                .clearAuthentication(true)
                 .permitAll()
             )
-            // Configuración de la cabecera Content Security Policy
+            .sessionManagement(session -> session
+                .maximumSessions(1)
+                .maxSessionsPreventsLogin(true)
+            )
             .headers(headers -> headers
+                .frameOptions(frame -> frame.deny())
                 .contentSecurityPolicy(csp -> csp
-                    .policyDirectives("default-src 'self'; script-src 'self' 'unsafe-inline'; img-src 'self' data:; style-src 'self' 'unsafe-inline'")
+                    .policyDirectives("default-src 'self'; " +
+                        "script-src 'self' 'unsafe-inline'; " +
+                        "style-src 'self' 'unsafe-inline'; " +
+                        "img-src 'self' data:; " +
+                        "font-src 'self'; " +
+                        "form-action 'self'; " +
+                        "frame-ancestors 'none'")
                 )
-            );
+            )
+            .csrf(csrf -> csrf.ignoringRequestMatchers("/login", "/logout"));
 
         return http.build();
     }
-/*
-    @Bean
-    @Description("In memory Userdetails service registered since DB doesn't have user table ")
-    public UserDetailsService userDetailsService() {
-        UserDetails user1 = User.builder()
-                .username("user1")
-                .password(passwordEncoder().encode("cl4v3web"))
-                .roles("USER")
-                .build();
-        
-        UserDetails user2 = User.builder()
-                .username("user2")
-                .password(passwordEncoder().encode("cl4v3web"))
-                .roles("USER")
-                .build();
 
-        UserDetails user3 = User.builder()
-                .username("user3")
-                .password(passwordEncoder().encode("cl4v3web"))
-                .roles("USER")
-                .build();
-        UserDetails admin = User.builder()
-                .username("admin")
-                .password(passwordEncoder().encode("cl4v3web"))
-                .roles("USER", "ADMIN")
-                .build();
-        return new InMemoryUserDetailsManager(user1, user2, user3, admin);
-    }
- */
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -100,13 +80,12 @@ public class WebSecurityConfig {
     @Bean
     public CookieSerializer cookieSerializer() {
         DefaultCookieSerializer serializer = new DefaultCookieSerializer();
-        // Usamos solo domainName para desarrollo local
         serializer.setDomainName("localhost");
-        serializer.setSameSite("strict");
-        serializer.setUseSecureCookie(false); // false para desarrollo local, true para producción
+        serializer.setSameSite("Strict");
+        serializer.setUseSecureCookie(true);
         serializer.setCookiePath("/");
         serializer.setCookieName("JSESSIONID");
-        serializer.setCookieMaxAge(3600); // 1 hora
+        serializer.setCookieMaxAge(3600);
         return serializer;
     }
 }

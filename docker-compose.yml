@@ -46,28 +46,50 @@ services:
     restart: unless-stopped
 
   frontend:
+    # Configuración básica del contenedor
     image: web_recetas
+    container_name: recetas_frontend
     build:
       context: ./web_recetas
-    container_name: recetas_frontend
+    
+    # Configuración de red y dependencias
     ports:
       - "8081:8081"
-    depends_on:
-      - backend
     networks:
       - recetas_network
+    depends_on:
+      - backend
+    
+    # Configuración de reinicio
+    restart: unless-stopped
+    
+    # Variables de entorno
     environment:
-      # Configuraciones de cookies y seguridad
+      # Configuración de comunicación
+      BACKEND_URL: http://backend:8082
+      
+      # Configuración de cookies
       SERVER_SERVLET_SESSION_COOKIE_DOMAIN: localhost
-      SERVER_SERVLET_SESSION_COOKIE_SAMESITE: strict
       SERVER_SERVLET_SESSION_COOKIE_PATH: /
       SERVER_SERVLET_SESSION_COOKIE_HTTP_ONLY: "true"
       SERVER_SERVLET_SESSION_COOKIE_MAX_AGE: "3600"
-      # Configuración de seguridad general
+      SERVER_SERVLET_SESSION_COOKIE_SECURE: "true"
+      SERVER_SERVLET_SESSION_COOKIE_SAME_SITE: "Strict"
+      SERVER_SERVLET_SESSION_TIMEOUT: "30m"
+      
+      # Headers de seguridad
+      SECURITY_HEADERS_FRAME: "DENY"
+      SECURITY_HEADERS_CONTENT_TYPE_OPTIONS: "nosniff"
+      SECURITY_HEADERS_XSS_PROTECTION: "1; mode=block"
+      SECURITY_HEADERS_HSTS: "max-age=31536000; includeSubDomains"
+      SECURITY_HEADERS_REFERRER_POLICY: "same-origin"
+      
+      # Configuración SSL y seguridad general
       SPRING_SECURITY_REQUIRE_SSL: "false"  # Cambiar a true en producción
-      # Configuración para comunicación con backend
-      BACKEND_URL: http://backend:8082
-    restart: unless-stopped
+      
+      # Configuración de gestión y errores
+      SERVER_ERROR_INCLUDE_STACKTRACE: "never"
+      MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_EXCLUDE: "*"
 
 volumes:
   mysql_data:
