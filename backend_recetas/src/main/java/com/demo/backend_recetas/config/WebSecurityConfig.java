@@ -13,7 +13,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
+import org.springframework.session.web.http.DefaultCookieSerializer;
+import org.springframework.session.web.http.CookieSerializer;
 import com.demo.backend_recetas.security.jwt.JWTAuthorizationFilter;
 
 @EnableWebSecurity
@@ -43,5 +44,13 @@ class WebSecurityConfig {
             .addFilterAfter(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
         
         return http.build();
+    }
+
+    @Bean
+    public CookieSerializer cookieSerializer() {
+        DefaultCookieSerializer cookieSerializer = new DefaultCookieSerializer();
+        cookieSerializer.setDomainName("recetas.local"); 
+        cookieSerializer.setSameSite("strict"); // Cambia a "lax" si es necesario
+        return cookieSerializer;
     }
 }
