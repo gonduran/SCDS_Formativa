@@ -6,7 +6,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager; 
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder; 
 import org.springframework.security.config.annotation.web.builders.HttpSecurity; 
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity; 
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User; 
 import org.springframework.security.core.userdetails.UserDetails; 
 import org.springframework.security.core.userdetails.UserDetailsService; 
@@ -15,7 +16,9 @@ import org.springframework.security.web.SecurityFilterChain;
 import com.demo.web_recetas.integration.CustomAuthenticationProvider;
 import org.springframework.security.crypto.password.PasswordEncoder; 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder; 
-import org.springframework.context.annotation.Description; 
+import org.springframework.context.annotation.Description;
+import org.springframework.session.web.http.CookieSerializer;
+import org.springframework.session.web.http.DefaultCookieSerializer;
  
 @Configuration 
 @EnableWebSecurity(debug = true) 
@@ -50,11 +53,17 @@ public class WebSecurityConfig {
             .logout((logout) -> logout
                 .logoutSuccessUrl("/login?logout=true")
                 .permitAll()
+            )
+            // Configuración de la cabecera Content Security Policy
+            .headers(headers -> headers
+                .contentSecurityPolicy(csp -> csp
+                    .policyDirectives("default-src 'self'; script-src 'self' 'unsafe-inline'; img-src 'self' data:; style-src 'self' 'unsafe-inline'")
+                )
             );
-        
+
         return http.build();
     }
-
+/*
     @Bean
     @Description("In memory Userdetails service registered since DB doesn't have user table ")
     public UserDetailsService userDetailsService() {
@@ -82,9 +91,22 @@ public class WebSecurityConfig {
                 .build();
         return new InMemoryUserDetailsManager(user1, user2, user3, admin);
     }
-
+ */
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public CookieSerializer cookieSerializer() {
+        DefaultCookieSerializer serializer = new DefaultCookieSerializer();
+        // Usamos solo domainName para desarrollo local
+        serializer.setDomainName("localhost");
+        serializer.setSameSite("strict");
+        serializer.setUseSecureCookie(false); // false para desarrollo local, true para producción
+        serializer.setCookiePath("/");
+        serializer.setCookieName("JSESSIONID");
+        serializer.setCookieMaxAge(3600); // 1 hora
+        return serializer;
     }
 }

@@ -13,6 +13,10 @@ services:
       - mysql_data:/var/lib/mysql
     networks:
       - recetas_network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 5s
+      retries: 10
 
   backend:
     image: recetas_backend
@@ -20,24 +24,50 @@ services:
       context: ./backend_recetas
     container_name: recetas_backend
     depends_on:
-      - mysql
+      mysql:
+        condition: service_healthy
     ports:
       - "8081:8081"
     environment:
+      # Configuraciones de base de datos
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/db_recetas_web
       SPRING_DATASOURCE_USERNAME: user_recetas_web
       SPRING_DATASOURCE_PASSWORD: p4ssw0rd_recetas_web
+      # Configuraciones de cookies y seguridad
+      SERVER_SERVLET_SESSION_COOKIE_DOMAIN: localhost
+      SERVER_SERVLET_SESSION_COOKIE_SAMESITE: strict
+      SERVER_SERVLET_SESSION_COOKIE_PATH: /
+      SERVER_SERVLET_SESSION_COOKIE_HTTP_ONLY: "true"
+      SERVER_SERVLET_SESSION_COOKIE_MAX_AGE: "3600"
+      # Configuración de seguridad general
+      SPRING_SECURITY_REQUIRE_SSL: "false"  # Cambiar a true en producción
     networks:
       - recetas_network
+    restart: unless-stopped
 
   frontend:
     image: web_recetas
     build:
       context: ./web_recetas
+    container_name: recetas_frontend
     ports:
       - "8080:8080"
+    depends_on:
+      - backend
     networks:
       - recetas_network
+    environment:
+      # Configuraciones de cookies y seguridad
+      SERVER_SERVLET_SESSION_COOKIE_DOMAIN: localhost
+      SERVER_SERVLET_SESSION_COOKIE_SAMESITE: strict
+      SERVER_SERVLET_SESSION_COOKIE_PATH: /
+      SERVER_SERVLET_SESSION_COOKIE_HTTP_ONLY: "true"
+      SERVER_SERVLET_SESSION_COOKIE_MAX_AGE: "3600"
+      # Configuración de seguridad general
+      SPRING_SECURITY_REQUIRE_SSL: "false"  # Cambiar a true en producción
+      # Configuración para comunicación con backend
+      BACKEND_URL: http://backend:8081
+    restart: unless-stopped
 
 volumes:
   mysql_data:
@@ -45,3 +75,4 @@ volumes:
 networks:
   recetas_network:
     driver: bridge
+    name: recetas_network
