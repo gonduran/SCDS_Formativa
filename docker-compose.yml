@@ -27,7 +27,7 @@ services:
       mysql:
         condition: service_healthy
     ports:
-      - "8081:8081"
+      - "8082:8082"
     environment:
       # Configuraciones de base de datos
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/db_recetas_web
@@ -51,7 +51,7 @@ services:
       context: ./web_recetas
     container_name: recetas_frontend
     ports:
-      - "8080:8080"
+      - "8081:8081"
     depends_on:
       - backend
     networks:
@@ -66,7 +66,7 @@ services:
       # Configuración de seguridad general
       SPRING_SECURITY_REQUIRE_SSL: "false"  # Cambiar a true en producción
       # Configuración para comunicación con backend
-      BACKEND_URL: http://backend:8081
+      BACKEND_URL: http://backend:8082
     restart: unless-stopped
 
 volumes:

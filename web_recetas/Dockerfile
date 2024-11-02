@@ -20,8 +20,8 @@ FROM eclipse-temurin:17-jdk-focal
 # Copia el archivo jar al contenedor
 COPY --from=buildstage /app/target/web_recetas-0.0.1-SNAPSHOT.jar /app/app.jar
 
-# Exponer el puerto 8080 (puerto típico de Spring Boot)
-EXPOSE 8080
+# Exponer el puerto 8081 (puerto típico de Spring Boot)
+EXPOSE 8081
 
 # Comando para ejecutar la aplicación
 CMD ["java", "-jar", "/app/app.jar"]
