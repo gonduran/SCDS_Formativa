@@ -9,11 +9,16 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
-
 import com.demo.web_recetas.integration.CustomAuthenticationProvider;
+import org.springframework.security.crypto.password.PasswordEncoder; 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder; 
 import org.springframework.session.web.http.CookieSerializer;
 import org.springframework.session.web.http.DefaultCookieSerializer;
+import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
+import org.springframework.security.web.header.writers.XXssProtectionHeaderWriter;
+import org.springframework.security.web.csrf.CsrfTokenRepository;
+import org.springframework.security.web.header.writers.ReferrerPolicyHeaderWriter;
+
  
 @Configuration 
 @EnableWebSecurity(debug = true) 
@@ -35,7 +40,7 @@ public class WebSecurityConfig {
         http
             .authorizeHttpRequests((requests) -> requests
                 .requestMatchers("/", "/home", "/login", "/buscar").permitAll() 
-                .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
+                .requestMatchers("/css/**", "/js/**", "/images/**", "/webjars/**").permitAll()
                 .anyRequest().authenticated()
             )
             .formLogin((form) -> form
@@ -55,33 +60,54 @@ public class WebSecurityConfig {
                 .maximumSessions(1)
                 .maxSessionsPreventsLogin(true)
             )
+            .csrf(csrf -> csrf
+                .csrfTokenRepository(csrfTokenRepository())
+            )
             .headers(headers -> headers
-                .frameOptions(frame -> frame.deny())
+                .xssProtection(xss -> xss
+                    .headerValue(XXssProtectionHeaderWriter.HeaderValue.ENABLED_MODE_BLOCK)
+                )
                 .contentSecurityPolicy(csp -> csp
                     .policyDirectives(
-                        "default-src 'self'; " +
-                        "script-src 'self'; " +
-                        "style-src 'self'; " +
-                        "img-src 'self' data:; " +
-                        "font-src 'self'; " +
-                        "form-action 'self'; " +
-                        "frame-ancestors 'none'")
+                        "default-src 'self';" +
+                        "script-src 'self';" +
+                        "style-src 'self';" +
+                        "img-src 'self' data:;" +
+                        "font-src 'self';" +
+                        "object-src 'none';" +
+                        "base-uri 'self';" +
+                        "form-action 'self';" +
+                        "frame-ancestors 'none';" +
+                        "upgrade-insecure-requests;" +
+                        "block-all-mixed-content"
+                    )
                 )
-            )
-            .csrf(csrf -> csrf
-                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                .frameOptions(frame -> frame.deny())
+                .httpStrictTransportSecurity(hsts -> hsts
+                    .includeSubDomains(true)
+                    .preload(true)
+                    .maxAgeInSeconds(31536000)
+                )
+                .referrerPolicy(referrer -> referrer
+                    .policy(ReferrerPolicyHeaderWriter.ReferrerPolicy.STRICT_ORIGIN_WHEN_CROSS_ORIGIN)
+                )
             );
 
         return http.build();
     }
 
     @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web) -> web.ignoring()
             .requestMatchers(
                 "/css/**",
                 "/js/**",
                 "/images/**",
+                "/webjars/**",
                 "/favicon.ico"
             );
     }
@@ -96,5 +122,12 @@ public class WebSecurityConfig {
         serializer.setCookieName("JSESSIONID");
         serializer.setCookieMaxAge(3600);
         return serializer;
+    }
+
+    @Bean
+    public CsrfTokenRepository csrfTokenRepository() {
+        HttpSessionCsrfTokenRepository repository = new HttpSessionCsrfTokenRepository();
+        repository.setHeaderName("X-CSRF-TOKEN");
+        return repository;
     }
 }
