@@ -1,0 +1,100 @@
+services:
+  mysql:
+    image: mysql:latest
+    container_name: recetas_mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: p4ssw0rd
+      MYSQL_DATABASE: db_recetas_web
+      MYSQL_USER: user_recetas_web
+      MYSQL_PASSWORD: p4ssw0rd_recetas_web
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - recetas_network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 5s
+      retries: 10
+
+  backend:
+    image: recetas_backend
+    build:
+      context: ./backend_recetas
+    container_name: recetas_backend
+    depends_on:
+      mysql:
+        condition: service_healthy
+    ports:
+      - "8082:8082"
+    environment:
+      # Configuraciones de base de datos
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/db_recetas_web
+      SPRING_DATASOURCE_USERNAME: user_recetas_web
+      SPRING_DATASOURCE_PASSWORD: p4ssw0rd_recetas_web
+      # Configuraciones de cookies y seguridad
+      SERVER_SERVLET_SESSION_COOKIE_DOMAIN: localhost
+      SERVER_SERVLET_SESSION_COOKIE_SAMESITE: strict
+      SERVER_SERVLET_SESSION_COOKIE_PATH: /
+      SERVER_SERVLET_SESSION_COOKIE_HTTP_ONLY: "true"
+      SERVER_SERVLET_SESSION_COOKIE_MAX_AGE: "3600"
+      # Configuración de seguridad general
+      SPRING_SECURITY_REQUIRE_SSL: "false"  # Cambiar a true en producción
+    networks:
+      - recetas_network
+    restart: unless-stopped
+
+  frontend:
+    # Configuración básica del contenedor
+    image: web_recetas
+    container_name: recetas_frontend
+    build:
+      context: ./web_recetas
+    
+    # Configuración de red y dependencias
+    ports:
+      - "8081:8081"
+    networks:
+      - recetas_network
+    depends_on:
+      - backend
+    
+    # Configuración de reinicio
+    restart: unless-stopped
+    
+    # Variables de entorno
+    environment:
+      # Configuración de comunicación
+      BACKEND_URL: http://backend:8082
+      
+      # Configuración de cookies
+      SERVER_SERVLET_SESSION_COOKIE_DOMAIN: localhost
+      SERVER_SERVLET_SESSION_COOKIE_PATH: /
+      SERVER_SERVLET_SESSION_COOKIE_HTTP_ONLY: "true"
+      SERVER_SERVLET_SESSION_COOKIE_MAX_AGE: "3600"
+      SERVER_SERVLET_SESSION_COOKIE_SECURE: "false"
+      SERVER_SERVLET_SESSION_COOKIE_SAME_SITE: "Strict"
+      SERVER_SERVLET_SESSION_TIMEOUT: "30m"
+      
+      # Headers de seguridad
+      SECURITY_HEADERS_FRAME: "DENY"
+      SECURITY_HEADERS_CONTENT_TYPE_OPTIONS: "nosniff"
+      SECURITY_HEADERS_XSS_PROTECTION: "1; mode=block"
+      SECURITY_HEADERS_HSTS: "max-age=31536000; includeSubDomains"
+      SECURITY_HEADERS_REFERRER_POLICY: "same-origin"
+      
+      # Configuración SSL y seguridad general
+      SPRING_SECURITY_REQUIRE_SSL: "false"  # Cambiar a true en producción
+      
+      # Configuración de gestión y errores
+      SERVER_ERROR_INCLUDE_STACKTRACE: "never"
+      MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_EXCLUDE: "*"
+
+volumes:
+  mysql_data:
+
+networks:
+  recetas_network:
+    driver: bridge
+    name: recetas_network

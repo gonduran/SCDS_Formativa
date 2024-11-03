@@ -4,32 +4,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Buscar Recetas</title>
-    <link rel="stylesheet" href="/css/styles.css"> <!-- Estilos generales -->
-    <link rel="stylesheet" href="/css/buscar.css"> <!-- Estilos específicos para buscar -->
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/buscar.css">
 </head>
 <body>
     <!-- Incluir el header -->
     <div th:replace="~{fragments/header :: header}"></div>
 
-    <!-- Contenido principal de buscar -->
     <div class="search-wrapper">
         <div class="search-container">
             <h1>Buscar Recetas</h1>
 
             <!-- Formulario de búsqueda -->
             <form th:action="@{/buscar}" method="GET" class="search-form">
-                <input type="text" name="searchQuery" th:value="${searchQuery}" placeholder="Ingresa el nombre de una receta" required>
+                <input type="text" name="searchQuery" th:value="${searchQuery}" placeholder="Ingresa el nombre de una receta" required pattern="[A-Za-z0-9 ]+" title="Solo se permiten letras, números y espacios">
                 <button type="submit">Buscar</button>
             </form>
 
+            <!-- Mensaje de error o sin resultados -->
+            <p class="message" th:if="${message}" th:text="${message}"></p>
+
             <!-- Mostrar resultados de recetas solo si se ha hecho una búsqueda -->
             <div class="recipe-list" th:if="${recetasFiltradas != null}">
-                <!-- Si no hay resultados, mostrar un mensaje -->
                 <p th:if="${#lists.isEmpty(recetasFiltradas)}">No se encontraron recetas que coincidan con la búsqueda.</p>
 
                 <!-- Mostrar recetas filtradas -->
                 <div class="recipe-card" th:each="receta : ${recetasFiltradas}">
-                    <img th:src="@{${receta.imagen}}" alt="Imagen de la receta" class="recipe-img"/>
+                    <img th:src="${receta.imagen}" alt="Imagen de la receta" class="recipe-img"/>
                     <h3 th:text="${receta.nombre}"></h3>
                     <p><span th:text="${receta.descripcion}"></span></p>
                     <p><strong>Tipo de Cocina:</strong> <span th:text="${receta.tipoCocina}"></span></p>

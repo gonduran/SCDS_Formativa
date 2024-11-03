@@ -1,17 +1,38 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Security Headers -->
+    <meta http-equiv="Content-Security-Policy" 
+          content="default-src 'self'; 
+                   script-src 'self'; 
+                   style-src 'self'; 
+                   img-src 'self' data:; 
+                   font-src 'self';
+                   form-action 'self';
+                   frame-ancestors 'none';
+                   base-uri 'self';
+                   object-src 'none'">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta http-equiv="Strict-Transport-Security" content="max-age=31536000; includeSubDomains">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, private">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+    <meta name="referrer" content="same-origin">
+    
     <title>Recetas</title>
-    <link rel="stylesheet" href="/css/styles.css"> 
+    <link rel="stylesheet" href="/css/styles.css" th:href="@{/css/styles.css}">
 </head>
 <body>
     <header>
         <nav>
-            <a href="/home">Inicio</a>
-            <a href="/buscar">Buscar Recetas</a>
-            <a href="/login">Iniciar Sesión</a>
+            <a th:href="@{/home}">Inicio</a>
+            <a th:href="@{/buscar}">Buscar Recetas</a>
+            <a th:href="@{/login}">Iniciar Sesión</a>
         </nav>
     </header>
 </body>
