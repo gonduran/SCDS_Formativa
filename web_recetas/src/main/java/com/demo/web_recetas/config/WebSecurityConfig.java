@@ -10,6 +10,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.web.SecurityFilterChain;
 import com.demo.web_recetas.integration.CustomAuthenticationProvider;
+
+import jakarta.servlet.http.HttpServletResponse;
+
 import org.springframework.security.crypto.password.PasswordEncoder; 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder; 
 import org.springframework.session.web.http.CookieSerializer;
@@ -39,9 +42,33 @@ public class WebSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests((requests) -> requests
-                .requestMatchers("/", "/home", "/login", "/buscar").permitAll() 
+                // Bloquear explícitamente accesos a sistemas de control de versiones
+                .requestMatchers(
+                    "/_darcs",
+                    "/_darcs/*",
+                    "/.bzr",
+                    "/.bzr/*",
+                    "/.hg",
+                    "/.hg/*",
+                    "/BitKeeper",
+                    "/BitKeeper/*",
+                    "/.git",
+                    "/.git/*",
+                    "/.svn",
+                    "/.svn/*"
+                ).denyAll()
+                // Solo permitir acceso a la raíz
+                .requestMatchers("/").permitAll()                
+                // Permitir recursos estáticos
                 .requestMatchers("/css/**", "/js/**", "/images/**", "/webjars/**").permitAll()
-                .anyRequest().authenticated()
+                // Endpoints públicos específicos
+                .requestMatchers("/login").permitAll()
+                .requestMatchers("/home").permitAll()
+                .requestMatchers("/buscar").permitAll()
+                // Solo la ruta específica de recetas requiere autenticación
+                .requestMatchers("/recetas/{id}").authenticated()
+                // Cualquier otra ruta será denegada
+                .anyRequest().denyAll()
             )
             .formLogin((form) -> form
                 .loginPage("/login")
@@ -55,6 +82,19 @@ public class WebSecurityConfig {
                 .deleteCookies("JSESSIONID")
                 .clearAuthentication(true)
                 .permitAll()
+            )
+            .exceptionHandling(exceptions -> exceptions
+                .accessDeniedHandler((request, response, accessDeniedException) -> {
+                    response.sendError(HttpServletResponse.SC_NOT_FOUND);
+                })
+                .authenticationEntryPoint((request, response, authException) -> {
+                    String path = request.getRequestURI();
+                    if (path.matches("/recetas/\\d+")) {
+                        response.sendRedirect("/login");
+                    } else {
+                        response.sendError(HttpServletResponse.SC_NOT_FOUND);
+                    }
+                })
             )
             .sessionManagement(session -> session
                 .maximumSessions(1)
