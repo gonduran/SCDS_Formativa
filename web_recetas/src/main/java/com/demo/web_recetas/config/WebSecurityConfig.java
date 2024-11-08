@@ -66,8 +66,9 @@ public class WebSecurityConfig {
                 .requestMatchers("/home").permitAll()
                 .requestMatchers("/buscar").permitAll()
                 .requestMatchers("/register").permitAll()
-                // Solo la ruta específica de recetas requiere autenticación
+                // Endpoints privados que requiere autenticación
                 .requestMatchers("/recetas/{id}").authenticated()
+                .requestMatchers("/publicar").authenticated()
                 // Cualquier otra ruta será denegada
                 .anyRequest().denyAll()
             )
@@ -90,7 +91,7 @@ public class WebSecurityConfig {
                 })
                 .authenticationEntryPoint((request, response, authException) -> {
                     String path = request.getRequestURI();
-                    if (path.matches("/recetas/\\d+")) {
+                    if (path.matches("/recetas/\\d+") || path.equals("/publicar")) {
                         response.sendRedirect("/login");
                     } else {
                         response.sendError(HttpServletResponse.SC_NOT_FOUND);

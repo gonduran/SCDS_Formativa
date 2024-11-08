@@ -13,6 +13,10 @@ public class Receta {
     private String detallePreparacion;
     private String imagen;
 
+    // Constructor sin parámetros
+    public Receta() {
+    }
+
     // Constructor
     public Receta(Long id, String nombre, String descripcion, String tipoCocina, List<String> ingredientes, String paisOrigen, String detallePreparacion, String imagen) {
         this.id = id;

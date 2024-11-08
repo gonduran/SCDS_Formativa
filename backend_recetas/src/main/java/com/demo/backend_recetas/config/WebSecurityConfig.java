@@ -45,6 +45,7 @@ class WebSecurityConfig {
                 .requestMatchers("/api/recetas_buscar").permitAll()
                 .requestMatchers("/api/register").permitAll()
                 .requestMatchers("/api/recetas_detalle/**").authenticated()
+                .requestMatchers("/api/recetas/publicar").authenticated()
                 .anyRequest().authenticated())
             .addFilterAfter(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
         

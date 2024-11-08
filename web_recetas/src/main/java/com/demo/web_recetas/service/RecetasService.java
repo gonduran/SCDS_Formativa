@@ -82,4 +82,26 @@ public class RecetasService {
             throw new Exception("Error al registrar el usuario: " + e.getMessage());
         }
     }
+
+    public String publicarReceta(Receta receta) {
+        String url = backendUrl + "/api/recetas/publicar";
+
+        // Asegurarse de que el token es válido
+        String token = tokenStore.getToken();
+        if (token == null || token.isEmpty()) {
+            throw new RuntimeException("Token de autenticación no disponible");
+        }
+
+        // Crea las cabeceras con el token JWT
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", token);
+
+        // Configura la entidad de la solicitud con las cabeceras y el cuerpo
+        HttpEntity<Receta> entity = new HttpEntity<>(receta, headers);
+
+        // Envía la solicitud POST con el token JWT
+        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
+
+        return response.getBody();
+    }
 }
