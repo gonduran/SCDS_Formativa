@@ -21,10 +21,16 @@
 
             <!-- Formulario de registro -->
             <form th:action="@{/register}" th:object="${user}" method="post">
-                <!-- Nombre de Usuario -->
+                <!-- Usuario -->
                 <div class="form-group">
                     <label for="username">Usuario</label>
-                    <input type="text" id="username" th:field="*{username}" placeholder="Nombre de usuario" required />
+                    <input type="text" id="username" th:field="*{username}" placeholder="Usuario" required />
+                </div>
+
+                <!-- Nombre de Usuario -->
+                <div class="form-group">
+                    <label for="nombreCompleto">Nombre Completo</label>
+                    <input type="text" id="nombreCompleto" th:field="*{nombreCompleto}" placeholder="Nombre Completo" required />
                 </div>
 
                 <!-- Correo Electrónico -->

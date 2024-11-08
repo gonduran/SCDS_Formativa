@@ -27,11 +27,19 @@ public class RegisterController {
             @ModelAttribute("user") User user, 
             @RequestParam("confirmPassword") String confirmPassword, 
             Model model) {
+
+        // Verificación de campos requeridos
+        if (user.getNombreCompleto() == null || user.getNombreCompleto().trim().isEmpty()) {
+            model.addAttribute("error", "El nombre completo es requerido.");
+            return "register";
+        }
+        
         // Verificación de coincidencia de contraseñas
         if (!user.getPassword().equals(confirmPassword)) {
             model.addAttribute("error", "Las contraseñas no coinciden.");
             return "register";
         }
+
         try {
             String response = recetasService.registerUser(user);
             model.addAttribute("message", response);
@@ -40,5 +48,6 @@ public class RegisterController {
             model.addAttribute("error", e.getMessage());
             return "register";
         }
+
     }
 }

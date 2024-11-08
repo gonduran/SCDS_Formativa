@@ -36,6 +36,23 @@
                     <input type="text" id="tipoCocina" th:field="*{tipoCocina}" placeholder="Ej. Chilena, Internacional" required />
                 </div>
 
+                <!-- Dificultad -->
+                <div class="form-group">
+                    <label for="dificultad">Dificultad:</label>
+                    <select id="dificultad" th:field="*{dificultad}" required>
+                        <option value="">Seleccione la dificultad</option>
+                        <option value="Alta">Alta</option>
+                        <option value="Media">Media</option>
+                        <option value="Baja">Baja</option>
+                    </select>                    
+                </div>
+
+                <!-- Tiempo de Cocción -->
+                <div class="form-group">
+                    <label for="tiempoCoccion">Tiempo de Cocción (HH:MM):</label>
+                    <input type="text" id="tiempoCoccion" th:field="*{tiempoCoccion}" placeholder="Tiempo de Cocción (HH:MM)" pattern="^([0-9]|[1-9][0-9]):([0-5][0-9])$" required />
+                </div>
+
                 <!-- Ingredientes -->
                 <div class="form-group">
                     <label for="ingredientes">Ingredientes (separados por comas):</label>
