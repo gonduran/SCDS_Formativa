@@ -65,6 +65,7 @@ public class WebSecurityConfig {
                 .requestMatchers("/login").permitAll()
                 .requestMatchers("/home").permitAll()
                 .requestMatchers("/buscar").permitAll()
+                .requestMatchers("/register").permitAll()
                 // Solo la ruta específica de recetas requiere autenticación
                 .requestMatchers("/recetas/{id}").authenticated()
                 // Cualquier otra ruta será denegada

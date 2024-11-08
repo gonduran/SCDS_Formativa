@@ -1,6 +1,7 @@
 package com.demo.web_recetas.service;
 
 import com.demo.web_recetas.model.Receta;
+import com.demo.web_recetas.model.User;
 import com.demo.web_recetas.integration.TokenStore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -8,6 +9,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.springframework.http.HttpHeaders;
@@ -66,5 +68,18 @@ public class RecetasService {
         String url = backendUrl + "/api/recetas_buscar?keyword=" + searchQuery;
         Receta[] recetasArray = restTemplate.getForObject(url, Receta[].class);
         return Arrays.asList(recetasArray);
+    }
+
+    public String registerUser(User user) throws Exception {
+        try {
+            String url = backendUrl + "/api/register";
+            ResponseEntity<String> response = restTemplate.postForEntity(url, user, String.class);
+            return response.getBody();
+        } catch (HttpClientErrorException.BadRequest e) {
+            // Extrae el mensaje de error en caso de que el usuario ya esté registrado
+            throw new Exception("El nombre de usuario ya está en uso.");
+        } catch (Exception e) {
+            throw new Exception("Error al registrar el usuario: " + e.getMessage());
+        }
     }
 }
