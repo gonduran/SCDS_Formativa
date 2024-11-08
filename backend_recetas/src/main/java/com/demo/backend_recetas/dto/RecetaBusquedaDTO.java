@@ -7,15 +7,19 @@ public class RecetaBusquedaDTO {
     private String imagen;
     private String tipoCocina;
     private String paisOrigen;
+    private String tiempoCoccion;
+    private String dificultad;
 
     // Constructor
-    public RecetaBusquedaDTO(Long id, String nombre, String descripcion, String imagen, String tipoCocina, String paisOrigen) {
+    public RecetaBusquedaDTO(Long id, String nombre, String descripcion, String imagen, String tipoCocina, String paisOrigen, String tiempoCoccion, String dificultad) {
         this.id = id;
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.imagen = imagen;
         this.tipoCocina = tipoCocina;
         this.paisOrigen = paisOrigen;
+        this.tiempoCoccion = tiempoCoccion;
+        this.dificultad = dificultad;
     }
 
     // Getters y Setters
@@ -65,5 +69,21 @@ public class RecetaBusquedaDTO {
 
     public void setPaisOrigen(String paisOrigen) {
         this.paisOrigen = paisOrigen;
+    }
+
+    public String getTiempoCoccion() {
+        return tiempoCoccion;
+    }
+
+    public void setTiempoCoccion(String tiempoCoccion) {
+        this.tiempoCoccion = tiempoCoccion;
+    }
+
+    public String getDificultad() {
+        return dificultad;
+    }
+
+    public void setDificultad(String dificultad) {
+        this.dificultad = dificultad;
     }
 }

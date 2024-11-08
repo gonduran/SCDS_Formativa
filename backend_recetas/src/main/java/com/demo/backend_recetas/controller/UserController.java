@@ -25,6 +25,11 @@ public class UserController {
             return ResponseEntity.badRequest().body("Error: El nombre de usuario ya está en uso.");
         }
 
+        // Verificar que el nombre completo no esté vacío
+        if (user.getNombreCompleto() == null || user.getNombreCompleto().trim().isEmpty()) {
+            return ResponseEntity.badRequest().body("Error: El nombre completo es requerido.");
+        }
+
         // Configurar el rol de usuario normal
         user.setUserType(1);  // 1 para usuario normal
         user.setPassword(passwordEncoder.encode(user.getPassword()));  // Encriptar la contraseña

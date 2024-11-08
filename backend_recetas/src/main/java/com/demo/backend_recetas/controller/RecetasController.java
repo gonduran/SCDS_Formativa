@@ -28,7 +28,9 @@ public class RecetasController {
                 receta.getId(),
                 receta.getNombre(),
                 receta.getDescripcion(),
-                receta.getImagen()
+                receta.getImagen(),
+                receta.getTiempoCoccion(),
+                receta.getDificultad()
             ))
             .collect(Collectors.toList());
 
@@ -44,7 +46,9 @@ public class RecetasController {
                 receta.getDescripcion(),
                 receta.getImagen(),
                 receta.getTipoCocina(),
-                receta.getPaisOrigen()
+                receta.getPaisOrigen(),
+                receta.getTiempoCoccion(),
+                receta.getDificultad()
             ))
             .collect(Collectors.toList());
 

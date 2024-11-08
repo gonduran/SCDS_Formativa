@@ -28,10 +28,10 @@ public class DataInitializer implements CommandLineRunner {
     public void run(String... args) throws Exception {
         // Inicializar usuarios si no existen
         if (userRepository.count() == 0) {
-            createUser("user1", "user1@example.com", "cl4v3web", 1);
-            createUser("user2", "user2@example.com", "cl4v3web", 1);
-            createUser("user3", "user3@example.com", "cl4v3web", 1);
-            createUser("admin", "admin@example.com", "cl4v3web", 0);
+            createUser("user1", "user1@example.com", "cl4v3web", "Usuario Uno", 1);
+            createUser("user2", "user2@example.com", "cl4v3web", "Usuario Dos", 1);
+            createUser("user3", "user3@example.com", "cl4v3web", "Usuario Tres", 1);
+            createUser("admin", "admin@example.com", "cl4v3web", "Administrador", 0);
             System.out.println("✅ Usuarios iniciales creados exitosamente");
         }
 
@@ -53,7 +53,9 @@ public class DataInitializer implements CommandLineRunner {
                 "Cocinar por 20-30 min o hasta que esté cocido el pollo.\r\n" + //
                 "Servir caliente acompañado de papas fritas o arroz.\r\n" + //
                 "*Flambear: Tipo de cocción donde se rocía la preparación con un alcohol y una vez que esté caliente se enciende con fuego para evaporar el alcohol dejando el aroma y sabor en el plato.",
-                "/images/receta1.jpg"
+                "/images/receta1.jpg",
+                "1:30",
+                "Media"
             ));
 
             recetaRepository.save(new Receta(
@@ -70,7 +72,9 @@ public class DataInitializer implements CommandLineRunner {
                 "Agregar las papas y zapallo, revolver bien. Incorporar el Ají de Color, Comino Molido y Orégano Entero, revolver hasta integrar. Agregar el agua y el Caldo en Polvo de Carne. Dejar hervir y luego reducir el fuego y cocinar por 25 minutos o hasta que las verduras estén blandas.\r\n" + //
                 "Por último, agregar el choclo y los porotos verdes, cocinar por 5 minutos o hasta que estén blandos.\r\n" + //
                 "Con la ayuda de una cuchara de palo, aplastar levemente las papas y zapallo y servir.",
-                "/images/receta2.jpg"
+                "/images/receta2.jpg",
+                "2:00",
+                "Media"
             ));
 
             recetaRepository.save(new Receta(
@@ -81,7 +85,9 @@ public class DataInitializer implements CommandLineRunner {
                 Arrays.asList("Arroz", "Pescado fresco", "Alga nori", "Vinagre de arroz"),
                 "Japón",
                 "Cocinar el arroz, preparar los rollos con alga nori y el pescado, cortar y servir.",
-                "/images/receta3.jpg"
+                "/images/receta3.jpg",
+                "1:00",
+                "Alta"
             ));
     
             recetaRepository.save(new Receta(
@@ -92,7 +98,9 @@ public class DataInitializer implements CommandLineRunner {
                 Arrays.asList("Harina", "Agua", "Levadura", "Tomate", "Mozzarella", "Albahaca"),
                 "Italia",
                 "Preparar la masa, añadir salsa de tomate, queso y hornear hasta dorar.",
-                "/images/receta4.jpg"
+                "/images/receta4.jpg",
+                "0:30",
+                "Baja"
             ));
     
             recetaRepository.save(new Receta(
@@ -103,7 +111,9 @@ public class DataInitializer implements CommandLineRunner {
                 Arrays.asList("Garbanzos", "Ajo", "Perejil", "Cebolla", "Especias"),
                 "Líbano",
                 "Preparar la mezcla con garbanzos, freír las bolitas y servir con salsa de yogur.",
-                "/images/receta5.jpg"
+                "/images/receta5.jpg",
+                "2:00",
+                "Alta"
             ));
     
             recetaRepository.save(new Receta(
@@ -114,18 +124,21 @@ public class DataInitializer implements CommandLineRunner {
                 Arrays.asList("Cebolla", "Tomates", "Perejil", "Comino", "Maicena"),
                 "México",
                 "Preparar la salsa, preparar el relleno y servir con salsa.",
-                "/images/receta6.jpg"
+                "/images/receta6.jpg",
+                "1:45",
+                "Media"
             ));
     
             System.out.println("✅ Recetas iniciales creadas exitosamente");
         }
     }
 
-    private void createUser(String username, String email, String password, Integer userType) {
+    private void createUser(String username, String email, String password, String nombreCompleto, Integer userType) {
         User user = new User();
         user.setUsername(username);
         user.setEmail(email);
         user.setPassword(passwordEncoder.encode(password));
+        user.setNombreCompleto(nombreCompleto);
         user.setUserType(userType);
         userRepository.save(user);
     }
