@@ -10,6 +10,7 @@
                    script-src 'self'; 
                    style-src 'self'; 
                    img-src 'self' data:; 
+                   img-src 'self' data: https:;
                    font-src 'self';
                    form-action 'self';
                    frame-ancestors 'none';
@@ -33,6 +34,8 @@
             <a th:href="@{/home}">Inicio</a>
             <a th:href="@{/buscar}">Buscar Recetas</a>
             <a th:href="@{/login}">Iniciar Sesión</a>
+            <a th:href="@{/register}">Registrar</a>
+            <a th:href="@{/publicar}">Publicar Receta</a>
         </nav>
     </header>
 </body>

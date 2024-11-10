@@ -16,6 +16,8 @@ public interface RecetaRepository extends JpaRepository<Receta, Long> {
            "LOWER(r.detallePreparacion) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
            "LOWER(r.tipoCocina) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
            "LOWER(r.paisOrigen) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
+           "LOWER(r.tiempoCoccion) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
+           "LOWER(r.dificultad) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
            "EXISTS (SELECT i FROM r.ingredientes i WHERE LOWER(i) LIKE LOWER(CONCAT('%', :keyword, '%')))")
     List<Receta> buscarPorKeyword(@Param("keyword") String keyword);
 }

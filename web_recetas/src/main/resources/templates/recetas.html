@@ -22,7 +22,27 @@
             <!-- Título y Descripción -->
             <div class="recipe-info">
                 <h1 th:text="${receta.nombre}"></h1>
-                <p th:text="${receta.descripcion}"></p>
+
+                <div class="recipe-metadata">
+                    <div class="metadata-item">
+                        <span class="metadata-label">Dificultad:</span>
+                        <span class="metadata-value" th:text="${receta.dificultad}"></span>
+                    </div>
+                    <div class="metadata-item">
+                        <span class="metadata-label">Tiempo de Cocción:</span>
+                        <span class="metadata-value" th:text="${receta.tiempoCoccion}"></span>
+                    </div>
+                    <div class="metadata-item">
+                        <span class="metadata-label">Tipo de Cocina:</span>
+                        <span class="metadata-value" th:text="${receta.tipoCocina}"></span>
+                    </div>
+                    <div class="metadata-item">
+                        <span class="metadata-label">País de Origen:</span>
+                        <span class="metadata-value" th:text="${receta.paisOrigen}"></span>
+                    </div>
+                </div>
+
+                <p class="recipe-description" th:text="${receta.descripcion}"></p>
             </div>
         </div>
 

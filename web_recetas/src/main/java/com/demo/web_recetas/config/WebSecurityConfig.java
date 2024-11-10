@@ -65,8 +65,10 @@ public class WebSecurityConfig {
                 .requestMatchers("/login").permitAll()
                 .requestMatchers("/home").permitAll()
                 .requestMatchers("/buscar").permitAll()
-                // Solo la ruta específica de recetas requiere autenticación
+                .requestMatchers("/register").permitAll()
+                // Endpoints privados que requiere autenticación
                 .requestMatchers("/recetas/{id}").authenticated()
+                .requestMatchers("/publicar").authenticated()
                 // Cualquier otra ruta será denegada
                 .anyRequest().denyAll()
             )
@@ -89,7 +91,7 @@ public class WebSecurityConfig {
                 })
                 .authenticationEntryPoint((request, response, authException) -> {
                     String path = request.getRequestURI();
-                    if (path.matches("/recetas/\\d+")) {
+                    if (path.matches("/recetas/\\d+") || path.equals("/publicar")) {
                         response.sendRedirect("/login");
                     } else {
                         response.sendError(HttpServletResponse.SC_NOT_FOUND);
@@ -112,7 +114,7 @@ public class WebSecurityConfig {
                         "default-src 'self';" +
                         "script-src 'self';" +
                         "style-src 'self';" +
-                        "img-src 'self' data:;" +
+                        "img-src 'self' data: https:;" +
                         "font-src 'self';" +
                         "object-src 'none';" +
                         "base-uri 'self';" +

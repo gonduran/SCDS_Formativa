@@ -24,6 +24,7 @@ public class User implements UserDetails {
     private String username;
     private String email;
     private String password;
+    private String nombreCompleto;
     private Integer userType; // 0 = admin, 1 = normal
     private boolean enabled = true;
     private boolean accountNonExpired = true;
@@ -35,10 +36,11 @@ public class User implements UserDetails {
         this.userType = 1; // Por defecto, usuario normal
     }
 
-    public User(String username, String email, String password, Integer userType) {
+    public User(String username, String email, String password, String nombreCompleto, Integer userType) {
         this.username = username;
         this.email = email;
         this.password = password;
+        this.nombreCompleto = nombreCompleto;
         this.userType = userType;
     }
 
@@ -82,6 +84,14 @@ public class User implements UserDetails {
 
     public void setUserType(Integer userType) {
         this.userType = userType;
+    }
+
+    public String getNombreCompleto() {
+        return nombreCompleto;
+    }
+
+    public void setNombreCompleto(String nombreCompleto) {
+        this.nombreCompleto = nombreCompleto;
     }
 
     @Override

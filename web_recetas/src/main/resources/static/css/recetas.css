@@ -40,6 +40,62 @@ body {
     margin-bottom: 20px;
 }
 
+.recipe-metadata {
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 8px;
+    padding: 20px;
+    margin: 20px 0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.recipe-info p {
+    font-size: 1.2em;
+    line-height: 1.6;
+    color: #555;
+}
+
+.metadata-item {
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+}
+
+.metadata-label {
+    font-weight: bold;
+    color: #343a40;
+    width: 150px;
+    font-size: 1.1em;
+}
+
+.metadata-value {
+    color: #555;
+    font-size: 1.1em;
+    padding: 5px 15px;
+    background-color: white;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.metadata-value[th\:text*="Alta"] {
+    color: #dc3545;
+    border-left: 3px solid #dc3545;
+}
+
+.metadata-value[th\:text*="Media"] {
+    color: #fd7e14;
+    border-left: 3px solid #fd7e14;
+}
+
+.metadata-value[th\:text*="Baja"] {
+    color: #28a745;
+    border-left: 3px solid #28a745;
+}
+
+.metadata-value[th\:text*=":"] {
+    font-family: 'Courier New', monospace;
+    letter-spacing: 1px;
+}
+
 .recipe-info p {
     font-size: 1.2em;
     line-height: 1.6;
@@ -70,4 +126,40 @@ body {
     line-height: 1.6;
     font-size: 1.2em;
     color: #555;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .recipe-header {
+        flex-direction: column;
+    }
+
+    .recipe-info {
+        padding-left: 0;
+        margin-top: 20px;
+    }
+
+    .recipe-details {
+        flex-direction: column;
+    }
+
+    .ingredients, .preparation {
+        width: 100%;
+        margin-bottom: 30px;
+    }
+
+    .metadata-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .metadata-label {
+        width: 100%;
+        margin-bottom: 5px;
+    }
+
+    .metadata-value {
+        width: 100%;
+        box-sizing: border-box;
+    }
 }

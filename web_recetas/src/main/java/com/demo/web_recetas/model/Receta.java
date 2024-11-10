@@ -12,9 +12,15 @@ public class Receta {
     private String paisOrigen;
     private String detallePreparacion;
     private String imagen;
+    private String tiempoCoccion;
+    private String dificultad;
+
+    // Constructor sin parámetros
+    public Receta() {
+    }
 
     // Constructor
-    public Receta(Long id, String nombre, String descripcion, String tipoCocina, List<String> ingredientes, String paisOrigen, String detallePreparacion, String imagen) {
+    public Receta(Long id, String nombre, String descripcion, String tipoCocina, List<String> ingredientes, String paisOrigen, String detallePreparacion, String imagen, String tiempoCoccion, String dificultad) {
         this.id = id;
         this.nombre = nombre;
         this.descripcion = descripcion;
@@ -23,6 +29,8 @@ public class Receta {
         this.paisOrigen = paisOrigen;
         this.detallePreparacion = detallePreparacion;
         this.imagen = imagen;
+        this.tiempoCoccion = tiempoCoccion;
+        this.dificultad = dificultad;
     }
 
     // Getters y Setters
@@ -88,5 +96,21 @@ public class Receta {
 
     public void setImagen(String imagen) {
         this.imagen = imagen;
+    }
+
+    public String getTiempoCoccion() {
+        return tiempoCoccion;
+    }
+
+    public void setTiempoCoccion(String tiempoCoccion) {
+        this.tiempoCoccion = tiempoCoccion;
+    }
+
+    public String getDificultad() {
+        return dificultad;
+    }
+
+    public void setDificultad(String dificultad) {
+        this.dificultad = dificultad;
     }
 }
