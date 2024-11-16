@@ -11,6 +11,7 @@ import com.demo.backend_recetas.repository.RecetaRepository;
 import com.demo.backend_recetas.repository.UserRepository;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 @Component
 public class DataInitializer implements CommandLineRunner {
@@ -55,7 +56,11 @@ public class DataInitializer implements CommandLineRunner {
                 "*Flambear: Tipo de cocción donde se rocía la preparación con un alcohol y una vez que esté caliente se enciende con fuego para evaporar el alcohol dejando el aroma y sabor en el plato.",
                 "/images/receta1.jpg",
                 "1:30",
-                "Media"
+                "Media",
+                Collections.emptyList(), // Fotos vacías
+                Collections.emptyList(),  // Videos vacíos
+                Collections.emptyList(), // Comentarios vacíos
+                0.0 // Valoración inicial
             ));
 
             recetaRepository.save(new Receta(
@@ -74,7 +79,11 @@ public class DataInitializer implements CommandLineRunner {
                 "Con la ayuda de una cuchara de palo, aplastar levemente las papas y zapallo y servir.",
                 "/images/receta2.jpg",
                 "2:00",
-                "Media"
+                "Media",
+                Collections.emptyList(), // Fotos vacías
+                Collections.emptyList(),  // Videos vacíos
+                Collections.emptyList(), // Comentarios vacíos
+                0.0 // Valoración inicial
             ));
 
             recetaRepository.save(new Receta(
@@ -87,7 +96,11 @@ public class DataInitializer implements CommandLineRunner {
                 "Cocinar el arroz, preparar los rollos con alga nori y el pescado, cortar y servir.",
                 "/images/receta3.jpg",
                 "1:00",
-                "Alta"
+                "Alta",
+                Collections.emptyList(), // Fotos vacías
+                Collections.emptyList(),  // Videos vacíos
+                Collections.emptyList(), // Comentarios vacíos
+                0.0 // Valoración inicial
             ));
     
             recetaRepository.save(new Receta(
@@ -100,7 +113,11 @@ public class DataInitializer implements CommandLineRunner {
                 "Preparar la masa, añadir salsa de tomate, queso y hornear hasta dorar.",
                 "/images/receta4.jpg",
                 "0:30",
-                "Baja"
+                "Baja",
+                Collections.emptyList(), // Fotos vacías
+                Collections.emptyList(),  // Videos vacíos
+                Collections.emptyList(), // Comentarios vacíos
+                0.0 // Valoración inicial
             ));
     
             recetaRepository.save(new Receta(
@@ -113,7 +130,11 @@ public class DataInitializer implements CommandLineRunner {
                 "Preparar la mezcla con garbanzos, freír las bolitas y servir con salsa de yogur.",
                 "/images/receta5.jpg",
                 "2:00",
-                "Alta"
+                "Alta",
+                Collections.emptyList(), // Fotos vacías
+                Collections.emptyList(),  // Videos vacíos
+                Collections.emptyList(), // Comentarios vacíos
+                0.0 // Valoración inicial
             ));
     
             recetaRepository.save(new Receta(
@@ -126,7 +147,11 @@ public class DataInitializer implements CommandLineRunner {
                 "Preparar la salsa, preparar el relleno y servir con salsa.",
                 "/images/receta6.jpg",
                 "1:45",
-                "Media"
+                "Media",
+                Collections.emptyList(), // Fotos vacías
+                Collections.emptyList(),  // Videos vacíos
+                Collections.emptyList(), // Comentarios vacíos
+                0.0 // Valoración inicial
             ));
     
             System.out.println("✅ Recetas iniciales creadas exitosamente");

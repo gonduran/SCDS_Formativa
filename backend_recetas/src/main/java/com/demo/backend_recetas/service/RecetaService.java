@@ -14,4 +14,8 @@ public class RecetaService {
     public Receta guardarReceta(Receta receta) {
         return recetaRepository.save(receta);
     }
+
+    public Receta obtenerRecetaPorId(Long id) {
+        return recetaRepository.findById(id).orElse(null);
+    }
 }

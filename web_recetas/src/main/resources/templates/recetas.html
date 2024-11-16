@@ -62,6 +62,37 @@
         </div>
     </div>
 
+    <div class="comentarios">
+        <h2>Comentarios</h2>
+        <div th:each="comentario : ${receta.comentarios}">
+            <p><strong th:text="${comentario.usuario}"></strong>: <span th:text="${comentario.comentario}"></span></p>
+            <p>Valoración: <span th:text="${comentario.valoracion}"></span>/5</p>
+        </div>
+    
+        <form th:action="@{/recetas/{id}/comentarios(id=${receta.id})}" method="post">
+            <textarea name="comentario" placeholder="Escribe un comentario..."></textarea>
+            <select name="valoracion" required>
+                <option value="1">1 estrella</option>
+                <option value="2">2 estrellas</option>
+                <option value="3">3 estrellas</option>
+                <option value="4">4 estrellas</option>
+                <option value="5">5 estrellas</option>
+            </select>
+            <button type="submit">Enviar</button>
+        </form>
+    </div>
+
+    <a href="https://www.facebook.com/sharer/sharer.php?u=https://miaplicacion.com/recetas/{id}" target="_blank">
+        <img src="/images/facebook-icon.png" alt="Compartir en Facebook" />
+    </a>
+    <a href="https://twitter.com/share?url=https://miaplicacion.com/recetas/{id}&text=¡Mira esta receta!" target="_blank">
+        <img src="/images/twitter-icon.png" alt="Compartir en Twitter" />
+    </a>
+    <a href="https://www.instagram.com/tu_perfil/" target="_blank">
+        <img src="/images/instagram-icon.png" alt="Ver en Instagram" />
+    </a>
+    <a href="#" onclick="navigator.clipboard.writeText('https://miaplicacion.com/recetas/{id}')">Copiar enlace para compartir</a>
+
     <div th:replace="~{fragments/footer :: footer}"></div>
 
 </body>
