@@ -25,14 +25,16 @@ public class DataInitializer implements CommandLineRunner {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    private static final String LITERAL_CL4V3WEB = "cl4v3web";
+
     @Override
     public void run(String... args) throws Exception {
         // Inicializar usuarios si no existen
         if (userRepository.count() == 0) {
-            createUser("user1", "user1@example.com", "cl4v3web", "Usuario Uno", 1);
-            createUser("user2", "user2@example.com", "cl4v3web", "Usuario Dos", 1);
-            createUser("user3", "user3@example.com", "cl4v3web", "Usuario Tres", 1);
-            createUser("admin", "admin@example.com", "cl4v3web", "Administrador", 0);
+            createUser("user1", "user1@example.com", LITERAL_CL4V3WEB, "Usuario Uno", 1);
+            createUser("user2", "user2@example.com", LITERAL_CL4V3WEB, "Usuario Dos", 1);
+            createUser("user3", "user3@example.com", LITERAL_CL4V3WEB, "Usuario Tres", 1);
+            createUser("admin", "admin@example.com", LITERAL_CL4V3WEB, "Administrador", 0);
             System.out.println("✅ Usuarios iniciales creados exitosamente");
         }
 

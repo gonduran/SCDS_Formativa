@@ -1,7 +1,6 @@
 package com.demo.backend_recetas.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-
 import jakarta.persistence.*;
 
 @Entity
@@ -24,8 +23,29 @@ public class Comentario {
     @JsonBackReference
     private Receta receta;
 
-    // Constructor vacío necesario para JPA
-    public Comentario() {
+    /**
+     * Constructor vacío requerido por JPA.
+     * JPA necesita este constructor para crear instancias de la entidad
+     * durante la carga desde la base de datos.
+     * No debe usarse directamente en el código de la aplicación.
+     */
+    protected Comentario() {
+        // Constructor vacío requerido por JPA
+        // Se marca como protected para desalentar su uso directo
+    }
+
+    /**
+     * Constructor principal para crear nuevos comentarios.
+     * @param usuario El nombre del usuario que hace el comentario
+     * @param comentario El texto del comentario
+     * @param valoracion La valoración (1-5 estrellas)
+     * @param receta La receta a la que pertenece el comentario
+     */
+    public Comentario(String usuario, String comentario, Integer valoracion, Receta receta) {
+        this.usuario = usuario;
+        this.comentario = comentario;
+        this.valoracion = valoracion;
+        this.receta = receta;
     }
     
     // Getters y Setters

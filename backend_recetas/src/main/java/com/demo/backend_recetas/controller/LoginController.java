@@ -1,8 +1,5 @@
 package com.demo.backend_recetas.controller;
 
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,23 +8,31 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.demo.backend_recetas.security.jwt.JWTAuthtenticationConfig;
 import com.demo.backend_recetas.service.MyUserDetailsService;
-
 import org.springframework.security.core.userdetails.UserDetails;
+
+// Creamos una clase para representar la respuesta
+record LoginResponse(String token, String username) {}
+record ErrorResponse(String error) {}
 
 @RestController
 public class LoginController {
 
-    @Autowired
-    private JWTAuthtenticationConfig jwtAuthenticationConfig;
+    private final JWTAuthtenticationConfig jwtAuthenticationConfig;
+    private final MyUserDetailsService userDetailsService;
+    private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private MyUserDetailsService userDetailsService;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    // Constructor injection en lugar de @Autowired
+    public LoginController(
+            JWTAuthtenticationConfig jwtAuthenticationConfig,
+            MyUserDetailsService userDetailsService,
+            PasswordEncoder passwordEncoder) {
+        this.jwtAuthenticationConfig = jwtAuthenticationConfig;
+        this.userDetailsService = userDetailsService;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(
+    public ResponseEntity<Object> login(
             @RequestParam("user") String username,
             @RequestParam("encryptedPass") String password) {
         try {
@@ -35,18 +40,14 @@ public class LoginController {
             
             if (userDetails != null && passwordEncoder.matches(password, userDetails.getPassword())) {
                 String token = jwtAuthenticationConfig.getJWTToken(username);
-                return ResponseEntity.ok()
-                    .body(Map.of(
-                        "token", token,
-                        "username", username
-                    ));
+                return ResponseEntity.ok(new LoginResponse(token, username));
             } else {
                 return ResponseEntity.status(401)
-                    .body(Map.of("error", "Credenciales inválidas"));
+                    .body(new ErrorResponse("Credenciales inválidas"));
             }
         } catch (Exception e) {
             return ResponseEntity.status(401)
-                .body(Map.of("error", "Error en la autenticación: " + e.getMessage()));
+                .body(new ErrorResponse("Error en la autenticación: " + e.getMessage()));
         }
     }
 }
