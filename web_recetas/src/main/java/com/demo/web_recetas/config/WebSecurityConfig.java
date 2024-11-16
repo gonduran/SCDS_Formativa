@@ -121,9 +121,10 @@ public class WebSecurityConfig {
                         "object-src 'none';" +
                         "base-uri 'self';" +
                         "form-action 'self';" +
-                        "frame-ancestors 'none';" +
+                        "frame-src 'self' https://www.youtube.com;" + // Permitir iframes de YouTube
+                        "media-src 'self' https://youtu.be;" + // Permitir medios desde YouTube
                         "upgrade-insecure-requests;" +
-                        "block-all-mixed-content"
+                        "block-all-mixed-content;"
                     )
                 )
                 .frameOptions(frame -> frame.deny())

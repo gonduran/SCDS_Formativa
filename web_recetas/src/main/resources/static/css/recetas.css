@@ -306,3 +306,152 @@ body {
 .estrella.vacia {
     color: #ddd; /* Estrellas vacías en gris claro */
 }
+
+/* Estilo general para la galería */
+.media-gallery {
+    margin: 40px auto;
+    max-width: 1200px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+/* Encabezados */
+.media-gallery h3,
+.media-gallery h4 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Contenedores de imágenes y videos */
+.images-container,
+.videos-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}
+
+/* Estilo para cuando no hay contenido */
+.media-gallery p {
+    text-align: center;
+    color: #888;
+    font-size: 1rem;
+}
+
+/* Contenedor del formulario */
+.upload-media {
+    margin: 40px auto;
+    max-width: 800px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    text-align: center;
+}
+
+/* Encabezado del formulario */
+.upload-media h4 {
+    margin-bottom: 20px;
+    color: #333;
+}
+
+/* Estilo general para los grupos de formulario */
+.form-group {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+/* Etiquetas del formulario */
+.form-group label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+    color: #555;
+}
+
+/* Campos de texto */
+.form-group input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+/* Botón de enviar */
+.upload-media button[type="submit"] {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.upload-media button[type="submit"]:hover {
+    background-color: #45a049;
+}
+
+/* Estilos para la galería */
+.gallery-image {
+    width: 100px;
+    height: auto;
+    margin: 5px;
+    cursor: pointer;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.gallery-image:hover {
+    border: 1px solid #333;
+}
+
+.gallery-video {
+    width: 100%;
+    max-width: 300px;
+    margin: 5px 0;
+}
+
+.gallery-video:hover {
+    transform: scale(1.1);
+}
+
+/* Modal para agrandar imágenes */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.9);
+}
+
+.modal-content {
+    margin: auto;
+    display: block;
+    max-width: 90%;
+    max-height: 90%;
+}
+
+.close {
+    position: absolute;
+    top: 10px;
+    right: 25px;
+    color: white;
+    font-size: 35px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* Archivo: styles.css */
+.social-icon {
+    width: 32px;
+    height: 32px;
+}

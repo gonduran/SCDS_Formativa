@@ -15,7 +15,9 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.springframework.http.HttpHeaders;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -124,5 +126,33 @@ public class RecetasService {
     
         // Enviar la solicitud POST con el token JWT
         restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
+    }
+
+    public void agregarMedia(Long recetaId, String fotos, String videos) {
+        String url = backendUrl + "/api/recetas/" + recetaId + "/media";
+
+        // Construir las listas a partir de las cadenas separadas por comas
+        List<String> listaFotos = Arrays.asList(fotos.split(",\\s*"));
+        List<String> listaVideos = Arrays.asList(videos.split(",\\s*"));
+
+        // Verificar que el token JWT esté disponible
+        String token = tokenStore.getToken();
+        if (token == null || token.isEmpty()) {
+            throw new RuntimeException("Token de autenticación no disponible");
+        }
+    
+        // Construcción de encabezados con el token JWT
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", token);
+
+        // Cuerpo de la solicitud
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("fotos", listaFotos);
+        requestBody.put("videos", listaVideos);
+
+        HttpEntity<Map<String, Object>> entity = new HttpEntity<>(requestBody, headers);
+
+        // Llamada al endpoint
+       restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
     }
 }

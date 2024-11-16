@@ -59,6 +59,64 @@
         </div>
     </div>
 
+    <!-- Galería de fotos y videos -->
+    <div class="media-gallery">
+        <h3>Galería</h3>
+
+        <!-- Mostrar imágenes con opción de agrandarlas -->
+        <div class="gallery-images">
+            <h4>Imágenes</h4>
+            <div th:if="${#lists.isEmpty(receta.fotos)}">
+                <p>No hay imágenes disponibles.</p>
+            </div>
+            <div class="images-container" th:if="${!#lists.isEmpty(receta.fotos)}">
+                <img th:each="foto : ${receta.fotos}" th:src="@{${foto}}" alt="Imagen de la receta"
+                    class="gallery-image">
+            </div>
+        </div>
+
+        <!-- Mostrar videos con controles -->
+        <div class="gallery-videos">
+            <h4>Videos</h4>
+            <div th:if="${#lists.isEmpty(receta.videos)}">
+                <p>No hay videos disponibles.</p>
+            </div>
+            <div class="videos-container" th:if="${!#lists.isEmpty(receta.videos)}">
+                <video th:each="video : ${receta.videos}" th:src="@{${video}}" controls class="gallery-video">
+                    Tu navegador no soporta la reproducción de este video.
+                </video>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para agrandar imágenes -->
+    <div id="imageModal" class="modal">
+        <span class="close">&times;</span>
+        <img class="modal-content" id="modalImage">
+    </div>
+
+    <!-- Formulario para subir medios -->
+    <div class="upload-media">
+        <h4>Agregar Fotos o Videos</h4>
+        <form th:action="@{/recetas/{id}/media(id=${receta.id})}" method="post">
+            <!-- Campo para agregar fotos -->
+            <div class="form-group">
+                <label for="fotos">Agregar Fotos (URLs separadas por comas):</label>
+                <input type="text" id="fotos" name="fotos"
+                    placeholder="https://example.com/foto1.jpg, https://example.com/foto2.jpg" required />
+            </div>
+
+            <!-- Campo para agregar videos -->
+            <div class="form-group">
+                <label for="videos">Agregar Videos (URLs separadas por comas):</label>
+                <input type="text" id="videos" name="videos"
+                    placeholder="https://example.com/video1.mp4, https://example.com/video2.mp4" required />
+            </div>
+
+            <button type="submit">Agregar</button>
+        </form>
+    </div>
+
     <!-- Sección de comentarios -->
     <div class="comentarios">
         <h3>Comentarios</h3>
@@ -74,7 +132,7 @@
                     <p class="comentario-texto" th:text="${comentario.comentario}"></p>
                     <p class="comentario-valoracion">
                         Valoración:
-                        <span th:text="${comentario.valoracion}"></span>/5
+                        <!-- <span th:text="${comentario.valoracion}"></span>/5 -->
                         <span>
                             <span th:each="i : ${#numbers.sequence(1, 5)}">
                                 <span th:if="${i <= comentario.valoracion}" class="estrella llena">&#9733;</span>
@@ -112,26 +170,26 @@
     <div class="compartir-redes">
         <h4>Compartir esta receta</h4>
         <div class="redes-enlaces">
-            <a th:href="'https://www.facebook.com/sharer/sharer.php?u=https://miaplicacion.com/recetas/' + ${receta.id}"
+            <a th:href="'https://www.facebook.com/sharer/sharer.php?u=https://localhost:8081/recetas/' + ${receta.id}"
                 target="_blank">
-                <img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="Facebook"
-                    style="width: 32px; height: 32px;" />
+                <img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="Facebook" class="social-icon" />
             </a>
-            <a th:href="'https://twitter.com/share?url=https://miaplicacion.com/recetas/' + ${receta.id} + '&text=¡Mira esta receta!'"
+            <a th:href="'https://twitter.com/share?url=https://localhost:8081/recetas/' + ${receta.id} + '&text=¡Mira esta receta!'"
                 target="_blank">
-                <img src="https://cdn-icons-png.flaticon.com/512/733/733579.png" alt="Twitter"
-                    style="width: 32px; height: 32px;" />
+                <img src="https://cdn-icons-png.flaticon.com/512/733/733579.png" alt="Twitter" class="social-icon" />
             </a>
-            <a th:href="'https://www.instagram.com/?url=https://miaplicacion.com/recetas/' + ${receta.id}"
+            <a th:href="'https://www.instagram.com/?url=https://localhost:8081/recetas/' + ${receta.id}"
                 target="_blank">
-                <img src="https://cdn-icons-png.flaticon.com/512/733/733558.png" alt="Instagram"
-                    style="width: 32px; height: 32px;" />
+                <img src="https://cdn-icons-png.flaticon.com/512/733/733558.png" alt="Instagram" class="social-icon" />
             </a>
         </div>
     </div>
 
     <!-- Footer -->
     <div th:replace="~{fragments/footer :: footer}"></div>
+
+    <!-- JavaScript -->
+    <script src="/js/gallery.js"></script>
 </body>
 
 </html>
