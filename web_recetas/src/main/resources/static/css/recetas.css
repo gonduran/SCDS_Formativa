@@ -293,3 +293,16 @@ body {
 .star-rating label:hover ~ label {
     color: #f5c518; /* Color dorado para hover */
 }
+
+.estrella {
+    font-size: 20px;
+    color: #ccc;
+}
+
+.estrella.llena {
+    color: gold; /* Estrellas llenas en dorado */
+}
+
+.estrella.vacia {
+    color: #ddd; /* Estrellas vacías en gris claro */
+}
