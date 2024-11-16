@@ -1,5 +1,6 @@
 package com.demo.web_recetas.service;
 
+import com.demo.web_recetas.model.Comentario;
 import com.demo.web_recetas.model.Receta;
 import com.demo.web_recetas.model.User;
 import com.demo.web_recetas.integration.TokenStore;
@@ -44,20 +45,20 @@ public class RecetasService {
         if (token == null || token.isEmpty()) {
             throw new RuntimeException("Token de autenticación no disponible");
         }
-        //System.out.println("Token: " + token); 
-        
+        // System.out.println("Token: " + token);
+
         // Crear encabezados con el token de autenticación
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", token);
-        HttpEntity<String> entity = new HttpEntity<>("parameters", headers); 
+        HttpEntity<String> entity = new HttpEntity<>("parameters", headers);
 
-        // Agregar parámetros a la URL 
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url) 
-            .queryParam("name", id); 
-
+        // Agregar parámetros a la URL
+        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+                .queryParam("name", id);
 
         // Hacer la solicitud y obtener la respuesta
-        ResponseEntity<Receta> response = restTemplate.exchange(builder.toUriString(), HttpMethod.GET, entity, Receta.class);
+        ResponseEntity<Receta> response = restTemplate.exchange(builder.toUriString(), HttpMethod.GET, entity,
+                Receta.class);
 
         // Devolver la receta envuelta en Optional si la respuesta es exitosa
         return Optional.ofNullable(response.getBody());
@@ -103,5 +104,15 @@ public class RecetasService {
         ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
 
         return response.getBody();
+    }
+
+    public List<Comentario> obtenerComentariosPorReceta(Long recetaId) {
+        String url = backendUrl + "/api/recetas/" + recetaId + "/comentarios";
+        return Arrays.asList(restTemplate.getForObject(url, Comentario[].class));
+    }
+
+    public void agregarComentario(Long recetaId, Comentario comentario) {
+        String url = backendUrl + "/api/recetas/" + recetaId + "/comentarios";
+        restTemplate.postForObject(url, comentario, String.class);
     }
 }
