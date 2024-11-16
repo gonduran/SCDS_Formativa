@@ -10,21 +10,18 @@
 </head>
 
 <body>
-
+    <!-- Header -->
     <div th:replace="~{fragments/header :: header}"></div>
 
     <!-- Contenedor principal de la receta -->
     <div class="recipe-container">
-        <!-- Primera fila: imagen y título/descripción -->
+        <!-- Imagen y detalles -->
         <div class="recipe-header">
-            <!-- Imagen -->
             <div class="recipe-image">
                 <img th:src="@{${receta.imagen}}" alt="${receta.nombre}">
             </div>
-            <!-- Título y Descripción -->
             <div class="recipe-info">
                 <h1 th:text="${receta.nombre}"></h1>
-
                 <div class="recipe-metadata">
                     <div class="metadata-item">
                         <span class="metadata-label">Dificultad:</span>
@@ -43,12 +40,11 @@
                         <span class="metadata-value" th:text="${receta.paisOrigen}"></span>
                     </div>
                 </div>
-
                 <p class="recipe-description" th:text="${receta.descripcion}"></p>
             </div>
         </div>
 
-        <!-- Segunda fila: ingredientes y preparación -->
+        <!-- Ingredientes y preparación -->
         <div class="recipe-details">
             <div class="ingredients">
                 <h2>Ingredientes</h2>
@@ -56,7 +52,6 @@
                     <li th:each="ingrediente : ${receta.ingredientes}" th:text="${ingrediente}"></li>
                 </ul>
             </div>
-
             <div class="preparation">
                 <h2>Preparación</h2>
                 <p th:text="${receta.detallePreparacion}"></p>
@@ -64,40 +59,48 @@
         </div>
     </div>
 
+    <!-- Sección de comentarios -->
     <div class="comentarios">
         <h3>Comentarios</h3>
-        <div class="comentario-list">
-            <div class="comentario-item" th:each="comentario : ${comentarios}">
-                <p class="comentario-usuario"><strong th:text="${comentario.usuario}"></strong>:</p>
-                <p class="comentario-texto" th:text="${comentario.comentario}"></p>
-                <p class="comentario-valoracion">
-                    Valoración:
-                    <span th:text="${comentario.valoracion}"></span>/5
-                </p>
+
+        <!-- Depuración: Ver si los comentarios están disponibles -->
+        <div th:if="${#lists.isEmpty(comentarios)}">
+            <p>No hay comentarios aún.</p>
+        </div>
+        <div th:if="${!#lists.isEmpty(comentarios)}">
+            <div class="comentario-list">
+                <div class="comentario-item" th:each="comentario : ${comentarios}">
+                    <p class="comentario-usuario"><strong th:text="${comentario.usuario}"></strong>:</p>
+                    <p class="comentario-texto" th:text="${comentario.comentario}"></p>
+                    <p class="comentario-valoracion">
+                        Valoración:
+                        <span th:text="${comentario.valoracion}"></span>/5
+                        <span>
+                            <span th:each="i : ${#numbers.sequence(1, 5)}">
+                                <span th:if="${i <= comentario.valoracion}" class="estrella llena">&#9733;</span>
+                                <span th:if="${i > comentario.valoracion}" class="estrella vacia">&#9734;</span>
+                            </span>
+                        </span>
+                    </p>
+                </div>
             </div>
         </div>
-        <h4>Agregar un comentario</h4>
-        <form class="comentario-form" th:action="@{/comentarios/{id}/agregar(id=${receta.id})}" method="post"
-            th:object="${nuevoComentario}">
-            <!-- Campo de nombre prellenado -->
-            <input type="text" th:field="*{usuario}" th:value="${nombreUsuario}" readonly placeholder="${nombreUsuario}" required />
 
-            <!-- Campo para el comentario -->
+        <!-- Agregar comentario -->
+        <h4>Agregar un comentario</h4>
+        <form class="comentario-form" th:action="@{/recetas/{id}/comentarios(id=${receta.id})}" method="post"
+            th:object="${nuevoComentario}">
+            <input type="text" th:field="*{usuario}" th:value="${nombreUsuario}" required placeholder="Tu nombre" />
             <textarea th:field="*{comentario}" placeholder="Escribe tu comentario" required></textarea>
-            <!-- Selección gráfica de estrellas -->
             <div class="star-rating">
                 <input type="radio" id="estrella5" th:field="*{valoracion}" value="5" />
                 <label for="estrella5" title="5 estrellas">&#9733;</label>
-
                 <input type="radio" id="estrella4" th:field="*{valoracion}" value="4" />
                 <label for="estrella4" title="4 estrellas">&#9733;</label>
-
                 <input type="radio" id="estrella3" th:field="*{valoracion}" value="3" />
                 <label for="estrella3" title="3 estrellas">&#9733;</label>
-
                 <input type="radio" id="estrella2" th:field="*{valoracion}" value="2" />
                 <label for="estrella2" title="2 estrellas">&#9733;</label>
-
                 <input type="radio" id="estrella1" th:field="*{valoracion}" value="1" />
                 <label for="estrella1" title="1 estrella">&#9733;</label>
             </div>
@@ -105,28 +108,30 @@
         </form>
     </div>
 
+    <!-- Compartir en redes sociales -->
     <div class="compartir-redes">
         <h4>Compartir esta receta</h4>
         <div class="redes-enlaces">
             <a th:href="'https://www.facebook.com/sharer/sharer.php?u=https://miaplicacion.com/recetas/' + ${receta.id}"
                 target="_blank">
-                <img src="/images/facebook-icon.png" alt="Facebook" />
+                <img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="Facebook"
+                    style="width: 32px; height: 32px;" />
             </a>
             <a th:href="'https://twitter.com/share?url=https://miaplicacion.com/recetas/' + ${receta.id} + '&text=¡Mira esta receta!'"
                 target="_blank">
-                <img src="/images/twitter-icon.png" alt="Twitter" />
+                <img src="https://cdn-icons-png.flaticon.com/512/733/733579.png" alt="Twitter"
+                    style="width: 32px; height: 32px;" />
             </a>
             <a th:href="'https://www.instagram.com/?url=https://miaplicacion.com/recetas/' + ${receta.id}"
                 target="_blank">
-                <img src="/images/instagram-icon.png" alt="Instagram" />
+                <img src="https://cdn-icons-png.flaticon.com/512/733/733558.png" alt="Instagram"
+                    style="width: 32px; height: 32px;" />
             </a>
         </div>
     </div>
-    <!--
-    <a href="#" onclick="navigator.clipboard.writeText('https://miaplicacion.com/recetas/{id}')">Copiar enlace para compartir</a>
-    -->
-    <div th:replace="~{fragments/footer :: footer}"></div>
 
+    <!-- Footer -->
+    <div th:replace="~{fragments/footer :: footer}"></div>
 </body>
 
 </html>

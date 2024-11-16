@@ -106,13 +106,23 @@ public class RecetasService {
         return response.getBody();
     }
 
-    public List<Comentario> obtenerComentariosPorReceta(Long recetaId) {
-        String url = backendUrl + "/api/recetas/" + recetaId + "/comentarios";
-        return Arrays.asList(restTemplate.getForObject(url, Comentario[].class));
-    }
-
     public void agregarComentario(Long recetaId, Comentario comentario) {
         String url = backendUrl + "/api/recetas/" + recetaId + "/comentarios";
-        restTemplate.postForObject(url, comentario, String.class);
+    
+        // Verificar que el token JWT esté disponible
+        String token = tokenStore.getToken();
+        if (token == null || token.isEmpty()) {
+            throw new RuntimeException("Token de autenticación no disponible");
+        }
+    
+        // Configurar las cabeceras con el token JWT
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", token);
+    
+        // Crear la entidad de la solicitud con las cabeceras y el cuerpo
+        HttpEntity<Comentario> entity = new HttpEntity<>(comentario, headers);
+    
+        // Enviar la solicitud POST con el token JWT
+        restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
     }
 }

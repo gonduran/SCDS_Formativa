@@ -69,6 +69,8 @@ public class WebSecurityConfig {
                 // Endpoints privados que requiere autenticación
                 .requestMatchers("/recetas/{id}").authenticated()
                 .requestMatchers("/publicar").authenticated()
+                .requestMatchers("/recetas/{id}/comentarios").authenticated()
+                .requestMatchers("/recetas/{id}/media").authenticated()
                 // Cualquier otra ruta será denegada
                 .anyRequest().denyAll()
             )
