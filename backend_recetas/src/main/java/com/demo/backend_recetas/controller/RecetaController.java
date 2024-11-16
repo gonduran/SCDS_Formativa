@@ -4,10 +4,14 @@ import com.demo.backend_recetas.model.Comentario;
 import com.demo.backend_recetas.model.Receta;
 import com.demo.backend_recetas.service.RecetaService;
 import com.demo.backend_recetas.dto.MediaRequestDTO;
-import java.util.List;
+import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.security.core.Authentication;
 
 @RestController
 @RequestMapping("/api/recetas")
@@ -38,27 +42,42 @@ public class RecetaController {
     }
 
     @PostMapping("/{id}/comentarios")
+    @Transactional
     public ResponseEntity<String> agregarComentario(@PathVariable Long id, @RequestBody Comentario comentario) {
-        Receta receta = recetaService.obtenerRecetaPorId(id);
-        if (receta == null) {
-            return ResponseEntity.badRequest().body("Receta no encontrada.");
+        try {
+            // 1. Obtener la receta
+            Receta receta = recetaService.obtenerRecetaPorId(id);
+            if (receta == null) {
+                return ResponseEntity.badRequest().body("Receta no encontrada.");
+            }
+
+            // 2. Obtener el usuario autenticado
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            String username = auth.getName();
+            comentario.setUsuario(username);
+
+            // 3. Establecer la relación bidireccional
+            comentario.setReceta(receta);
+            if (receta.getComentarios() == null) {
+                receta.setComentarios(new ArrayList<>());
+            }
+            receta.getComentarios().add(comentario);
+
+            // 4. Calcular y actualizar el promedio
+            double promedio = receta.getComentarios().stream()
+                    .mapToInt(Comentario::getValoracion)
+                    .average()
+                    .orElse(0.0);
+            receta.setValoracionPromedio(promedio);
+
+            // 5. Guardar
+            recetaService.guardarReceta(receta);
+
+            return ResponseEntity.ok("Comentario agregado exitosamente. Valoración promedio actualizada a: " + promedio);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al agregar el comentario: " + e.getMessage());
         }
-
-        // Agregar comentario a la receta
-        receta.getComentarios().add(comentario);
-
-        // Recalcular la valoración promedio
-        receta.setValoracionPromedio(calcularValoracionPromedio(receta.getComentarios()));
-
-        recetaService.guardarReceta(receta);
-
-        return ResponseEntity.ok("Comentario agregado exitosamente.");
-    }
-
-    private Double calcularValoracionPromedio(List<Comentario> comentarios) {
-        return comentarios.stream()
-                .mapToInt(Comentario::getValoracion)
-                .average()
-                .orElse(0.0);
-    }
+    }   
 }

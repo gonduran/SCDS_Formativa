@@ -163,3 +163,133 @@ body {
         box-sizing: border-box;
     }
 }
+
+/* Contenedor de comentarios */
+.comentarios {
+    margin-top: 30px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+}
+
+.comentarios h3 {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.comentario-list {
+    margin-bottom: 20px;
+}
+
+.comentario-item {
+    border-bottom: 1px solid #ddd;
+    padding: 10px 0;
+}
+
+.comentario-usuario {
+    font-weight: bold;
+    color: #555;
+}
+
+.comentario-texto {
+    font-size: 1rem;
+    margin: 5px 0;
+    color: #666;
+}
+
+.comentario-valoracion {
+    font-size: 0.9rem;
+    color: #888;
+}
+
+/* Formulario de comentario */
+.comentario-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.comentario-form input,
+.comentario-form textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+.comentario-form button {
+    padding: 10px 20px;
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.comentario-form button:hover {
+    background-color: #218838;
+}
+
+/* Compartir en redes sociales */
+.compartir-redes {
+    margin-top: 30px;
+    text-align: center;
+}
+
+.compartir-redes h4 {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.redes-enlaces {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.redes-enlaces a img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    transition: transform 0.3s ease;
+}
+
+.redes-enlaces a img:hover {
+    transform: scale(1.2);
+}
+
+/* Contenedor de estrellas */
+.star-rating {
+    direction: rtl; /* Para que las estrellas se seleccionen desde la derecha */
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+    font-size: 1.5rem; /* Tamaño de las estrellas */
+    margin-bottom: 15px;
+}
+
+/* Ocultar inputs de radio */
+.star-rating input[type="radio"] {
+    display: none;
+}
+
+/* Estilo por defecto para las estrellas */
+.star-rating label {
+    color: #ccc; /* Estrella desactivada */
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+/* Estrellas activadas */
+.star-rating input[type="radio"]:checked ~ label {
+    color: #f5c518; /* Estrella activa (color dorado) */
+}
+
+/* Hover: visualiza las estrellas seleccionadas al pasar el cursor */
+.star-rating label:hover,
+.star-rating label:hover ~ label {
+    color: #f5c518; /* Color dorado para hover */
+}

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,7 @@
     <link rel="stylesheet" href="/css/styles.css"> <!-- Estilos generales -->
     <link rel="stylesheet" href="/css/recetas.css"> <!-- Estilos específicos para recetas -->
 </head>
+
 <body>
 
     <div th:replace="~{fragments/header :: header}"></div>
@@ -64,25 +66,61 @@
 
     <div class="comentarios">
         <h3>Comentarios</h3>
-        <div th:each="comentario : ${comentarios}">
-            <p><strong th:text="${comentario.usuario}"></strong>:</p>
-            <p th:text="${comentario.comentario}"></p>
-            <p>Valoración: <span th:text="${comentario.valoracion}"></span>/5</p>
+        <div class="comentario-list">
+            <div class="comentario-item" th:each="comentario : ${comentarios}">
+                <p class="comentario-usuario"><strong th:text="${comentario.usuario}"></strong>:</p>
+                <p class="comentario-texto" th:text="${comentario.comentario}"></p>
+                <p class="comentario-valoracion">
+                    Valoración:
+                    <span th:text="${comentario.valoracion}"></span>/5
+                </p>
+            </div>
         </div>
+        <h4>Agregar un comentario</h4>
+        <form class="comentario-form" th:action="@{/comentarios/{id}/agregar(id=${receta.id})}" method="post"
+            th:object="${nuevoComentario}">
+            <!-- Campo de nombre prellenado -->
+            <input type="text" th:field="*{usuario}" th:value="${nombreUsuario}" readonly placeholder="${nombreUsuario}" required />
+
+            <!-- Campo para el comentario -->
+            <textarea th:field="*{comentario}" placeholder="Escribe tu comentario" required></textarea>
+            <!-- Selección gráfica de estrellas -->
+            <div class="star-rating">
+                <input type="radio" id="estrella5" th:field="*{valoracion}" value="5" />
+                <label for="estrella5" title="5 estrellas">&#9733;</label>
+
+                <input type="radio" id="estrella4" th:field="*{valoracion}" value="4" />
+                <label for="estrella4" title="4 estrellas">&#9733;</label>
+
+                <input type="radio" id="estrella3" th:field="*{valoracion}" value="3" />
+                <label for="estrella3" title="3 estrellas">&#9733;</label>
+
+                <input type="radio" id="estrella2" th:field="*{valoracion}" value="2" />
+                <label for="estrella2" title="2 estrellas">&#9733;</label>
+
+                <input type="radio" id="estrella1" th:field="*{valoracion}" value="1" />
+                <label for="estrella1" title="1 estrella">&#9733;</label>
+            </div>
+            <button type="submit">Enviar</button>
+        </form>
     </div>
-    
-    <h4>Agregar un comentario</h4>
-    <form th:action="@{/comentarios/{id}/agregar(id=${receta.id})}" method="post" th:object="${nuevoComentario}">
-        <input type="text" th:field="*{usuario}" placeholder="Tu nombre" required />
-        <textarea th:field="*{comentario}" placeholder="Escribe tu comentario" required></textarea>
-        <input type="number" th:field="*{valoracion}" min="1" max="5" required />
-        <button type="submit">Enviar</button>
-    </form>
 
     <div class="compartir-redes">
-        <a th:href="'https://www.facebook.com/sharer/sharer.php?u=https://miaplicacion.com/recetas/' + ${receta.id}" target="_blank">Compartir en Facebook</a>
-        <a th:href="'https://twitter.com/share?url=https://miaplicacion.com/recetas/' + ${receta.id} + '&text=¡Mira esta receta!'" target="_blank">Compartir en Twitter</a>
-        <a th:href="'https://www.instagram.com/?url=https://miaplicacion.com/recetas/' + ${receta.id}" target="_blank">Compartir en Instagram</a>
+        <h4>Compartir esta receta</h4>
+        <div class="redes-enlaces">
+            <a th:href="'https://www.facebook.com/sharer/sharer.php?u=https://miaplicacion.com/recetas/' + ${receta.id}"
+                target="_blank">
+                <img src="/images/facebook-icon.png" alt="Facebook" />
+            </a>
+            <a th:href="'https://twitter.com/share?url=https://miaplicacion.com/recetas/' + ${receta.id} + '&text=¡Mira esta receta!'"
+                target="_blank">
+                <img src="/images/twitter-icon.png" alt="Twitter" />
+            </a>
+            <a th:href="'https://www.instagram.com/?url=https://miaplicacion.com/recetas/' + ${receta.id}"
+                target="_blank">
+                <img src="/images/instagram-icon.png" alt="Instagram" />
+            </a>
+        </div>
     </div>
     <!--
     <a href="#" onclick="navigator.clipboard.writeText('https://miaplicacion.com/recetas/{id}')">Copiar enlace para compartir</a>
@@ -90,4 +128,5 @@
     <div th:replace="~{fragments/footer :: footer}"></div>
 
 </body>
+
 </html>

@@ -1,5 +1,7 @@
 package com.demo.backend_recetas.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -17,10 +19,15 @@ public class Comentario {
 
     private Integer valoracion; // 1 a 5 estrellas
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "receta_id", nullable = false)
+    @JsonBackReference
     private Receta receta;
 
+    // Constructor vacío necesario para JPA
+    public Comentario() {
+    }
+    
     // Getters y Setters
     public Long getId() {
         return id;
@@ -52,5 +59,13 @@ public class Comentario {
 
     public void setValoracion(Integer valoracion) {
         this.valoracion = valoracion;
+    }
+
+    public Receta getReceta() {
+        return receta;
+    }
+
+    public void setReceta(Receta receta) {
+        this.receta = receta;
     }
 }

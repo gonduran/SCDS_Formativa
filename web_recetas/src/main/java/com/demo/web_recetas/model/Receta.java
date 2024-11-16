@@ -1,10 +1,11 @@
 package com.demo.web_recetas.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Receta {
 
-    private Long id;  // Campo ID para identificar cada receta
+    private Long id;
     private String nombre;
     private String descripcion;
     private String tipoCocina;
@@ -14,12 +15,12 @@ public class Receta {
     private String imagen;
     private String tiempoCoccion;
     private String dificultad;
-    private List<String> fotos;  // Nuevas fotos de la receta
-    private List<String> videos; // Nuevos videos de la receta
-    private List<Comentario> comentarios; // Nuevos comentarios asociados
-    private Double valoracionPromedio; // Nueva valoración promedio de la receta
+    private List<String> fotos;
+    private List<String> videos;
+    private List<Comentario> comentarios = new ArrayList<>();
+    private Double valoracionPromedio;
 
-    // Constructor sin parámetros
+    // Constructor vacío
     public Receta() {
     }
 

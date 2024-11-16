@@ -1,7 +1,11 @@
 package com.demo.backend_recetas.model;
 
 import jakarta.persistence.*;
+
+import java.util.ArrayList;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "recetas")
@@ -39,8 +43,9 @@ public class Receta {
     @Column(name = "video_url")
     private List<String> videos;
 
-    @OneToMany(mappedBy = "receta", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Comentario> comentarios;
+    @OneToMany(mappedBy = "receta", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private List<Comentario> comentarios = new ArrayList<>();
 
     private Double valoracionPromedio;
 
