@@ -9,3 +9,7 @@ User: user1 | Password: cl4v3web
 User: user2 | Password: cl4v3web
 User: user3 | Password: cl4v3web
 User: admin | Password: cl4v3web
+
+# Docker - SonarQube
+docker pull sonarqube
+docker run -d --name sonarqube -p 9000:9000 sonarqube

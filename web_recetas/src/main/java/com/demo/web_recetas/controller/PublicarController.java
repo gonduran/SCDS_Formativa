@@ -15,36 +15,43 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 @Controller
 public class PublicarController {
 
+    private static final String PATH_PUBLICAR = "publicar";
+    private static final String VIEW_PUBLICAR = "publicar";  // Para el nombre de la vista
+    private static final String REDIRECT_HOME = "redirect:/home"; 
+    private static final String ATTR_ERROR = "error";   
+    private static final String ATTR_RECETA = "receta";
+    private static final String ATTR_MESSAGE = "message";
+
     @Autowired
     private RecetasService recetasService;
 
-    @GetMapping("/publicar")
+    @GetMapping("/" + PATH_PUBLICAR)
     public String showPublicarForm(Model model) {
-        model.addAttribute("receta", new Receta());
-        return "publicar";
+        model.addAttribute(ATTR_RECETA, new Receta());
+        return VIEW_PUBLICAR;
     }
 
-    @PostMapping("/publicar")
+    @PostMapping("/" + PATH_PUBLICAR)
     public String publicarReceta(@ModelAttribute Receta receta, Model model) {
         try {
             // Validar formato de tiempo de cocción
             if (!receta.getTiempoCoccion().matches("^([0-9]|[1-9][0-9]):([0-5][0-9])$")) {
-                model.addAttribute("error", "El formato del tiempo de cocción debe ser HH:MM");
-                return "publicar";
+                model.addAttribute(ATTR_ERROR, "El formato del tiempo de cocción debe ser HH:MM");
+                return VIEW_PUBLICAR;
             }
 
             // Validar dificultad
             if (!Arrays.asList("Alta", "Media", "Baja").contains(receta.getDificultad())) {
-                model.addAttribute("error", "La dificultad debe ser Alta, Media o Baja");
-                return "publicar";
+                model.addAttribute(ATTR_ERROR, "La dificultad debe ser Alta, Media o Baja");
+                return VIEW_PUBLICAR;
             }
 
             recetasService.publicarReceta(receta);
-            model.addAttribute("message", "Receta publicada exitosamente.");
-            return "redirect:/home"; // Redirige al inicio después de publicar
+            model.addAttribute(ATTR_MESSAGE, "Receta publicada exitosamente.");
+            return REDIRECT_HOME; // Redirige al inicio después de publicar
         } catch (Exception e) {
-            model.addAttribute("error", "Hubo un error al publicar la receta: " + e.getMessage());
-            return "publicar";
+            model.addAttribute(ATTR_ERROR, "Hubo un error al publicar la receta: " + e.getMessage());
+            return VIEW_PUBLICAR;
         }
     }
 }

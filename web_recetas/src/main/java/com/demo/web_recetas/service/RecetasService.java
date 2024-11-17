@@ -4,6 +4,7 @@ import com.demo.web_recetas.model.Comentario;
 import com.demo.web_recetas.model.Receta;
 import com.demo.web_recetas.model.User;
 import com.demo.web_recetas.integration.TokenStore;
+import com.demo.web_recetas.exception.TokenNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -23,6 +24,9 @@ import java.util.Optional;
 @Service
 public class RecetasService {
 
+    private static final String PATH_TOKEN_EXCEPTION = "Token de autenticación no disponible";
+    private static final String HEADER_AUTH = "Authorization";
+
     @Value("${backend.url}")
     private String backendUrl;
 
@@ -31,6 +35,26 @@ public class RecetasService {
 
     @Autowired
     private TokenStore tokenStore;
+
+    /**
+     * Valida el token y lanza una excepción específica si no es válido
+     */
+    private void validarToken(String token) {
+        if (token == null || token.isEmpty()) {
+            throw new TokenNotFoundException(PATH_TOKEN_EXCEPTION);
+        }
+    }
+
+    /**
+     * Crea headers HTTP con el token de autorización
+     */
+    private HttpHeaders crearHeadersConToken() {
+        String token = tokenStore.getToken();
+        validarToken(token);
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(HEADER_AUTH, token);
+        return headers;
+    }
 
     // Método para obtener todas las recetas
     public List<Receta> obtenerRecetas() {
@@ -41,17 +65,7 @@ public class RecetasService {
     // Método para obtener una receta por ID
     public Optional<Receta> obtenerRecetaPorId(Long id) {
         String url = backendUrl + "/api/recetas_detalle/" + id;
-
-        // Asegurarse de que el token es válido
-        String token = tokenStore.getToken();
-        if (token == null || token.isEmpty()) {
-            throw new RuntimeException("Token de autenticación no disponible");
-        }
-        // System.out.println("Token: " + token);
-
-        // Crear encabezados con el token de autenticación
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", token);
+        HttpHeaders headers = crearHeadersConToken();
         HttpEntity<String> entity = new HttpEntity<>("parameters", headers);
 
         // Agregar parámetros a la URL
@@ -59,10 +73,13 @@ public class RecetasService {
                 .queryParam("name", id);
 
         // Hacer la solicitud y obtener la respuesta
-        ResponseEntity<Receta> response = restTemplate.exchange(builder.toUriString(), HttpMethod.GET, entity,
-                Receta.class);
+        ResponseEntity<Receta> response = restTemplate.exchange(
+            builder.toUriString(), 
+            HttpMethod.GET, 
+            entity,
+            Receta.class
+        );
 
-        // Devolver la receta envuelta en Optional si la respuesta es exitosa
         return Optional.ofNullable(response.getBody());
     }
 
@@ -88,44 +105,30 @@ public class RecetasService {
 
     public String publicarReceta(Receta receta) {
         String url = backendUrl + "/api/recetas/publicar";
-
-        // Asegurarse de que el token es válido
-        String token = tokenStore.getToken();
-        if (token == null || token.isEmpty()) {
-            throw new RuntimeException("Token de autenticación no disponible");
-        }
-
-        // Crea las cabeceras con el token JWT
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", token);
-
-        // Configura la entidad de la solicitud con las cabeceras y el cuerpo
+        HttpHeaders headers = crearHeadersConToken();
         HttpEntity<Receta> entity = new HttpEntity<>(receta, headers);
 
-        // Envía la solicitud POST con el token JWT
-        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
+        ResponseEntity<String> response = restTemplate.exchange(
+            url, 
+            HttpMethod.POST, 
+            entity, 
+            String.class
+        );
 
         return response.getBody();
     }
 
     public void agregarComentario(Long recetaId, Comentario comentario) {
         String url = backendUrl + "/api/recetas/" + recetaId + "/comentarios";
-    
-        // Verificar que el token JWT esté disponible
-        String token = tokenStore.getToken();
-        if (token == null || token.isEmpty()) {
-            throw new RuntimeException("Token de autenticación no disponible");
-        }
-    
-        // Configurar las cabeceras con el token JWT
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", token);
-    
-        // Crear la entidad de la solicitud con las cabeceras y el cuerpo
+        HttpHeaders headers = crearHeadersConToken();
         HttpEntity<Comentario> entity = new HttpEntity<>(comentario, headers);
-    
-        // Enviar la solicitud POST con el token JWT
-        restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
+
+        restTemplate.exchange(
+            url, 
+            HttpMethod.POST, 
+            entity, 
+            String.class
+        );
     }
 
     public void agregarMedia(Long recetaId, String fotos, String videos) {
@@ -135,15 +138,7 @@ public class RecetasService {
         List<String> listaFotos = Arrays.asList(fotos.split(",\\s*"));
         List<String> listaVideos = Arrays.asList(videos.split(",\\s*"));
 
-        // Verificar que el token JWT esté disponible
-        String token = tokenStore.getToken();
-        if (token == null || token.isEmpty()) {
-            throw new RuntimeException("Token de autenticación no disponible");
-        }
-    
-        // Construcción de encabezados con el token JWT
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", token);
+        HttpHeaders headers = crearHeadersConToken();
 
         // Cuerpo de la solicitud
         Map<String, Object> requestBody = new HashMap<>();
@@ -152,7 +147,11 @@ public class RecetasService {
 
         HttpEntity<Map<String, Object>> entity = new HttpEntity<>(requestBody, headers);
 
-        // Llamada al endpoint
-       restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
+        restTemplate.exchange(
+            url, 
+            HttpMethod.POST, 
+            entity, 
+            String.class
+        );
     }
 }

@@ -13,40 +13,47 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class RegisterController {
 
+    private static final String PATH_REGISTER = "register";
+    private static final String VIEW_REGISTER = "register";
+    private static final String VIEW_LOGIN = "login";
+    private static final String ATTR_USER = "user";
+    private static final String ATTR_ERROR = "error";
+    private static final String ATTR_MESSAGE = "message";
+
     @Autowired
     private RecetasService recetasService;
 
-    @GetMapping("/register")
+    @GetMapping("/" + PATH_REGISTER)
     public String showRegisterForm(Model model) {
-        model.addAttribute("user", new User());
+        model.addAttribute(ATTR_USER, new User());
         return "register";
     }
 
-    @PostMapping("/register")
+    @PostMapping("/" + PATH_REGISTER)
     public String registerUser(
-            @ModelAttribute("user") User user, 
+            @ModelAttribute(ATTR_USER) User user, 
             @RequestParam("confirmPassword") String confirmPassword, 
             Model model) {
 
         // Verificación de campos requeridos
         if (user.getNombreCompleto() == null || user.getNombreCompleto().trim().isEmpty()) {
-            model.addAttribute("error", "El nombre completo es requerido.");
-            return "register";
+            model.addAttribute(ATTR_ERROR, "El nombre completo es requerido.");
+            return VIEW_REGISTER;
         }
         
         // Verificación de coincidencia de contraseñas
         if (!user.getPassword().equals(confirmPassword)) {
-            model.addAttribute("error", "Las contraseñas no coinciden.");
-            return "register";
+            model.addAttribute(ATTR_ERROR, "Las contraseñas no coinciden.");
+            return VIEW_REGISTER;
         }
 
         try {
             String response = recetasService.registerUser(user);
-            model.addAttribute("message", response);
-            return "login"; // Redirige al login después de registrarse
+            model.addAttribute(ATTR_MESSAGE, response);
+            return VIEW_LOGIN; // Redirige al login después de registrarse
         } catch (Exception e) {
-            model.addAttribute("error", e.getMessage());
-            return "register";
+            model.addAttribute(ATTR_ERROR, e.getMessage());
+            return VIEW_REGISTER;
         }
 
     }
