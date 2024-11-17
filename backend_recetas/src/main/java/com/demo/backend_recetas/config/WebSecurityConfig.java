@@ -2,7 +2,6 @@ package com.demo.backend_recetas.config;
 
 import static com.demo.backend_recetas.security.Constants.*;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -24,8 +23,12 @@ import com.demo.backend_recetas.security.jwt.JWTAuthorizationFilter;
 @Configuration
 class WebSecurityConfig {
 
-    @Autowired
-    JWTAuthorizationFilter jwtAuthorizationFilter;
+    private final JWTAuthorizationFilter jwtAuthorizationFilter;
+
+    // Constructor para inyección de dependencias
+    public WebSecurityConfig(JWTAuthorizationFilter jwtAuthorizationFilter) {
+        this.jwtAuthorizationFilter = jwtAuthorizationFilter;
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -46,6 +49,8 @@ class WebSecurityConfig {
                 .requestMatchers("/api/register").permitAll()
                 .requestMatchers("/api/recetas_detalle/**").authenticated()
                 .requestMatchers("/api/recetas/publicar").authenticated()
+                .requestMatchers("/api/recetas/{id}/comentarios").authenticated()
+                .requestMatchers("/api/recetas/{id}/media").authenticated()
                 .anyRequest().authenticated())
             .addFilterAfter(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
         

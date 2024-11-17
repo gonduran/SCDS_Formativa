@@ -1,6 +1,5 @@
 package com.demo.backend_recetas.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -18,8 +17,11 @@ import java.util.stream.Collectors;
 @RequestMapping("/api")
 public class RecetasController {
 
-    @Autowired
-    private RecetaRepository recetaRepository;
+    private final RecetaRepository recetaRepository;
+
+    public RecetasController(RecetaRepository recetaRepository) {
+        this.recetaRepository = recetaRepository;
+    }
 
     @GetMapping("/recetas")
     public ResponseEntity<List<RecetaDTO>> obtenerRecetas() {

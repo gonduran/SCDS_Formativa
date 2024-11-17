@@ -16,6 +16,7 @@ import java.util.regex.Pattern;
 @Controller
 public class BuscarController {
 
+    @SuppressWarnings("unused")
     private TokenStore tokenStore; 
 
     public BuscarController(TokenStore tokenStore, RecetasService recetasService) {

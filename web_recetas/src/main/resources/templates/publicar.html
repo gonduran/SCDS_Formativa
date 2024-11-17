@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,7 @@
     <link rel="stylesheet" href="/css/styles.css">
     <link rel="stylesheet" href="/css/publicar.css">
 </head>
+
 <body>
 
     <!-- Header -->
@@ -16,7 +18,7 @@
     <div class="publicar-wrapper">
         <div class="publicar-container">
             <h1>Publicar Nueva Receta</h1>
-            
+
             <form action="#" th:action="@{/publicar}" th:object="${receta}" method="post">
                 <!-- Nombre de la receta -->
                 <div class="form-group">
@@ -27,13 +29,15 @@
                 <!-- Descripción -->
                 <div class="form-group">
                     <label for="descripcion">Descripción:</label>
-                    <input type="text" id="descripcion" th:field="*{descripcion}" placeholder="Breve descripción" required />
+                    <input type="text" id="descripcion" th:field="*{descripcion}" placeholder="Breve descripción"
+                        required />
                 </div>
 
                 <!-- Tipo de cocina -->
                 <div class="form-group">
                     <label for="tipoCocina">Tipo de Cocina:</label>
-                    <input type="text" id="tipoCocina" th:field="*{tipoCocina}" placeholder="Ej. Chilena, Internacional" required />
+                    <input type="text" id="tipoCocina" th:field="*{tipoCocina}" placeholder="Ej. Chilena, Internacional"
+                        required />
                 </div>
 
                 <!-- Dificultad -->
@@ -44,19 +48,21 @@
                         <option value="Alta">Alta</option>
                         <option value="Media">Media</option>
                         <option value="Baja">Baja</option>
-                    </select>                    
+                    </select>
                 </div>
 
                 <!-- Tiempo de Cocción -->
                 <div class="form-group">
-                    <label for="tiempoCoccion">Tiempo de Cocción (HH:MM):</label>
-                    <input type="text" id="tiempoCoccion" th:field="*{tiempoCoccion}" placeholder="Tiempo de Cocción (HH:MM)" pattern="^([0-9]|[1-9][0-9]):([0-5][0-9])$" required />
+                    <label for="tiempoCoccion">Tiempo de Cocción (MM:SS):</label>
+                    <input type="text" id="tiempoCoccion" th:field="*{tiempoCoccion}"
+                        placeholder="Tiempo de Cocción (MM:SS)" pattern="^([0-9]|[1-9][0-9]):([0-5][0-9])$" required />
                 </div>
 
                 <!-- Ingredientes -->
                 <div class="form-group">
                     <label for="ingredientes">Ingredientes (separados por comas):</label>
-                    <input type="text" id="ingredientes" th:field="*{ingredientes}" placeholder="Ej. Pollo, papas, zapallo" required />
+                    <input type="text" id="ingredientes" th:field="*{ingredientes}"
+                        placeholder="Ej. Pollo, papas, zapallo" required />
                 </div>
 
                 <!-- País de origen -->
@@ -68,13 +74,28 @@
                 <!-- Detalle de preparación -->
                 <div class="form-group">
                     <label for="detallePreparacion">Detalle de Preparación:</label>
-                    <textarea id="detallePreparacion" th:field="*{detallePreparacion}" placeholder="Describe la preparación paso a paso" required></textarea>
+                    <textarea id="detallePreparacion" th:field="*{detallePreparacion}"
+                        placeholder="Describe la preparación paso a paso" required></textarea>
                 </div>
 
                 <!-- Imagen de la receta -->
                 <div class="form-group">
                     <label for="imagen">URL de la Imagen:</label>
                     <input type="text" id="imagen" th:field="*{imagen}" placeholder="URL de la imagen" />
+                </div>
+
+                <!-- Campo para agregar fotos -->
+                <div class="form-group">
+                    <label for="fotos">Agregar Fotos (URLs separadas por comas):</label>
+                    <input type="text" id="fotos" name="fotos"
+                        placeholder="https://example.com/foto1.jpg, https://example.com/foto2.jpg" />
+                </div>
+
+                <!-- Campo para agregar videos -->
+                <div class="form-group">
+                    <label for="videos">Agregar Videos (URLs separadas por comas):</label>
+                    <input type="text" id="videos" name="videos"
+                        placeholder="https://example.com/video1.mp4, https://example.com/video2.mp4" />
                 </div>
 
                 <!-- Botón de publicar -->
@@ -90,4 +111,5 @@
     <div th:replace="~{fragments/footer :: footer}"></div>
 
 </body>
+
 </html>

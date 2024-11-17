@@ -163,3 +163,295 @@ body {
         box-sizing: border-box;
     }
 }
+
+/* Contenedor de comentarios */
+.comentarios {
+    margin-top: 30px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+}
+
+.comentarios h3 {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.comentario-list {
+    margin-bottom: 20px;
+}
+
+.comentario-item {
+    border-bottom: 1px solid #ddd;
+    padding: 10px 0;
+}
+
+.comentario-usuario {
+    font-weight: bold;
+    color: #555;
+}
+
+.comentario-texto {
+    font-size: 1rem;
+    margin: 5px 0;
+    color: #666;
+}
+
+.comentario-valoracion {
+    font-size: 0.9rem;
+    color: #888;
+}
+
+/* Formulario de comentario */
+.comentario-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.comentario-form input,
+.comentario-form textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+.comentario-form button {
+    padding: 10px 20px;
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.comentario-form button:hover {
+    background-color: #218838;
+}
+
+/* Compartir en redes sociales */
+.compartir-redes {
+    margin-top: 30px;
+    text-align: center;
+}
+
+.compartir-redes h4 {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.redes-enlaces {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.redes-enlaces a img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    transition: transform 0.3s ease;
+}
+
+.redes-enlaces a img:hover {
+    transform: scale(1.2);
+}
+
+/* Contenedor de estrellas */
+.star-rating {
+    direction: rtl; /* Para que las estrellas se seleccionen desde la derecha */
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+    font-size: 1.5rem; /* Tamaño de las estrellas */
+    margin-bottom: 15px;
+}
+
+/* Ocultar inputs de radio */
+.star-rating input[type="radio"] {
+    display: none;
+}
+
+/* Estilo por defecto para las estrellas */
+.star-rating label {
+    color: #ccc; /* Estrella desactivada */
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+/* Estrellas activadas */
+.star-rating input[type="radio"]:checked ~ label {
+    color: #f5c518; /* Estrella activa (color dorado) */
+}
+
+/* Hover: visualiza las estrellas seleccionadas al pasar el cursor */
+.star-rating label:hover,
+.star-rating label:hover ~ label {
+    color: #f5c518; /* Color dorado para hover */
+}
+
+.estrella {
+    font-size: 20px;
+    color: #ccc;
+}
+
+.estrella.llena {
+    color: gold; /* Estrellas llenas en dorado */
+}
+
+.estrella.vacia {
+    color: #ddd; /* Estrellas vacías en gris claro */
+}
+
+/* Estilo general para la galería */
+.media-gallery {
+    margin: 40px auto;
+    max-width: 1200px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+/* Encabezados */
+.media-gallery h3,
+.media-gallery h4 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Contenedores de imágenes y videos */
+.images-container,
+.videos-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}
+
+/* Estilo para cuando no hay contenido */
+.media-gallery p {
+    text-align: center;
+    color: #888;
+    font-size: 1rem;
+}
+
+/* Contenedor del formulario */
+.upload-media {
+    margin: 40px auto;
+    max-width: 800px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    text-align: center;
+}
+
+/* Encabezado del formulario */
+.upload-media h4 {
+    margin-bottom: 20px;
+    color: #333;
+}
+
+/* Estilo general para los grupos de formulario */
+.form-group {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+/* Etiquetas del formulario */
+.form-group label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+    color: #555;
+}
+
+/* Campos de texto */
+.form-group input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+/* Botón de enviar */
+.upload-media button[type="submit"] {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.upload-media button[type="submit"]:hover {
+    background-color: #45a049;
+}
+
+/* Estilos para la galería */
+.gallery-image {
+    width: 100px;
+    height: auto;
+    margin: 5px;
+    cursor: pointer;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.gallery-image:hover {
+    border: 1px solid #333;
+}
+
+.gallery-video {
+    width: 100%;
+    max-width: 300px;
+    margin: 5px 0;
+}
+
+.gallery-video:hover {
+    transform: scale(1.1);
+}
+
+/* Modal para agrandar imágenes */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.9);
+}
+
+.modal-content {
+    margin: auto;
+    display: block;
+    max-width: 90%;
+    max-height: 90%;
+}
+
+.close {
+    position: absolute;
+    top: 10px;
+    right: 25px;
+    color: white;
+    font-size: 35px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* Archivo: styles.css */
+.social-icon {
+    width: 32px;
+    height: 32px;
+}

@@ -12,6 +12,7 @@ import java.util.List;
 @Controller
 public class HomeController {
 
+    @SuppressWarnings("unused")
     private TokenStore tokenStore; 
  
     public HomeController(TokenStore tokenStore, RecetasService recetasService) {

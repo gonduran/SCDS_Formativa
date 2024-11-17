@@ -1,6 +1,6 @@
 package com.demo.web_recetas.config;
 
-import org.springframework.beans.factory.annotation.Autowired; 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean; 
 import org.springframework.context.annotation.Configuration; 
 import org.springframework.security.authentication.AuthenticationManager; 
@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.web.SecurityFilterChain;
 import com.demo.web_recetas.integration.CustomAuthenticationProvider;
+import com.demo.web_recetas.integration.TokenStore;
 
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -27,16 +28,49 @@ import org.springframework.security.web.header.writers.ReferrerPolicyHeaderWrite
 @EnableWebSecurity(debug = true) 
 public class WebSecurityConfig {
 
-    @Autowired 
-    private CustomAuthenticationProvider authProvider; 
+    @Value("${app.security.paths.login}")
+    private String pathLogin;
+
+    @Value("${app.security.paths.home}")
+    private String pathHome;
+
+    @Value("${app.security.paths.buscar}")
+    private String pathBuscar;
+
+    @Value("${app.security.paths.register}")
+    private String pathRegister;
+
+    @Value("${app.security.paths.recetas}")
+    private String pathRecetas;
+
+    @Value("${app.security.paths.publicar}")
+    private String pathPublicar;
+
+    @Value("${app.security.paths.comentarios}")
+    private String pathComentarios;
+
+    @Value("${app.security.paths.media}")
+    private String pathMedia;
 
     @Bean 
-    public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception { 
+    public TokenStore tokenStore() {
+        return new TokenStore();
+    }
+
+    @Bean 
+    public CustomAuthenticationProvider customAuthenticationProvider(TokenStore tokenStore) {
+        return new CustomAuthenticationProvider(tokenStore);
+    }
+
+    @Bean 
+    public AuthenticationManager authenticationManager(
+            HttpSecurity http, 
+            CustomAuthenticationProvider authProvider) throws Exception { 
         AuthenticationManagerBuilder authenticationManagerBuilder =  
             http.getSharedObject(AuthenticationManagerBuilder.class); 
         authenticationManagerBuilder.authenticationProvider(authProvider); 
         return authenticationManagerBuilder.build(); 
-    } 
+    }
  
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -62,24 +96,26 @@ public class WebSecurityConfig {
                 // Permitir recursos estáticos
                 .requestMatchers("/css/**", "/js/**", "/images/**", "/webjars/**").permitAll()
                 // Endpoints públicos específicos
-                .requestMatchers("/login").permitAll()
-                .requestMatchers("/home").permitAll()
-                .requestMatchers("/buscar").permitAll()
-                .requestMatchers("/register").permitAll()
+                .requestMatchers(pathLogin).permitAll()
+                .requestMatchers(pathHome).permitAll()
+                .requestMatchers(pathBuscar).permitAll()
+                .requestMatchers(pathRegister).permitAll()
                 // Endpoints privados que requiere autenticación
-                .requestMatchers("/recetas/{id}").authenticated()
-                .requestMatchers("/publicar").authenticated()
+                .requestMatchers(pathRecetas).authenticated()
+                .requestMatchers(pathPublicar).authenticated()
+                .requestMatchers(pathComentarios).authenticated()
+                .requestMatchers(pathMedia).authenticated()
                 // Cualquier otra ruta será denegada
                 .anyRequest().denyAll()
             )
             .formLogin((form) -> form
-                .loginPage("/login")
-                .failureUrl("/login?error=true")
-                .defaultSuccessUrl("/home", true)
+                .loginPage(pathLogin)
+                .failureUrl(pathLogin + "?error=true")
+                .defaultSuccessUrl(pathHome, true)
                 .permitAll()
             )
             .logout((logout) -> logout
-                .logoutSuccessUrl("/login?logout=true")
+                .logoutSuccessUrl(pathLogin + "?logout=true")
                 .invalidateHttpSession(true)
                 .deleteCookies("JSESSIONID")
                 .clearAuthentication(true)
@@ -91,8 +127,8 @@ public class WebSecurityConfig {
                 })
                 .authenticationEntryPoint((request, response, authException) -> {
                     String path = request.getRequestURI();
-                    if (path.matches("/recetas/\\d+") || path.equals("/publicar")) {
-                        response.sendRedirect("/login");
+                    if (path.matches("/recetas/\\d+") || path.equals(pathPublicar)) {
+                        response.sendRedirect(pathLogin);
                     } else {
                         response.sendError(HttpServletResponse.SC_NOT_FOUND);
                     }
@@ -119,9 +155,10 @@ public class WebSecurityConfig {
                         "object-src 'none';" +
                         "base-uri 'self';" +
                         "form-action 'self';" +
-                        "frame-ancestors 'none';" +
+                        "frame-src 'self' https://www.youtube.com;" + // Permitir iframes de YouTube
+                        "media-src 'self' https://youtu.be;" + // Permitir medios desde YouTube
                         "upgrade-insecure-requests;" +
-                        "block-all-mixed-content"
+                        "block-all-mixed-content;"
                     )
                 )
                 .frameOptions(frame -> frame.deny())
