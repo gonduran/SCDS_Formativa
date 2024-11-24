@@ -2,6 +2,9 @@ package com.demo.backend_recetas.controller;
 
 import com.demo.backend_recetas.model.User;
 import com.demo.backend_recetas.repository.UserRepository;
+
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -39,6 +42,23 @@ public class UserController {
         userRepository.save(user);
         return ResponseEntity.ok("Usuario registrado exitosamente");
     }
+
+    //Endpoint para listar todos los usuarios (solo admin)
+    @GetMapping("/admin/users")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<List<User>> getAllUsers() {
+        List<User> users = userRepository.findAll();
+        return ResponseEntity.ok(users);
+    }
+
+    //Endpoint para obtener un usuario específico por ID (solo admin)
+    @GetMapping("/admin/users/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<?> getUserById(@PathVariable Integer id) {
+        return userRepository.findById(id)
+            .map(ResponseEntity::ok)
+            .orElseGet(() -> ResponseEntity.notFound().build());
+    }    
 
     //Endpoint para actualización administrativa de usuarios
     @PutMapping("/admin/users/{id}")
