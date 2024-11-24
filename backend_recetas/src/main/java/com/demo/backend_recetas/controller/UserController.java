@@ -45,7 +45,7 @@ public class UserController {
 
     //Endpoint para listar todos los usuarios (solo admin)
     @GetMapping("/admin/users")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<User>> getAllUsers() {
         List<User> users = userRepository.findAll();
         return ResponseEntity.ok(users);
@@ -53,7 +53,7 @@ public class UserController {
 
     //Endpoint para obtener un usuario específico por ID (solo admin)
     @GetMapping("/admin/users/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> getUserById(@PathVariable Integer id) {
         return userRepository.findById(id)
             .map(ResponseEntity::ok)
@@ -62,7 +62,7 @@ public class UserController {
 
     //Endpoint para actualización administrativa de usuarios
     @PutMapping("/admin/users/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> adminUpdateUser(@PathVariable Integer id, @RequestBody User userDetails) {
         return userRepository.findById(id)
             .map(user -> {

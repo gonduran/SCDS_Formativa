@@ -2,10 +2,12 @@ package com.demo.web_recetas.model;
 
 public class User {
 
+    private Integer id;
     private String username;
     private String email;
     private String password;
     private String nombreCompleto;
+    private Integer userType; // 0 = admin, 1 = normal
 
     // Constructor por defecto
     public User() {
@@ -20,6 +22,14 @@ public class User {
     }
 
     // Getters y Setters
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
     public String getUsername() {
         return username;
     }
@@ -50,5 +60,13 @@ public class User {
 
     public void setNombreCompleto(String nombreCompleto) {
         this.nombreCompleto = nombreCompleto;
+    }
+
+    public Integer getUserType() {
+        return userType;
+    }
+
+    public void setUserType(Integer userType) {
+        this.userType = userType;
     }
 }

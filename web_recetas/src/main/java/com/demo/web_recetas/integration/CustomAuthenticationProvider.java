@@ -53,10 +53,19 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
                 // Extrae el token y lo guarda en TokenStore
                 String token = response.getBody().getToken();
                 tokenStore.setToken(token);
-
+                Integer userType = response.getBody().getUserType();
                 // Define las autoridades y retorna el token autenticado
                 List<GrantedAuthority> authorities = new ArrayList<>();
-                authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+                // Tipo 1 es usuario normal, solo tiene ROLE_USER
+                if (userType == 1) {
+                    authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+                }
+                // Tipo 0 es administrador, tiene ambos roles
+                else if (userType == 0) {
+                    authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+                    authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+                }
+
                 return new UsernamePasswordAuthenticationToken(name, password, authorities);
             } else {
                 throw new BadCredentialsException("Nombre de usuario o contraseña no válidos");
