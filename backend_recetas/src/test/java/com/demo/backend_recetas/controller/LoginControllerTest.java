@@ -1,5 +1,6 @@
 package com.demo.backend_recetas.controller;
 
+import com.demo.backend_recetas.model.User;
 import com.demo.backend_recetas.security.jwt.JWTAuthtenticationConfig;
 import com.demo.backend_recetas.service.MyUserDetailsService;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,9 +11,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import java.util.Collections;
 
 import static org.mockito.Mockito.when;
 import static org.junit.jupiter.api.Assertions.*;
@@ -32,27 +32,28 @@ public class LoginControllerTest {
     @InjectMocks
     private LoginController loginController;
 
-    private UserDetails testUserDetails;
+    private User testUser;
     private String testToken;
 
     @BeforeEach
     void setUp() {
-        // Crear usuario de prueba
-        testUserDetails = User.builder()
-                .username("testuser")
-                .password("encodedPassword123")
-                .roles("USER")
-                .build();
+        // Crear usuario de prueba usando la clase User
+        testUser = new User(
+            "testuser",
+            "test@example.com",
+            "encodedPassword123",
+            "Test User",
+            1  // Usuario normal
+        );
         
         // Token de prueba
         testToken = "test.jwt.token";
     }
-
     @Test
     void login_Success() {
         // Arrange
-        when(userDetailsService.loadUserByUsername("testuser")).thenReturn(testUserDetails);
-        when(passwordEncoder.matches("password123", "encodedPassword123")).thenReturn(true);
+        when(userDetailsService.loadUserByUsername("testuser")).thenReturn(testUser);
+        when(passwordEncoder.matches("password123", testUser.getPassword())).thenReturn(true);
         when(jwtAuthenticationConfig.getJWTToken("testuser")).thenReturn(testToken);
 
         // Act
@@ -66,12 +67,14 @@ public class LoginControllerTest {
         LoginResponse loginResponse = (LoginResponse) response.getBody();
         assertEquals(testToken, loginResponse.token());
         assertEquals("testuser", loginResponse.username());
+        assertEquals(1, loginResponse.userType());
+        assertTrue(loginResponse.roles().contains("USER")); // Verifica que tiene el rol USER
     }
 
     @Test
     void login_InvalidCredentials() {
         // Arrange
-        when(userDetailsService.loadUserByUsername("testuser")).thenReturn(testUserDetails);
+        when(userDetailsService.loadUserByUsername("testuser")).thenReturn(testUser);
         when(passwordEncoder.matches("wrongpassword", "encodedPassword123")).thenReturn(false);
 
         // Act
