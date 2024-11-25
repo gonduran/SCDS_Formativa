@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.demo.backend_recetas.service.MyUserDetailsService;
+import com.demo.backend_recetas.model.User;
 
 import static com.demo.backend_recetas.security.Constants.*;
 
@@ -25,6 +26,7 @@ public class JWTAuthtenticationConfig {
     public String getJWTToken(String username) {
         // Obtener el UserDetails para acceder a las authorities reales del usuario
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+        User user = (User) userDetails;
         
         // Obtener las authorities del usuario
         List<String> authorities = userDetails.getAuthorities().stream()
@@ -33,6 +35,7 @@ public class JWTAuthtenticationConfig {
 
         Map<String, Object> claims = new HashMap<>();
         claims.put("authorities", authorities);
+        claims.put("userType", user.getUserType());
 
         String token = Jwts.builder()
                 .claims()

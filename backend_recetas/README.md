@@ -7,3 +7,6 @@ mvn clean verify sonar:sonar "-Dsonar.projectKey=SCDS_BackEnd" "-Dsonar.projectN
 
 # Comando sonar saltando pruebas unitarias
 mvn clean verify sonar:sonar "-Dsonar.projectKey=SCDS_BackEnd" "-Dsonar.projectName=SCDS_BackEnd" "-Dsonar.host.url=http://localhost:9000" "-Dsonar.token=sqp_38a8983e3b8606ccee5372a8c6cd5c687399ba0e" "-Dsonar.coverage.exclusions=**/*" "-Dsonar.coverage.enabled=false"
+
+# Limpia y ejecuta las pruebas
+mvn clean test

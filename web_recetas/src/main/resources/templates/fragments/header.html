@@ -36,6 +36,8 @@
             <a th:href="@{/login}">Iniciar Sesión</a>
             <a th:href="@{/register}">Registrar</a>
             <a th:href="@{/publicar}">Publicar Receta</a>
+            <!-- Opción visible solo para administradores -->
+            <a th:href="@{/usuarios}" th:if="${#authorization.expression('isAuthenticated() and hasRole(''ROLE_ADMIN'')')}">Listar Usuarios</a>
         </nav>
     </header>
 </body>

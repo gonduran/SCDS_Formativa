@@ -154,4 +154,58 @@ public class RecetasService {
             String.class
         );
     }
+
+    /**
+     * Método para listar todos los usuarios
+     */
+    public List<User> listarUsuarios() {
+        String url = backendUrl + "/api/admin/users";
+        HttpHeaders headers = crearHeadersConToken();
+        HttpEntity<String> entity = new HttpEntity<>("parameters", headers);
+
+        ResponseEntity<User[]> response = restTemplate.exchange(
+            url,
+            HttpMethod.GET,
+            entity,
+            User[].class
+        );
+
+        return Arrays.asList(response.getBody());
+    }
+
+    /**
+     * Método para obtener un usuario por ID
+     */
+    public Optional<User> obtenerUsuarioPorId(Long userId) {
+        String url = backendUrl + "/api/admin/users/" + userId;
+        HttpHeaders headers = crearHeadersConToken();
+        HttpEntity<String> entity = new HttpEntity<>("parameters", headers);
+
+        ResponseEntity<User> response = restTemplate.exchange(
+            url,
+            HttpMethod.GET,
+            entity,
+            User.class
+        );
+
+        return Optional.ofNullable(response.getBody());
+    }
+
+    /**
+     * Método para actualizar un usuario
+     */
+    public String actualizarUsuario(User user) {
+        String url = backendUrl + "/api/admin/users/" + user.getId();
+        HttpHeaders headers = crearHeadersConToken();
+        HttpEntity<User> entity = new HttpEntity<>(user, headers);
+
+        ResponseEntity<String> response = restTemplate.exchange(
+            url,
+            HttpMethod.PUT,
+            entity,
+            String.class
+        );
+
+        return response.getBody();
+    }
 }

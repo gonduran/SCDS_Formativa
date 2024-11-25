@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Usuarios</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/listarusuarios.css">
+</head>
+<body>
+    <!-- Header -->
+    <div th:replace="~{fragments/header :: header}"></div>
+
+    <div class="listar-wrapper">
+        <div class="listar-container">
+            <h1>Gestión de Usuarios</h1>
+            <table class="usuarios-tabla">
+                <thead>
+                    <tr>
+                        <th>Usuario</th>
+                        <th>Nombre Completo</th>
+                        <th>Email</th>
+                        <th>Rol</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="usuario : ${usuarios}">
+                        <td th:text="${usuario.username}"></td>
+                        <td th:text="${usuario.nombreCompleto}"></td>
+                        <td th:text="${usuario.email}"></td>
+                        <td th:text="${usuario.userType == 0 ? 'ADMIN' : 'USER'}"></td>
+                        <td>
+                            <form th:action="@{/usuarios/{id}/editar(id=${usuario.id})}" method="get">
+                                <button type="submit" class="btn-edit">Editar</button>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <form th:action="@{/home}" method="get">
+                <button type="submit" class="btn-volver">Volver al Inicio</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div th:replace="~{fragments/footer :: footer}"></div>
+    
+</body>
+</html>

@@ -52,6 +52,15 @@ public class WebSecurityConfig {
     @Value("${app.security.paths.media}")
     private String pathMedia;
 
+    @Value("${app.security.paths.listarusuarios}")
+    private String pathListarUsuarios;
+
+    @Value("${app.security.paths.editarusuario}")
+    private String pathEditarUsuario;
+
+    @Value("${app.security.paths.accesodenegado}")
+    private String pathAccesoDenegado;
+
     @Bean 
     public TokenStore tokenStore() {
         return new TokenStore();
@@ -100,11 +109,15 @@ public class WebSecurityConfig {
                 .requestMatchers(pathHome).permitAll()
                 .requestMatchers(pathBuscar).permitAll()
                 .requestMatchers(pathRegister).permitAll()
+                .requestMatchers(pathAccesoDenegado).permitAll()
                 // Endpoints privados que requiere autenticación
                 .requestMatchers(pathRecetas).authenticated()
                 .requestMatchers(pathPublicar).authenticated()
                 .requestMatchers(pathComentarios).authenticated()
                 .requestMatchers(pathMedia).authenticated()
+                // Endpoints privados para administración de usuarios
+                .requestMatchers(pathListarUsuarios).hasRole("ADMIN") // Listar usuarios
+                .requestMatchers(pathEditarUsuario).hasRole("ADMIN") // Editar usuario
                 // Cualquier otra ruta será denegada
                 .anyRequest().denyAll()
             )
@@ -123,11 +136,11 @@ public class WebSecurityConfig {
             )
             .exceptionHandling(exceptions -> exceptions
                 .accessDeniedHandler((request, response, accessDeniedException) -> {
-                    response.sendError(HttpServletResponse.SC_NOT_FOUND);
+                    response.sendRedirect("/accesodenegado"); // Redirige a tu página personalizada
                 })
                 .authenticationEntryPoint((request, response, authException) -> {
                     String path = request.getRequestURI();
-                    if (path.matches("/recetas/\\d+") || path.equals(pathPublicar)) {
+                    if (path.matches("/recetas/\\d+") || path.equals(pathPublicar) || path.equals(pathListarUsuarios) || path.equals(pathEditarUsuario)) {
                         response.sendRedirect(pathLogin);
                     } else {
                         response.sendError(HttpServletResponse.SC_NOT_FOUND);
@@ -156,7 +169,7 @@ public class WebSecurityConfig {
                         "base-uri 'self';" +
                         "form-action 'self';" +
                         "frame-src 'self' https://www.youtube.com;" + // Permitir iframes de YouTube
-                        "media-src 'self' https://youtu.be;" + // Permitir medios desde YouTube
+                        "media-src 'self' https://www.youtube.com;" + // Permitir medios desde YouTube
                         "upgrade-insecure-requests;" +
                         "block-all-mixed-content;"
                     )

@@ -47,6 +47,7 @@ class WebSecurityConfig {
                 .requestMatchers("/api/recetas").permitAll()
                 .requestMatchers("/api/recetas_buscar").permitAll()
                 .requestMatchers("/api/register").permitAll()
+                .requestMatchers("/api/admin/**").hasRole("ADMIN")
                 .requestMatchers("/api/recetas_detalle/**").authenticated()
                 .requestMatchers("/api/recetas/publicar").authenticated()
                 .requestMatchers("/api/recetas/{id}/comentarios").authenticated()
