@@ -3,9 +3,12 @@ package com.demo.backend_recetas.model;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.DisplayName;
+
 public class ComentarioTest {
 
     @Test
+    @DisplayName("Constructor inicializa todos los campos correctamente")
     void constructor_InitializesCorrectly() {
         // Arrange
         Receta receta = new Receta();
@@ -24,6 +27,7 @@ public class ComentarioTest {
     }
 
     @Test
+    @DisplayName("Setters y Getters funcionan correctamente")
     void settersAndGetters_WorkCorrectly() {
         // Arrange
         Receta receta = new Receta();

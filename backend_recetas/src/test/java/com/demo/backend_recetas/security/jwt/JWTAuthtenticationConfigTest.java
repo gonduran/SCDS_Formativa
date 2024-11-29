@@ -3,6 +3,7 @@ package com.demo.backend_recetas.security.jwt;
 import com.demo.backend_recetas.model.User;
 import com.demo.backend_recetas.service.MyUserDetailsService;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -25,6 +26,7 @@ class JWTAuthtenticationConfigTest {
     }
 
     @Test
+    @DisplayName("Generación de token JWT válido")
     void testGetJWTToken() {
         // Datos de prueba
         String username = "testuser";

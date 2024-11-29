@@ -5,6 +5,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -44,6 +45,7 @@ public class SecuredControllerTest {
     }
 
     @Test
+    @DisplayName("Usuario con rol USER puede acceder a endpoint de usuario")
     @WithMockUser(username = "testuser", roles = "USER")
     void userEndpoint_AccessAsUser() throws Exception {
         mockMvc.perform(get("/api/user"))
@@ -52,12 +54,14 @@ public class SecuredControllerTest {
     }
 
     @Test
+    @DisplayName("Usuario sin autenticar no puede acceder a endpoint de usuario")
     void userEndpoint_AccessWithoutUserRole() throws Exception {
         mockMvc.perform(get("/api/user"))
             .andExpect(status().isUnauthorized()); // Asegúrate que esté correcto
     }
 
     @Test
+    @DisplayName("Usuario con rol ADMIN puede acceder a endpoint de admin")
     @WithMockUser(roles = "ADMIN")
     void adminEndpoint_AccessAsAdmin() throws Exception {
         mockMvc.perform(get("/api/admin"))
@@ -66,6 +70,7 @@ public class SecuredControllerTest {
     }
 
     @Test
+    @DisplayName("Usuario sin rol ADMIN no puede acceder a endpoint de admin")
     void adminEndpoint_AccessWithoutAdminRole() throws Exception {
         mockMvc.perform(get("/api/admin"))
             .andExpect(status().isUnauthorized()); // Asegúrate que esté correcto

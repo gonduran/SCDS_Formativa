@@ -1,6 +1,8 @@
 package com.demo.backend_recetas.repository;
 
 import com.demo.backend_recetas.model.Receta;
+
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -19,6 +21,7 @@ public class RecetaRepositoryTest {
     private RecetaRepository recetaRepository;
 
     @Test
+    @DisplayName("Búsqueda por keyword encuentra receta por nombre")
     void buscarPorKeyword_PorNombre() {
         // Crear receta
         Receta receta = new Receta();
@@ -43,6 +46,7 @@ public class RecetaRepositoryTest {
     }
 
     @Test
+    @DisplayName("Búsqueda por keyword encuentra receta por ingrediente")
     void buscarPorKeyword_PorIngrediente() {
         // Crear receta
         Receta receta = new Receta();
@@ -61,6 +65,7 @@ public class RecetaRepositoryTest {
     }
 
     @Test
+    @DisplayName("Búsqueda por keyword encuentra receta por tipo de cocina")
     void buscarPorKeyword_PorTipoCocina() {
         // Crear receta
         Receta receta = new Receta();
@@ -80,6 +85,7 @@ public class RecetaRepositoryTest {
     }
 
     @Test
+    @DisplayName("Búsqueda por keyword retorna lista vacía cuando no encuentra coincidencias")
     void buscarPorKeyword_NoEncontrado() {
         // Crear receta
         Receta receta = new Receta();
@@ -98,6 +104,7 @@ public class RecetaRepositoryTest {
     }
 
     @Test
+    @DisplayName("Búsqueda por keyword es insensible a mayúsculas/minúsculas")
     void buscarPorKeyword_CaseInsensitive() {
         // Crear receta
         Receta receta = new Receta();

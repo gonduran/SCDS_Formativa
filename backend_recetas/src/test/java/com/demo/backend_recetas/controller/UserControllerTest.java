@@ -3,6 +3,7 @@ package com.demo.backend_recetas.controller;
 import com.demo.backend_recetas.model.User;
 import com.demo.backend_recetas.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -12,6 +13,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.*;
 import org.springframework.http.HttpStatus;
 
@@ -55,8 +61,8 @@ public class UserControllerTest {
         adminUser.setEnabled(true);
     }
 
-    // Prueba del registro exitoso de un usuario
     @Test
+    @DisplayName("Registro de usuario exitoso")
     void registerUser_Success() {
         when(userRepository.findByUsername("testUser")).thenReturn(null);
         when(passwordEncoder.encode(any())).thenReturn("encodedPassword");
@@ -70,8 +76,8 @@ public class UserControllerTest {
         verify(passwordEncoder).encode(any());
     }
 
-    // Prueba de registro cuando el username ya existe
     @Test
+    @DisplayName("Registro falla cuando el nombre de usuario ya existe")
     void registerUser_UsernameExists() {
         when(userRepository.findByUsername("testUser")).thenReturn(testUser);
 
@@ -82,8 +88,8 @@ public class UserControllerTest {
         verify(userRepository, never()).save(any(User.class));
     }
 
-    // Prueba de registro con nombre completo vacío
     @Test
+    @DisplayName("Registro falla cuando el nombre completo está vacío")
     void registerUser_EmptyName() {
         testUser.setNombreCompleto("");
 
@@ -94,8 +100,8 @@ public class UserControllerTest {
         verify(userRepository, never()).save(any(User.class));
     }
 
-    // Prueba de actualización exitosa por parte del admin
     @Test
+    @DisplayName("Actualización de usuario por admin exitosa")
     void adminUpdateUser_Success() {
         when(userRepository.findById(1)).thenReturn(java.util.Optional.of(testUser));
         when(userRepository.findByUsername("updatedUser")).thenReturn(null);
@@ -113,8 +119,8 @@ public class UserControllerTest {
         verify(userRepository).save(any(User.class));
     }
 
-    // Prueba de actualización cuando el usuario no existe
     @Test
+    @DisplayName("Actualización falla cuando el usuario no existe")
     void adminUpdateUser_UserNotFound() {
         when(userRepository.findById(999)).thenReturn(java.util.Optional.empty());
 
@@ -122,5 +128,89 @@ public class UserControllerTest {
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
         verify(userRepository, never()).save(any(User.class));
+    }
+
+    @Test
+    @DisplayName("Obtener lista de todos los usuarios")
+    void getAllUsers_Success() {
+        // Arrange
+        List<User> userList = Arrays.asList(testUser, adminUser);
+        when(userRepository.findAll()).thenReturn(userList);
+
+        // Act
+        ResponseEntity<List<User>> response = userController.getAllUsers();
+
+        // Assert
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(2, response.getBody().size());
+        verify(userRepository).findAll();
+    }
+
+    @Test
+    @DisplayName("Obtener usuario por ID exitoso")
+    void getUserById_Success() {
+        // Arrange
+        when(userRepository.findById(1)).thenReturn(Optional.of(testUser));
+
+        // Act
+        ResponseEntity<?> response = userController.getUserById(1);
+
+        // Assert
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(testUser, response.getBody());
+    }
+
+    @Test
+    @DisplayName("Obtener usuario retorna not found cuando no existe")
+    void getUserById_NotFound() {
+        // Arrange
+        when(userRepository.findById(999)).thenReturn(Optional.empty());
+
+        // Act
+        ResponseEntity<?> response = userController.getUserById(999);
+
+        // Assert
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    }
+
+    @Test
+    @DisplayName("Actualización admin falla cuando nuevo username ya existe")
+    void adminUpdateUser_NewUsernameExists() {
+        // Arrange
+        User existingUser = new User();
+        existingUser.setUsername("existingUser");
+        when(userRepository.findById(1)).thenReturn(Optional.of(testUser));
+        when(userRepository.findByUsername("existingUser")).thenReturn(existingUser);
+
+        User updatedDetails = new User();
+        updatedDetails.setUsername("existingUser");
+
+        // Act
+        ResponseEntity<?> response = userController.adminUpdateUser(1, updatedDetails);
+
+        // Assert
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertTrue(response.getBody().toString().contains("nombre de usuario ya está en uso"));
+    }
+
+    @Test
+    @DisplayName("Actualización admin actualiza contraseña si se proporciona")
+    void adminUpdateUser_UpdatesPassword() {
+        // Arrange
+        when(userRepository.findById(1)).thenReturn(Optional.of(testUser));
+        when(passwordEncoder.encode("newPassword")).thenReturn("encodedNewPassword");
+        when(userRepository.save(any(User.class))).thenReturn(testUser);
+
+        User updatedDetails = new User();
+        updatedDetails.setUsername(testUser.getUsername());
+        updatedDetails.setPassword("newPassword");
+
+        // Act
+        ResponseEntity<?> response = userController.adminUpdateUser(1, updatedDetails);
+
+        // Assert
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        verify(passwordEncoder).encode("newPassword");
+        verify(userRepository).save(any(User.class));
     }
 }

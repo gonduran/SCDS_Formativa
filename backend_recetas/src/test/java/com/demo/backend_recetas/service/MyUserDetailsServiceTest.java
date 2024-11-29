@@ -3,6 +3,7 @@ package com.demo.backend_recetas.service;
 import com.demo.backend_recetas.model.User;
 import com.demo.backend_recetas.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -28,7 +29,6 @@ public class MyUserDetailsServiceTest {
     private User normalUser;
     private User adminUser;
 
-    // Configuración inicial antes de cada prueba
     @BeforeEach
     void setUp() {
         // Usuario normal
@@ -48,8 +48,8 @@ public class MyUserDetailsServiceTest {
         adminUser.setUserType(0);
     }
 
-    // Prueba de carga exitosa de un usuario normal
     @Test
+    @DisplayName("Usuario normal se carga correctamente con roles apropiados")
     void loadUserByUsername_NormalUserSuccess() {
         when(userRepository.findByUsername("user")).thenReturn(normalUser);
 
@@ -67,8 +67,8 @@ public class MyUserDetailsServiceTest {
             .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN")));
     }
 
-    // Prueba de carga exitosa de un usuario admin
     @Test
+    @DisplayName("Usuario administrador se carga correctamente con roles apropiados")
     void loadUserByUsername_AdminUserSuccess() {
         when(userRepository.findByUsername("admin")).thenReturn(adminUser);
 
@@ -84,8 +84,8 @@ public class MyUserDetailsServiceTest {
             .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN")));
     }
 
-    // Prueba cuando el usuario no existe
     @Test
+    @DisplayName("Lanza excepción cuando el usuario no existe")
     void loadUserByUsername_UserNotFound() {
         when(userRepository.findByUsername("nonexistent")).thenReturn(null);
 
@@ -94,8 +94,8 @@ public class MyUserDetailsServiceTest {
         });
     }
 
-    // Prueba de carga de usuario deshabilitado
     @Test
+    @DisplayName("Usuario deshabilitado mantiene su estado correctamente")
     void loadUserByUsername_DisabledUser() {
         normalUser.setEnabled(false);
         when(userRepository.findByUsername("user")).thenReturn(normalUser);
