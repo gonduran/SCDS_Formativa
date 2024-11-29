@@ -36,6 +36,19 @@ public class RecetasService {
     @Autowired
     private TokenStore tokenStore;
 
+    // Setters para pruebas
+    public void setBackendUrl(String backendUrl) {
+        this.backendUrl = backendUrl;
+    }
+
+    public void setRestTemplate(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
+    }
+
+    public void setTokenStore(TokenStore tokenStore) {
+        this.tokenStore = tokenStore;
+    }
+
     /**
      * Valida el token y lanza una excepción específica si no es válido
      */
