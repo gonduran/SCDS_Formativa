@@ -4,8 +4,8 @@ import com.demo.web_recetas.config.WebSecurityConfig;
 import com.demo.web_recetas.model.Receta;
 import com.demo.web_recetas.service.RecetasService;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -15,8 +15,8 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import java.util.Arrays;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -24,6 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static org.hamcrest.Matchers.containsString;
 
 @WebMvcTest(PublicarController.class)
 @AutoConfigureMockMvc(addFilters = true)
@@ -110,4 +111,72 @@ public class PublicarControllerTest {
                 .andExpect(model().attributeExists("error"))
                 .andExpect(model().attribute("error", "La dificultad debe ser Alta, Media o Baja"));
     }
+
+    @Test
+    @DisplayName("Publicar receta con error de servicio")
+    @WithMockUser(username = "testUser", roles = "USER")
+    public void testPublicarReceta_ServiceError() throws Exception {
+        // Configurar el mock para lanzar excepción
+        doThrow(new RuntimeException("Error de servicio"))
+            .when(recetasService).publicarReceta(any(Receta.class));
+
+        mockMvc.perform(post("/publicar")
+                .with(csrf())
+                .param("nombre", "Tarta")
+                .param("descripcion", "Descripción")
+                .param("tipoCocina", "Postres")
+                .param("tiempoCoccion", "40:00")
+                .param("dificultad", "Media")
+                .param("ingredientes", "Ingredientes")
+                .param("paisOrigen", "España")
+                .param("detallePreparacion", "Preparación")
+                .param("imagen", "imagen.jpg"))
+            .andExpect(status().isOk())
+            .andExpect(view().name("publicar"))
+            .andExpect(model().attributeExists("error"))
+            .andExpect(model().attribute("error", 
+                containsString("Hubo un error al publicar la receta")));
+    }
+
+    @Test
+    @DisplayName("Acceso a formulario de publicación sin autenticación")
+    public void testShowPublicarForm_SinAutenticacion() throws Exception {
+        mockMvc.perform(get("/publicar"))
+            .andExpect(status().is3xxRedirection())
+            .andExpect(redirectedUrl("/login"));
+    }
+
+    @Test
+    @DisplayName("Intento de publicación sin autenticación")
+    public void testPublicarReceta_SinAutenticacion() throws Exception {
+        mockMvc.perform(post("/publicar")
+                .with(csrf())
+                .flashAttr("receta", receta))
+            .andExpect(status().is3xxRedirection())
+            .andExpect(redirectedUrl("/login"));
+    }
+
+    @Test
+    @DisplayName("Publicar receta con campos vacíos")
+    @WithMockUser(username = "testUser", roles = "USER")
+    public void testPublicarReceta_CamposVacios() throws Exception {
+        Receta recetaVacia = new Receta();
+        recetaVacia.setTiempoCoccion("40:00");
+        recetaVacia.setDificultad("Media");
+    
+        mockMvc.perform(post("/publicar")
+                .with(csrf())
+                .flashAttr("receta", recetaVacia))
+            .andExpect(status().isFound());
+    }
+
+    @Test
+    @DisplayName("Publicar receta sin token CSRF")
+    @WithMockUser(username = "testUser", roles = "USER")
+    public void testPublicarReceta_SinCSRF() throws Exception {
+        mockMvc.perform(post("/publicar")
+                .flashAttr("receta", receta))
+            .andExpect(status().isFound());
+    }
+
 }
