@@ -4,6 +4,7 @@ import com.demo.backend_recetas.model.Comentario;
 import com.demo.backend_recetas.service.ComentarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,11 +17,13 @@ public class ComentarioController {
     private ComentarioService comentarioService;
 
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public List<Comentario> listarTodos() {
         return comentarioService.listarTodos();
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Comentario> obtenerPorId(@PathVariable Long id) {
         return comentarioService.obtenerPorId(id)
                 .map(ResponseEntity::ok)
@@ -28,11 +31,13 @@ public class ComentarioController {
     }
 
     @GetMapping("/estado/{estado}")
+    @PreAuthorize("hasRole('ADMIN')")
     public List<Comentario> listarPorEstado(@PathVariable Integer estado) {
         return comentarioService.listarPorEstado(estado);
     }
 
     @PutMapping("/{id}/estado")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Comentario> actualizarEstado(
             @PathVariable Long id,
             @RequestParam Integer nuevoEstado) {
@@ -44,6 +49,7 @@ public class ComentarioController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> eliminarComentario(@PathVariable Long id) {
         comentarioService.eliminarComentario(id);
         return ResponseEntity.noContent().build();

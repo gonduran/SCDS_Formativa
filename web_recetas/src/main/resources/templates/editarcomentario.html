@@ -1,29 +1,54 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar Comentario</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/editarcomentario.css">
 </head>
 <body>
-    <h1>Editar Comentario</h1>
+    <!-- Header -->
+    <div th:replace="~{fragments/header :: header}"></div>
 
-    <form th:action="@{/comentarios/{id}/editar(id=${comentario.id})}" method="post">
-        <label for="usuario">Usuario:</label>
-        <input type="text" id="usuario" name="usuario" th:value="${comentario.usuario}" readonly><br>
+    <div class="editar-wrapper">
+        <div class="editar-container">
+            <h1>Editar Comentario</h1>
 
-        <label for="comentario">Comentario:</label>
-        <textarea id="comentario" name="comentario" rows="4" cols="50" th:text="${comentario.comentario}"></textarea><br>
+            <form th:action="@{/comentarios/{id}/editar(id=${comentario.id})}" method="post" class="editar-form">
+                <div class="form-group">
+                    <label for="usuario">Usuario:</label>
+                    <input type="text" id="usuario" name="usuario" th:value="${comentario.usuario}" readonly>
+                </div>
 
-        <label for="valoracion">Valoración:</label>
-        <input type="number" id="valoracion" name="valoracion" min="1" max="5" th:value="${comentario.valoracion}"><br>
+                <div class="form-group">
+                    <label for="comentario">Comentario:</label>
+                    <textarea id="comentario" name="comentario" rows="4" cols="50" th:text="${comentario.comentario}"></textarea>
+                </div>
 
-        <label for="estado">Estado:</label>
-        <select id="estado" name="estado">
-            <option th:value="0" th:selected="${comentario.estado == 0}">Nuevo</option>
-            <option th:value="1" th:selected="${comentario.estado == 1}">Aprobado</option>
-            <option th:value="2" th:selected="${comentario.estado == 2}">Rechazado</option>
-        </select><br>
+                <div class="form-group">
+                    <label for="valoracion">Valoración:</label>
+                    <input type="number" id="valoracion" name="valoracion" min="1" max="5" th:value="${comentario.valoracion}">
+                </div>
 
-        <button type="submit">Guardar</button>
-    </form>
+                <div class="form-group">
+                    <label for="estado">Estado:</label>
+                    <select id="estado" name="estado">
+                        <option th:value="0" th:selected="${comentario.estado == 0}">Nuevo</option>
+                        <option th:value="1" th:selected="${comentario.estado == 1}">Aprobado</option>
+                        <option th:value="2" th:selected="${comentario.estado == 2}">Rechazado</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn-save">Guardar</button>
+            </form>
+            <form th:action="@{/comentarios}" method="get">
+                <button type="submit" class="btn-volver">Volver</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div th:replace="~{fragments/footer :: footer}"></div>
 </body>
 </html>
