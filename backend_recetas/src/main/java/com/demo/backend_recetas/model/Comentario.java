@@ -18,6 +18,8 @@ public class Comentario {
 
     private Integer valoracion; // 1 a 5 estrellas
 
+    private Integer estado; // 0 = nuevo, 1 = aprobado, 2 = rechazado
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "receta_id", nullable = false)
     @JsonBackReference
@@ -41,10 +43,11 @@ public class Comentario {
      * @param valoracion La valoración (1-5 estrellas)
      * @param receta La receta a la que pertenece el comentario
      */
-    public Comentario(String usuario, String comentario, Integer valoracion, Receta receta) {
+    public Comentario(String usuario, String comentario, Integer valoracion, Integer estado, Receta receta) {
         this.usuario = usuario;
         this.comentario = comentario;
         this.valoracion = valoracion;
+        this.estado = estado;
         this.receta = receta;
     }
     
@@ -79,6 +82,14 @@ public class Comentario {
 
     public void setValoracion(Integer valoracion) {
         this.valoracion = valoracion;
+    }
+
+    public Integer getEstado() {
+        return estado;
+    }
+
+    public void setEstado(Integer estado) {
+        this.estado = estado;
     }
 
     public Receta getReceta() {

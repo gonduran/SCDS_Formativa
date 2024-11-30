@@ -14,10 +14,11 @@ public class ComentarioTest {
         Receta receta = new Receta();
         String usuario = "testUser";
         String comentarioText = "Excelente receta";
+        Integer estado = 0;
         Integer valoracion = 5;
 
         // Act
-        Comentario comentario = new Comentario(usuario, comentarioText, valoracion, receta);
+        Comentario comentario = new Comentario(usuario, comentarioText, valoracion, estado, receta);
 
         // Assert
         assertEquals(usuario, comentario.getUsuario());
@@ -31,7 +32,7 @@ public class ComentarioTest {
     void settersAndGetters_WorkCorrectly() {
         // Arrange
         Receta receta = new Receta();
-        Comentario comentario = new Comentario("user", "comentario", 4, receta);
+        Comentario comentario = new Comentario("user", "comentario", 4, 0, receta);
         
         // Act
         Long id = 1L;

@@ -70,7 +70,10 @@ public class RecetaController {
                     .orElse(0.0);
             receta.setValoracionPromedio(promedio);
 
-            // 5. Guardar
+            // 5. Setear estado nuevo
+            comentario.setEstado(0);
+
+            // 6. Guardar
             recetaService.guardarReceta(receta);
 
             return ResponseEntity.ok("Comentario agregado exitosamente. Valoración promedio actualizada a: " + promedio);

@@ -96,7 +96,7 @@ public class RecetaTest {
     void comentarios_ManipulacionCorrecta() {
         // Arrange
         Receta receta = new Receta();
-        Comentario comentario = new Comentario("usuario", "Buen plato", 5, receta);
+        Comentario comentario = new Comentario("usuario", "Buen plato", 5, 0, receta);
         List<Comentario> comentarios = new ArrayList<>();
         comentarios.add(comentario);
 

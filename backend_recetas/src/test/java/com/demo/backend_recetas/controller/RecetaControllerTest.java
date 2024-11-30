@@ -59,7 +59,7 @@ public class RecetaControllerTest {
         List<String> videos = Arrays.asList("video1.mp4");
         testMediaRequest = new MediaRequestDTO(fotos, videos);
 
-        testComentario = new Comentario("testuser", "Muy buena receta", 5, testReceta);
+        testComentario = new Comentario("testuser", "Muy buena receta", 5, 0, testReceta);
     }
 
     @AfterEach
@@ -203,6 +203,6 @@ public class RecetaControllerTest {
     }    
 
     private Comentario createComentario(int valoracion) {
-        return new Comentario("testuser", "Comentario de prueba", valoracion, testReceta);
+        return new Comentario("testuser", "Comentario de prueba", valoracion, 0, testReceta);
     }
 }
