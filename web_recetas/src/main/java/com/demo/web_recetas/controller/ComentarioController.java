@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/recetas")
@@ -15,13 +16,14 @@ public class ComentarioController {
     private RecetasService recetasService;
 
     @PostMapping("/{recetaId}/comentarios")
-    public String agregarComentario(@PathVariable Long recetaId, @ModelAttribute Comentario comentario, Model model) {
+    public String agregarComentario(@PathVariable Long recetaId, @ModelAttribute Comentario comentario, 
+                                RedirectAttributes redirectAttributes) {
         try {
             recetasService.agregarComentario(recetaId, comentario);
-            return "redirect:/recetas/" + recetaId; // Redirige a la página de la receta
+            return "redirect:/recetas/" + recetaId;
         } catch (Exception e) {
-            model.addAttribute("errorMessage", "Hubo un error al agregar el comentario.");
-            return "comentarios";
+            redirectAttributes.addFlashAttribute("errorMessage", "Hubo un error al agregar el comentario.");
+            return "redirect:/recetas/" + recetaId;
         }
     }
 }
