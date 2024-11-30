@@ -40,8 +40,8 @@ public class RecetasControllerTest {
 
     @BeforeEach
     public void setUp() {
-        Comentario comentario1 = new Comentario(1L, "usuario1", "Muy buena receta", 5);
-        Comentario comentario2 = new Comentario(2L, "usuario2", "Me encantó", 4);
+        Comentario comentario1 = new Comentario(1L, "usuario1", "Muy buena receta", 5, 0);
+        Comentario comentario2 = new Comentario(2L, "usuario2", "Me encantó", 4, 0);
 
         receta = new Receta();
         receta.setId(1L);

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Comentarios</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/comentarios.css">
+</head>
+<body>
+    <!-- Header -->
+    <div th:replace="~{fragments/header :: header}"></div>
+
+    <div class="listar-wrapper">
+        <div class="listar-container">
+            <h1>Gestión de Comentarios</h1>
+
+            <!-- Filtro por estado -->
+            <form th:action="@{/comentarios}" method="get" class="filtro-form">
+                <label for="estado">Filtrar por estado:</label>
+                <select name="estado" id="estado">
+                    <option value="" th:selected="${#strings.isEmpty(estado)}">Todos</option>
+                    <option value="0" th:selected="${estado == 0}">Nuevo</option>
+                    <option value="1" th:selected="${estado == 1}">Aprobado</option>
+                    <option value="2" th:selected="${estado == 2}">Rechazado</option>
+                </select>
+                <button type="submit" class="btn-filtrar">Filtrar</button>
+            </form>
+
+            <!-- Tabla de comentarios -->
+            <table class="comentarios-tabla">
+                <thead>
+                    <tr>
+                        <th>Usuario</th>
+                        <th>Comentario</th>
+                        <th>Valoración</th>
+                        <th>Estado</th>
+                        <!-- <th>ID Receta</th> -->
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="comentario : ${comentarios}">
+                        <td th:text="${comentario.usuario}"></td>
+                        <td th:text="${comentario.comentario}"></td>
+                        <td th:text="${comentario.valoracion}"></td>
+                        <td th:text="${comentario.estado == 0 ? 'Nuevo' : (comentario.estado == 1 ? 'Aprobado' : 'Rechazado')}"></td>
+                        <!-- <td th:text="${comentario.receta.id}"></td> --> <!-- Muestra el ID de la receta -->
+                        <td>
+                            <div class="accion-botones">
+                                <form th:action="@{/comentarios/{id}/editar(id=${comentario.id})}" method="get">
+                                    <button type="submit" class="btn-edit">Editar</button>
+                                </form>
+                                <form th:action="@{/comentarios/{id}/aprobar(id=${comentario.id})}" method="post">
+                                    <button type="submit" class="btn-edit">Aprobar</button>
+                                </form>
+                                <form th:action="@{/comentarios/{id}/rechazar(id=${comentario.id})}" method="post">
+                                    <button type="submit" class="btn-edit">Rechazar</button>
+                                </form>
+                                <form th:action="@{/comentarios/{id}/eliminar(id=${comentario.id})}" method="post">
+                                    <input type="hidden" name="_method" value="DELETE">
+                                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                                    <button type="submit" class="btn-edit">Eliminar</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- Botón para volver al inicio -->
+            <form th:action="@{/home}" method="get">
+                <button type="submit" class="btn-volver">Volver al Inicio</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div th:replace="~{fragments/footer :: footer}"></div>
+    
+</body>
+</html>

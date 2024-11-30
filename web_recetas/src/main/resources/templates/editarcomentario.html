@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Editar Comentario</title>
+</head>
+<body>
+    <h1>Editar Comentario</h1>
+
+    <form th:action="@{/comentarios/{id}/editar(id=${comentario.id})}" method="post">
+        <label for="usuario">Usuario:</label>
+        <input type="text" id="usuario" name="usuario" th:value="${comentario.usuario}" readonly><br>
+
+        <label for="comentario">Comentario:</label>
+        <textarea id="comentario" name="comentario" rows="4" cols="50" th:text="${comentario.comentario}"></textarea><br>
+
+        <label for="valoracion">Valoración:</label>
+        <input type="number" id="valoracion" name="valoracion" min="1" max="5" th:value="${comentario.valoracion}"><br>
+
+        <label for="estado">Estado:</label>
+        <select id="estado" name="estado">
+            <option th:value="0" th:selected="${comentario.estado == 0}">Nuevo</option>
+            <option th:value="1" th:selected="${comentario.estado == 1}">Aprobado</option>
+            <option th:value="2" th:selected="${comentario.estado == 2}">Rechazado</option>
+        </select><br>
+
+        <button type="submit">Guardar</button>
+    </form>
+</body>
+</html>

@@ -2,7 +2,8 @@ package com.demo.web_recetas.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean; 
-import org.springframework.context.annotation.Configuration; 
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager; 
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder; 
 import org.springframework.security.config.annotation.web.builders.HttpSecurity; 
@@ -18,6 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder; 
 import org.springframework.session.web.http.CookieSerializer;
 import org.springframework.session.web.http.DefaultCookieSerializer;
+import org.springframework.web.filter.HiddenHttpMethodFilter;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 import org.springframework.security.web.header.writers.XXssProtectionHeaderWriter;
 import org.springframework.security.web.csrf.CsrfTokenRepository;
@@ -63,6 +65,12 @@ public class WebSecurityConfig {
 
     @Value("${app.security.paths.404}")
     private String path404;
+
+    @Value("${app.security.paths.listarcomentarios}")
+    private String pathListarComentarios;
+
+    @Value("${app.security.paths.editarcomentario}")
+    private String pathEditarComentario;
 
     @Bean 
     public TokenStore tokenStore() {
@@ -122,6 +130,8 @@ public class WebSecurityConfig {
                 // Endpoints privados para administración de usuarios
                 .requestMatchers(pathListarUsuarios).hasRole("ADMIN") // Listar usuarios
                 .requestMatchers(pathEditarUsuario).hasRole("ADMIN") // Editar usuario
+                .requestMatchers(pathListarComentarios).hasRole("ADMIN") // Listar comentarios
+                .requestMatchers(pathEditarComentario).hasRole("ADMIN") // Editar comentario
                 // Cualquier otra ruta será denegada
                 .anyRequest().denyAll()
             )
@@ -225,5 +235,10 @@ public class WebSecurityConfig {
         HttpSessionCsrfTokenRepository repository = new HttpSessionCsrfTokenRepository();
         repository.setHeaderName("X-CSRF-TOKEN");
         return repository;
+    }
+
+    @Bean
+    public HiddenHttpMethodFilter hiddenHttpMethodFilter() {
+        return new HiddenHttpMethodFilter();
     }
 }

@@ -38,6 +38,7 @@
             <a th:href="@{/publicar}">Publicar Receta</a>
             <!-- Opción visible solo para administradores -->
             <a th:href="@{/usuarios}" th:if="${#authorization.expression('isAuthenticated() and hasRole(''ROLE_ADMIN'')')}">Listar Usuarios</a>
+            <a th:href="@{/comentarios}" th:if="${#authorization.expression('isAuthenticated() and hasRole(''ROLE_ADMIN'')')}">Revisar Comentarios</a>
         </nav>
     </header>
 </body>
