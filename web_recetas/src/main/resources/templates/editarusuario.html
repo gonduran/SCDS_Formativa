@@ -14,7 +14,7 @@
     <div class="editar-wrapper">
         <div class="editar-container">
             <h1>Editar Usuario</h1>
-            <form th:action="@{/usuarios/{id}/editar(id=${usuario.id})}" method="post">
+            <form th:action="@{/usuarios/{id}/editar(id=${usuario.id})}" method="post" style="margin-bottom: 10px !important;">
                 <div class="form-group">
                     <label for="username">Usuario:</label>
                     <input type="text" id="username" name="username" th:value="${usuario.username}" readonly />
@@ -40,8 +40,9 @@
                 </div>
                 <button type="submit" class="btn-guardar">Guardar Cambios</button>
             </form>
+            <br>
             <form th:action="@{/usuarios}" method="get" style="margin-top: 10px !important;">
-                <button type="submit" class="btn-volver">Volver</button>
+                <button type="submit" class="btn-volver" style="margin-top: 10px !important;">Volver</button>
             </form>
         </div>
     </div>
