@@ -61,6 +61,9 @@ public class WebSecurityConfig {
     @Value("${app.security.paths.accesodenegado}")
     private String pathAccesoDenegado;
 
+    @Value("${app.security.paths.404}")
+    private String path404;
+
     @Bean 
     public TokenStore tokenStore() {
         return new TokenStore();
@@ -110,6 +113,7 @@ public class WebSecurityConfig {
                 .requestMatchers(pathBuscar).permitAll()
                 .requestMatchers(pathRegister).permitAll()
                 .requestMatchers(pathAccesoDenegado).permitAll()
+                .requestMatchers(path404).permitAll()
                 // Endpoints privados que requiere autenticación
                 .requestMatchers(pathRecetas).authenticated()
                 .requestMatchers(pathPublicar).authenticated()

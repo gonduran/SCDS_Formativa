@@ -72,15 +72,15 @@ public class RecetasControllerTest {
                 .andExpect(model().attributeExists("comentarios", "fotos", "videos", "nombreUsuario"));
     }
 
-    /*@Test
+    @Test
     @WithMockUser(username = "testUser", roles = "USER")
     public void testVerDetalleReceta_NotFound() throws Exception {
-        when(recetasService.obtenerRecetaPorId(2L)).thenReturn(Optional.empty());
-
-        mockMvc.perform(get("/recetas/2"))
+        when(recetasService.obtenerRecetaPorId(1L)).thenReturn(Optional.empty());
+    
+        mockMvc.perform(get("/recetas/1"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("error/404"));
-    }*/
+    }
 
     /*@Test
     @WithMockUser(username = "testUser", roles = "USER")
