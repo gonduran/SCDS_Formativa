@@ -52,9 +52,13 @@
                                     <button type="submit" class="btn-edit">Editar</button>
                                 </form>
                                 <form th:action="@{/comentarios/{id}/aprobar(id=${comentario.id})}" method="post">
+                                    <input type="hidden" name="_method" value="PUT">
+                                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
                                     <button type="submit" class="btn-edit">Aprobar</button>
                                 </form>
                                 <form th:action="@{/comentarios/{id}/rechazar(id=${comentario.id})}" method="post">
+                                    <input type="hidden" name="_method" value="PUT">
+                                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
                                     <button type="submit" class="btn-edit">Rechazar</button>
                                 </form>
                                 <form th:action="@{/comentarios/{id}/eliminar(id=${comentario.id})}" method="post">
