@@ -33,12 +33,29 @@
         <nav>
             <a th:href="@{/home}">Inicio</a>
             <a th:href="@{/buscar}">Buscar Recetas</a>
-            <a th:href="@{/login}">Iniciar Sesión</a>
-            <a th:href="@{/register}">Registrar</a>
-            <a th:href="@{/publicar}">Publicar Receta</a>
-            <!-- Opción visible solo para administradores -->
-            <a th:href="@{/usuarios}" th:if="${#authorization.expression('isAuthenticated() and hasRole(''ROLE_ADMIN'')')}">Listar Usuarios</a>
-            <a th:href="@{/comentarios}" th:if="${#authorization.expression('isAuthenticated() and hasRole(''ROLE_ADMIN'')')}">Revisar Comentarios</a>
+
+            <!-- Enlaces para usuarios NO autenticados -->
+            <div th:if="${!#authorization.expression('isAuthenticated()')}">
+                <a th:href="@{/login}">Iniciar Sesión</a>
+                <a th:href="@{/register}">Registrar</a>
+            </div>
+
+            <!-- Enlaces para usuarios autenticados -->
+            <div th:if="${#authorization.expression('isAuthenticated()')}">
+                <a th:href="@{/publicar}">Publicar Receta</a>
+                <!-- Enlaces solo para administradores -->
+                <a th:href="@{/usuarios}" 
+                th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}">
+                Listar Usuarios
+                </a>
+                <a th:href="@{/comentarios}" 
+                th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}">
+                Revisar Comentarios
+                </a>
+                <!-- Botón de cerrar sesión -->
+                <a href="#" id="logoutLink" style="cursor: pointer;">Cerrar Sesión</a>
+                <form id="logoutForm" th:action="@{/logout}" method="post" style="display: none;"></form>
+            </div>
         </nav>
     </header>
 </body>

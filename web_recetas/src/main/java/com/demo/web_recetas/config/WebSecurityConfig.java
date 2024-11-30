@@ -1,5 +1,6 @@
 package com.demo.web_recetas.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean; 
 import org.springframework.context.annotation.Configuration;
@@ -72,13 +73,21 @@ public class WebSecurityConfig {
     @Value("${app.security.paths.editarcomentario}")
     private String pathEditarComentario;
 
-    @Bean 
-    public TokenStore tokenStore() {
-        return new TokenStore();
-    }
+    // @Bean 
+    // public TokenStore tokenStore() {
+    //     return new TokenStore();
+    // }
+
+    // @Bean 
+    // public CustomAuthenticationProvider customAuthenticationProvider(TokenStore tokenStore) {
+    //     return new CustomAuthenticationProvider(tokenStore);
+    // }
+
+    @Autowired
+    private TokenStore tokenStore;
 
     @Bean 
-    public CustomAuthenticationProvider customAuthenticationProvider(TokenStore tokenStore) {
+    public CustomAuthenticationProvider customAuthenticationProvider() {
         return new CustomAuthenticationProvider(tokenStore);
     }
 
@@ -163,7 +172,7 @@ public class WebSecurityConfig {
             )
             .sessionManagement(session -> session
                 .maximumSessions(1)
-                .maxSessionsPreventsLogin(true)
+                .maxSessionsPreventsLogin(false)
             )
             .csrf(csrf -> csrf
                 .csrfTokenRepository(csrfTokenRepository())
