@@ -1,5 +1,6 @@
 package com.demo.backend_recetas.controller;
 
+import com.demo.backend_recetas.dto.EstadoComentarioDTO;
 import com.demo.backend_recetas.model.Comentario;
 import com.demo.backend_recetas.service.ComentarioService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,9 +41,9 @@ public class ComentarioController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Comentario> actualizarEstado(
             @PathVariable Long id,
-            @RequestParam Integer nuevoEstado) {
+            @RequestBody EstadoComentarioDTO estadoDTO) {
         try {
-            return ResponseEntity.ok(comentarioService.actualizarEstado(id, nuevoEstado));
+            return ResponseEntity.ok(comentarioService.actualizarEstado(id, estadoDTO.getEstado()));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.notFound().build();
         }

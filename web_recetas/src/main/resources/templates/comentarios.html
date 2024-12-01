@@ -48,23 +48,14 @@
                         <!-- <td th:text="${comentario.receta.id}"></td> --> <!-- Muestra el ID de la receta -->
                         <td>
                             <div class="accion-botones">
-                                <form th:action="@{/comentarios/{id}/editar(id=${comentario.id})}" method="get">
-                                    <button type="submit" class="btn-edit">Editar</button>
+                                <form th:action="@{/comentarios/{id}/aprobar(id=${comentario.id})}" method="post" style="display: inline">
+                                    <button type="submit" th:if="${comentario.estado != 1}" class="btn-aprobar">Aprobar</button>
                                 </form>
-                                <form th:action="@{/comentarios/{id}/aprobar(id=${comentario.id})}" method="post">
-                                    <input type="hidden" name="_method" value="PUT">
-                                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-                                    <button type="submit" class="btn-edit">Aprobar</button>
+                                <form th:action="@{/comentarios/{id}/rechazar(id=${comentario.id})}" method="post" style="display: inline">
+                                    <button type="submit" th:if="${comentario.estado != 2}" class="btn-rechazar">Rechazar</button>
                                 </form>
-                                <form th:action="@{/comentarios/{id}/rechazar(id=${comentario.id})}" method="post">
-                                    <input type="hidden" name="_method" value="PUT">
-                                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-                                    <button type="submit" class="btn-edit">Rechazar</button>
-                                </form>
-                                <form th:action="@{/comentarios/{id}/eliminar(id=${comentario.id})}" method="post">
-                                    <input type="hidden" name="_method" value="DELETE">
-                                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-                                    <button type="submit" class="btn-edit">Eliminar</button>
+                                <form th:action="@{/comentarios/{id}/eliminar(id=${comentario.id})}" method="post" style="display: inline">
+                                    <button type="submit" class="btn-eliminar">Eliminar</button>
                                 </form>
                             </div>
                         </td>

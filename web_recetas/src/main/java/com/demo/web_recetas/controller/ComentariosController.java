@@ -5,12 +5,10 @@ import com.demo.web_recetas.service.ComentariosService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -19,7 +17,6 @@ import java.util.List;
 @Controller
 @RequestMapping("/comentarios")
 public class ComentariosController {
-
     @Autowired
     private ComentariosService comentariosService;
 
@@ -35,32 +32,19 @@ public class ComentariosController {
         return "comentarios";
     }
 
-    @GetMapping("/{id}/editar")
-    public String mostrarFormularioEdicion(@PathVariable Long id, Model model) {
-        Comentario comentario = comentariosService.obtenerPorId(id).orElseThrow(() -> new RuntimeException("Comentario no encontrado"));
-        model.addAttribute("comentario", comentario);
-        return "editarcomentario";
-    }
-
-    @PostMapping("/{id}/editar")
-    public String editarComentario(@PathVariable Long id, @ModelAttribute Comentario comentario) {
-        comentariosService.actualizarEstadoComentario(id, comentario.getEstado());
-        return "redirect:/comentarios";
-    }
-
-    @PutMapping("/{id}/aprobar")
+    @PostMapping("/{id}/aprobar")
     public String aprobarComentario(@PathVariable Long id) {
         comentariosService.actualizarEstadoComentario(id, 1); // Aprobado
         return "redirect:/comentarios";
     }
 
-    @PutMapping("/{id}/rechazar")
+    @PostMapping("/{id}/rechazar")
     public String rechazarComentario(@PathVariable Long id) {
         comentariosService.actualizarEstadoComentario(id, 2); // Rechazado
         return "redirect:/comentarios";
     }
 
-    @DeleteMapping("/{id}/eliminar")
+    @PostMapping("/{id}/eliminar")
     public String eliminarComentario(@PathVariable Long id) {
         comentariosService.eliminarComentario(id);
         return "redirect:/comentarios";

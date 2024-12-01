@@ -2,6 +2,7 @@ package com.demo.web_recetas.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean; 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -25,7 +26,6 @@ import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 import org.springframework.security.web.header.writers.XXssProtectionHeaderWriter;
 import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.security.web.header.writers.ReferrerPolicyHeaderWriter;
-
  
 @Configuration 
 @EnableWebSecurity(debug = true) 
@@ -72,16 +72,6 @@ public class WebSecurityConfig {
 
     @Value("${app.security.paths.editarcomentario}")
     private String pathEditarComentario;
-
-    // @Bean 
-    // public TokenStore tokenStore() {
-    //     return new TokenStore();
-    // }
-
-    // @Bean 
-    // public CustomAuthenticationProvider customAuthenticationProvider(TokenStore tokenStore) {
-    //     return new CustomAuthenticationProvider(tokenStore);
-    // }
 
     @Autowired
     private TokenStore tokenStore;
@@ -139,8 +129,16 @@ public class WebSecurityConfig {
                 // Endpoints privados para administración de usuarios
                 .requestMatchers(pathListarUsuarios).hasRole("ADMIN") // Listar usuarios
                 .requestMatchers(pathEditarUsuario).hasRole("ADMIN") // Editar usuario
-                .requestMatchers(pathListarComentarios).hasRole("ADMIN") // Listar comentarios
-                .requestMatchers(pathEditarComentario).hasRole("ADMIN") // Editar comentario
+
+
+                .requestMatchers(pathListarComentarios).hasRole("ADMIN")
+                .requestMatchers(pathEditarComentario).hasRole("ADMIN")
+
+                .requestMatchers(HttpMethod.GET, "/comentarios/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.POST, "/comentarios/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/comentarios/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/comentarios/**").hasRole("ADMIN")
+                
                 // Cualquier otra ruta será denegada
                 .anyRequest().denyAll()
             )
@@ -212,6 +210,13 @@ public class WebSecurityConfig {
     }
 
     @Bean
+    public FilterRegistrationBean<HiddenHttpMethodFilter> hiddenHttpMethodFilter() {
+        FilterRegistrationBean<HiddenHttpMethodFilter> registrationBean = new FilterRegistrationBean<>(new HiddenHttpMethodFilter());
+        registrationBean.setOrder(Integer.MIN_VALUE);  // Asegura que este filtro se ejecute primero
+        return registrationBean;
+    }
+
+    @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
@@ -246,8 +251,8 @@ public class WebSecurityConfig {
         return repository;
     }
 
-    @Bean
-    public HiddenHttpMethodFilter hiddenHttpMethodFilter() {
-        return new HiddenHttpMethodFilter();
-    }
+    // @Bean
+    // public HiddenHttpMethodFilter hiddenHttpMethodFilter() {
+    //     return new HiddenHttpMethodFilter();
+    // }
 }

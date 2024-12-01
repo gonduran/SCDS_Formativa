@@ -130,14 +130,12 @@ public class ComentariosService {
     public void actualizarEstadoComentario(Long id, Integer estado) {
         String url = backendUrl + "/api/admin/comentarios/" + id + "/estado";
 
-        // Crear el cuerpo de la solicitud con el nuevo estado
         Map<String, Integer> requestBody = new HashMap<>();
-        requestBody.put("nuevoEstado", estado);
+        requestBody.put("estado", estado);  // Cambio de "nuevoEstado" a "estado" para coincidir con EstadoComentarioDTO
 
         HttpHeaders headers = crearHeadersConToken();
         HttpEntity<Map<String, Integer>> entity = new HttpEntity<>(requestBody, headers);
 
-        // Enviar la solicitud al backend con el estado actualizado
         restTemplate.exchange(url, HttpMethod.PUT, entity, Void.class);
     }
 
