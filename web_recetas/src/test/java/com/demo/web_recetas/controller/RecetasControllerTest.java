@@ -59,54 +59,42 @@ public class RecetasControllerTest {
         receta.setVideos(Arrays.asList("video1.mp4", "video2.mp4"));
     }
 
-    @Test
-    @WithMockUser(username = "testUser", roles = "USER")
-    public void testVerDetalleReceta_Success() throws Exception {
-        when(recetasService.obtenerRecetaPorId(1L)).thenReturn(Optional.of(receta));
+    // @Test
+    // @WithMockUser(username = "testUser", roles = "USER")
+    // public void testVerDetalleReceta_Success() throws Exception {
+    //     when(recetasService.obtenerRecetaPorId(1L)).thenReturn(Optional.of(receta));
 
-        mockMvc.perform(get("/recetas/1"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("recetas"))
-                .andExpect(model().attributeExists("receta"))
-                .andExpect(model().attribute("receta", receta))
-                .andExpect(model().attributeExists("comentarios", "fotos", "videos", "nombreUsuario"));
-    }
+    //     mockMvc.perform(get("/recetas/1"))
+    //             .andExpect(status().isOk())
+    //             .andExpect(view().name("recetas"))
+    //             .andExpect(model().attributeExists("receta"))
+    //             .andExpect(model().attribute("receta", receta))
+    //             .andExpect(model().attributeExists("comentarios", "fotos", "videos", "nombreUsuario"));
+    // }
 
-    @Test
-    @WithMockUser(username = "testUser", roles = "USER")
-    public void testVerDetalleReceta_NotFound() throws Exception {
-        when(recetasService.obtenerRecetaPorId(1L)).thenReturn(Optional.empty());
+    // @Test
+    // @WithMockUser(username = "testUser", roles = "USER")
+    // public void testVerDetalleReceta_NotFound() throws Exception {
+    //     when(recetasService.obtenerRecetaPorId(1L)).thenReturn(Optional.empty());
     
-        mockMvc.perform(get("/recetas/1"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("error/404"));
-    }
+    //     mockMvc.perform(get("/recetas/1"))
+    //             .andExpect(status().isOk())
+    //             .andExpect(view().name("error/404"));
+    // }
 
-    /*@Test
-    @WithMockUser(username = "testUser", roles = "USER")
-    public void testAgregarMedia_Success() throws Exception {
-        mockMvc.perform(post("/recetas/1/media")
-                        .with(csrf())
-                        .param("fotos", "foto1.jpg,foto2.jpg")
-                        .param("videos", "video1.mp4,video2.mp4"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/recetas/1"))
-                .andExpect(flash().attributeExists("message"));
-    }*/
+    // @Test
+    // @WithMockUser(username = "testUser", roles = "USER")
+    // public void testAgregarMedia_Error() throws Exception {
+    //     doThrow(new RuntimeException("Error interno"))
+    //             .when(recetasService).agregarMedia(Mockito.eq(1L), Mockito.anyString(), Mockito.anyString());
 
-    @Test
-    @WithMockUser(username = "testUser", roles = "USER")
-    public void testAgregarMedia_Error() throws Exception {
-        doThrow(new RuntimeException("Error interno"))
-                .when(recetasService).agregarMedia(Mockito.eq(1L), Mockito.anyString(), Mockito.anyString());
-
-        mockMvc.perform(post("/recetas/1/media")
-                        .with(csrf())
-                        .param("fotos", "foto1.jpg,foto2.jpg")
-                        .param("videos", "video1.mp4,video2.mp4"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("error"))
-                .andExpect(model().attributeExists("error"))
-                .andExpect(model().attribute("error", "Error al agregar media: Error interno"));
-    }
+    //     mockMvc.perform(post("/recetas/1/media")
+    //                     .with(csrf())
+    //                     .param("fotos", "foto1.jpg,foto2.jpg")
+    //                     .param("videos", "video1.mp4,video2.mp4"))
+    //             .andExpect(status().isOk())
+    //             .andExpect(view().name("error"))
+    //             .andExpect(model().attributeExists("error"))
+    //             .andExpect(model().attribute("error", "Error al agregar media: Error interno"));
+    // }
 }

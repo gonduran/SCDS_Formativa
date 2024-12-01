@@ -129,11 +129,9 @@ public class WebSecurityConfig {
                 // Endpoints privados para administración de usuarios
                 .requestMatchers(pathListarUsuarios).hasRole("ADMIN") // Listar usuarios
                 .requestMatchers(pathEditarUsuario).hasRole("ADMIN") // Editar usuario
-
-
-                .requestMatchers(pathListarComentarios).hasRole("ADMIN")
-                .requestMatchers(pathEditarComentario).hasRole("ADMIN")
-
+                // Endpoints privados para administración de comentarios
+                .requestMatchers(pathListarComentarios).hasRole("ADMIN") // Listar comentarios
+                .requestMatchers(pathEditarComentario).hasRole("ADMIN") // Editar comentario
                 .requestMatchers(HttpMethod.GET, "/comentarios/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.POST, "/comentarios/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.PUT, "/comentarios/**").hasRole("ADMIN")
@@ -210,13 +208,6 @@ public class WebSecurityConfig {
     }
 
     @Bean
-    public FilterRegistrationBean<HiddenHttpMethodFilter> hiddenHttpMethodFilter() {
-        FilterRegistrationBean<HiddenHttpMethodFilter> registrationBean = new FilterRegistrationBean<>(new HiddenHttpMethodFilter());
-        registrationBean.setOrder(Integer.MIN_VALUE);  // Asegura que este filtro se ejecute primero
-        return registrationBean;
-    }
-
-    @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
@@ -251,8 +242,8 @@ public class WebSecurityConfig {
         return repository;
     }
 
-    // @Bean
-    // public HiddenHttpMethodFilter hiddenHttpMethodFilter() {
-    //     return new HiddenHttpMethodFilter();
-    // }
+    @Bean
+    public HiddenHttpMethodFilter hiddenHttpMethodFilter() {
+        return new HiddenHttpMethodFilter();
+    }
 }

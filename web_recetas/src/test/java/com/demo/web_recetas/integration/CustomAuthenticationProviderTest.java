@@ -16,6 +16,7 @@ import java.lang.reflect.Field;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 public class CustomAuthenticationProviderTest {
@@ -37,6 +38,8 @@ public class CustomAuthenticationProviderTest {
         backendUrlField.setAccessible(true);
         backendUrlField.set(customAuthenticationProvider, "http://mock-backend");
     }
+
+    
 
     /*@Test
     public void testAuthenticate_Success_User() {
@@ -114,4 +117,14 @@ public class CustomAuthenticationProviderTest {
     public void testSupports_InvalidAuthentication() {
         assertFalse(customAuthenticationProvider.supports(Object.class));
     }
+
+    @Test
+    public void testClearAuthentication() {
+        // Invocar clearAuthentication
+        customAuthenticationProvider.clearAuthentication();
+
+        // Verificar que clearToken fue llamado
+        verify(tokenStore, times(1)).clearToken();
+    }
+
 }

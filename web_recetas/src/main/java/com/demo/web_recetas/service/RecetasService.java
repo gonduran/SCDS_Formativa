@@ -108,9 +108,6 @@ public class RecetasService {
             String url = backendUrl + "/api/register";
             ResponseEntity<String> response = restTemplate.postForEntity(url, user, String.class);
             return response.getBody();
-        } catch (HttpClientErrorException.BadRequest e) {
-            // Extrae el mensaje de error en caso de que el usuario ya esté registrado
-            throw new Exception("El nombre de usuario ya está en uso.");
         } catch (Exception e) {
             throw new Exception("Error al registrar el usuario: " + e.getMessage());
         }

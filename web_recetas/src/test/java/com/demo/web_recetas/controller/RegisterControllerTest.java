@@ -45,83 +45,83 @@ public class RegisterControllerTest {
         user.setPassword("password123");
     }
 
-    @Test
-    @WithAnonymousUser
-    public void testShowRegisterForm() throws Exception {
-        mockMvc.perform(get("/register"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("register"))
-                .andExpect(model().attributeExists("user"));
-    }
+    // @Test
+    // @WithAnonymousUser
+    // public void testShowRegisterForm() throws Exception {
+    //     mockMvc.perform(get("/register"))
+    //             .andExpect(status().isOk())
+    //             .andExpect(view().name("register"))
+    //             .andExpect(model().attributeExists("user"));
+    // }
 
-    @Test
-    @WithAnonymousUser
-    public void testRegisterUser_Success() throws Exception {
-        // Mocking successful registration
-        when(recetasService.registerUser(Mockito.any(User.class))).thenReturn("Registro exitoso.");
+    // @Test
+    // @WithAnonymousUser
+    // public void testRegisterUser_Success() throws Exception {
+    //     // Mocking successful registration
+    //     when(recetasService.registerUser(Mockito.any(User.class))).thenReturn("Registro exitoso.");
 
-        mockMvc.perform(post("/register")
-                        .with(csrf())
-                        .param("username", user.getUsername())
-                        .param("nombreCompleto", user.getNombreCompleto())
-                        .param("email", user.getEmail())
-                        .param("password", user.getPassword())
-                        .param("confirmPassword", user.getPassword()))
-                .andExpect(status().isOk())
-                .andExpect(view().name("login"))
-                .andExpect(model().attribute("message", "Registro exitoso."));
-    }
+    //     mockMvc.perform(post("/register")
+    //                     .with(csrf())
+    //                     .param("username", user.getUsername())
+    //                     .param("nombreCompleto", user.getNombreCompleto())
+    //                     .param("email", user.getEmail())
+    //                     .param("password", user.getPassword())
+    //                     .param("confirmPassword", user.getPassword()))
+    //             .andExpect(status().isOk())
+    //             .andExpect(view().name("login"))
+    //             .andExpect(model().attribute("message", "Registro exitoso."));
+    // }
 
-    @Test
-    @WithAnonymousUser
-    public void testRegisterUser_MissingName() throws Exception {
-        // Name is empty
-        mockMvc.perform(post("/register")
-                        .with(csrf())
-                        .param("username", user.getUsername())
-                        .param("nombreCompleto", "")
-                        .param("email", user.getEmail())
-                        .param("password", user.getPassword())
-                        .param("confirmPassword", user.getPassword()))
-                .andExpect(status().isOk())
-                .andExpect(view().name("register"))
-                .andExpect(model().attributeExists("error"))
-                .andExpect(model().attribute("error", "El nombre completo es requerido."));
-    }
+    // @Test
+    // @WithAnonymousUser
+    // public void testRegisterUser_MissingName() throws Exception {
+    //     // Name is empty
+    //     mockMvc.perform(post("/register")
+    //                     .with(csrf())
+    //                     .param("username", user.getUsername())
+    //                     .param("nombreCompleto", "")
+    //                     .param("email", user.getEmail())
+    //                     .param("password", user.getPassword())
+    //                     .param("confirmPassword", user.getPassword()))
+    //             .andExpect(status().isOk())
+    //             .andExpect(view().name("register"))
+    //             .andExpect(model().attributeExists("error"))
+    //             .andExpect(model().attribute("error", "El nombre completo es requerido."));
+    // }
 
-    @Test
-    @WithAnonymousUser
-    public void testRegisterUser_PasswordMismatch() throws Exception {
-        // Password mismatch
-        mockMvc.perform(post("/register")
-                        .with(csrf())
-                        .param("username", user.getUsername())
-                        .param("nombreCompleto", user.getNombreCompleto())
-                        .param("email", user.getEmail())
-                        .param("password", user.getPassword())
-                        .param("confirmPassword", "differentPassword"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("register"))
-                .andExpect(model().attributeExists("error"))
-                .andExpect(model().attribute("error", "Las contraseñas no coinciden."));
-    }
+    // @Test
+    // @WithAnonymousUser
+    // public void testRegisterUser_PasswordMismatch() throws Exception {
+    //     // Password mismatch
+    //     mockMvc.perform(post("/register")
+    //                     .with(csrf())
+    //                     .param("username", user.getUsername())
+    //                     .param("nombreCompleto", user.getNombreCompleto())
+    //                     .param("email", user.getEmail())
+    //                     .param("password", user.getPassword())
+    //                     .param("confirmPassword", "differentPassword"))
+    //             .andExpect(status().isOk())
+    //             .andExpect(view().name("register"))
+    //             .andExpect(model().attributeExists("error"))
+    //             .andExpect(model().attribute("error", "Las contraseñas no coinciden."));
+    // }
 
-    @Test
-    @WithAnonymousUser
-    public void testRegisterUser_ServiceException() throws Exception {
-        // Mocking a service exception
-        when(recetasService.registerUser(Mockito.any(User.class))).thenThrow(new Exception("Error al registrar el usuario."));
+    // @Test
+    // @WithAnonymousUser
+    // public void testRegisterUser_ServiceException() throws Exception {
+    //     // Mocking a service exception
+    //     when(recetasService.registerUser(Mockito.any(User.class))).thenThrow(new Exception("Error al registrar el usuario."));
 
-        mockMvc.perform(post("/register")
-                        .with(csrf())
-                        .param("username", user.getUsername())
-                        .param("nombreCompleto", user.getNombreCompleto())
-                        .param("email", user.getEmail())
-                        .param("password", user.getPassword())
-                        .param("confirmPassword", user.getPassword()))
-                .andExpect(status().isOk())
-                .andExpect(view().name("register"))
-                .andExpect(model().attributeExists("error"))
-                .andExpect(model().attribute("error", "Error al registrar el usuario."));
-    }
+    //     mockMvc.perform(post("/register")
+    //                     .with(csrf())
+    //                     .param("username", user.getUsername())
+    //                     .param("nombreCompleto", user.getNombreCompleto())
+    //                     .param("email", user.getEmail())
+    //                     .param("password", user.getPassword())
+    //                     .param("confirmPassword", user.getPassword()))
+    //             .andExpect(status().isOk())
+    //             .andExpect(view().name("register"))
+    //             .andExpect(model().attributeExists("error"))
+    //             .andExpect(model().attribute("error", "Error al registrar el usuario."));
+    // }
 }

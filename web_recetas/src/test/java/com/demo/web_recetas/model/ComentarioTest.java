@@ -51,4 +51,15 @@ public class ComentarioTest {
         assertEquals(textoComentario, comentario.getComentario());
         assertEquals(valoracion, comentario.getValoracion());
     }
+
+    @Test
+    void testSetEstado() {
+        Comentario comentario = new Comentario();
+
+        Integer estado = 1; // Por ejemplo, aprobado
+        comentario.setEstado(estado);
+
+        assertEquals(estado, comentario.getEstado());
+    }
+
 }

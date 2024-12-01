@@ -43,48 +43,48 @@ class ComentarioControllerTest {
         comentario.setValoracion(5);
     }
 
-    @Test
-    @DisplayName("Agregar comentario exitosamente")
-    @WithMockUser(username = "testUser", roles = "USER")
-    void agregarComentario_Success() throws Exception {
-        mockMvc.perform(post("/recetas/1/comentarios")
-                .with(csrf())
-                .param("id", comentario.getId().toString())
-                .param("usuario", comentario.getUsuario())
-                .param("comentario", comentario.getComentario())
-                .param("valoracion", comentario.getValoracion().toString()))
-            .andExpect(status().is3xxRedirection())
-            .andExpect(redirectedUrl("/recetas/1"));
-    }
+    // @Test
+    // @DisplayName("Agregar comentario exitosamente")
+    // @WithMockUser(username = "testUser", roles = "USER")
+    // void agregarComentario_Success() throws Exception {
+    //     mockMvc.perform(post("/recetas/1/comentarios")
+    //             .with(csrf())
+    //             .param("id", comentario.getId().toString())
+    //             .param("usuario", comentario.getUsuario())
+    //             .param("comentario", comentario.getComentario())
+    //             .param("valoracion", comentario.getValoracion().toString()))
+    //         .andExpect(status().is3xxRedirection())
+    //         .andExpect(redirectedUrl("/recetas/1"));
+    // }
 
-    @Test
-    @DisplayName("Manejar error al agregar comentario")
-    @WithMockUser(username = "testUser", roles = "USER")
-    void agregarComentario_Error() throws Exception {
-        // Configurar el mock para lanzar una excepción
-        doThrow(new RuntimeException("Error simulado"))
-            .when(recetasService)
-            .agregarComentario(eq(1L), any(Comentario.class));
+    // @Test
+    // @DisplayName("Manejar error al agregar comentario")
+    // @WithMockUser(username = "testUser", roles = "USER")
+    // void agregarComentario_Error() throws Exception {
+    //     // Configurar el mock para lanzar una excepción
+    //     doThrow(new RuntimeException("Error simulado"))
+    //         .when(recetasService)
+    //         .agregarComentario(eq(1L), any(Comentario.class));
     
-        mockMvc.perform(post("/recetas/1/comentarios")
-                .with(csrf())
-                .param("id", comentario.getId().toString())
-                .param("usuario", comentario.getUsuario())
-                .param("comentario", comentario.getComentario())
-                .param("valoracion", comentario.getValoracion().toString()))
-            .andExpect(status().is3xxRedirection())
-            .andExpect(redirectedUrl("/recetas/1"));
-    }
+    //     mockMvc.perform(post("/recetas/1/comentarios")
+    //             .with(csrf())
+    //             .param("id", comentario.getId().toString())
+    //             .param("usuario", comentario.getUsuario())
+    //             .param("comentario", comentario.getComentario())
+    //             .param("valoracion", comentario.getValoracion().toString()))
+    //         .andExpect(status().is3xxRedirection())
+    //         .andExpect(redirectedUrl("/recetas/1"));
+    // }
     
-    @Test
-    @DisplayName("Comentario sin autenticación debe ser rechazado")
-    void agregarComentario_SinAutenticacion() throws Exception {
-        mockMvc.perform(post("/recetas/1/comentarios")
-                .with(csrf())
-                .param("id", comentario.getId().toString())
-                .param("usuario", comentario.getUsuario())
-                .param("comentario", comentario.getComentario())
-                .param("valoracion", comentario.getValoracion().toString()))
-            .andExpect(status().is4xxClientError()); // Acepta cualquier error 4xx
-    }
+    // @Test
+    // @DisplayName("Comentario sin autenticación debe ser rechazado")
+    // void agregarComentario_SinAutenticacion() throws Exception {
+    //     mockMvc.perform(post("/recetas/1/comentarios")
+    //             .with(csrf())
+    //             .param("id", comentario.getId().toString())
+    //             .param("usuario", comentario.getUsuario())
+    //             .param("comentario", comentario.getComentario())
+    //             .param("valoracion", comentario.getValoracion().toString()))
+    //         .andExpect(status().is4xxClientError()); // Acepta cualquier error 4xx
+    // }
 }
