@@ -20,7 +20,6 @@ import java.util.stream.Collectors;
 
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -114,24 +113,6 @@ class RecetasControllerTest {
                 .andExpect(redirectedUrl("/login"));
     }
 
-    // @Test
-    // @DisplayName("Agregar media exitosamente")
-    // @WithMockUser
-    // void agregarMedia_Success() throws Exception {
-    //     mockMvc.perform(post("/recetas/{id}/media", RECETA_ID)
-    //             .with(csrf())
-    //             .param("fotos", "nuevafoto1.jpg,nuevafoto2.jpg")
-    //             .param("videos", "nuevovideo1.mp4,nuevovideo2.mp4"))
-    //             .andExpect(status().is3xxRedirection())
-    //             .andExpect(redirectedUrl("/recetas/" + RECETA_ID))
-    //             .andExpect(flash().attributeExists("message"));
-
-    //     verify(recetasService).agregarMedia(
-    //             eq(RECETA_ID), 
-    //             eq("nuevafoto1.jpg,nuevafoto2.jpg"), 
-    //             eq("nuevovideo1.mp4,nuevovideo2.mp4"));
-    // }
-
     @Test
     @DisplayName("Error al agregar media")
     @WithMockUser
@@ -169,5 +150,23 @@ class RecetasControllerTest {
                 .param("fotos", "foto.jpg")
                 .param("videos", "video.mp4"))
                 .andExpect(status().is3xxRedirection());
+    }
+
+    @Test
+    @DisplayName("Agregar media exitosamente")
+    @WithMockUser
+    void agregarMedia_Success() throws Exception {
+        Long recetaId = 1L;
+        String fotos = "nueva_foto.jpg";
+        String videos = "nuevo_video.mp4";
+
+        mockMvc.perform(post("/recetas/{id}/media", recetaId)
+                .with(csrf())
+                .param("fotos", fotos)
+                .param("videos", videos))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/recetas/" + recetaId));
+
+        verify(recetasService).agregarMedia(recetaId, fotos, videos);
     }
 }
