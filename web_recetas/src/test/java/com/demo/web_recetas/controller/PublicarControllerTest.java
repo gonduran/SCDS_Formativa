@@ -20,6 +20,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.doNothing;
+
 @SpringBootTest
 @AutoConfigureMockMvc
 class PublicarControllerTest {
@@ -41,7 +46,7 @@ class PublicarControllerTest {
         recetaValida.setIngredientes(Arrays.asList("Arroz", "Azafrán", "Pollo", "Conejo"));
         recetaValida.setPaisOrigen("España");
         recetaValida.setDetallePreparacion("1. Sofreír...");
-        recetaValida.setTiempoCoccion("01:30");
+        recetaValida.setTiempoCoccion("10:30");
         recetaValida.setDificultad("Media");
         recetaValida.setFotos(new ArrayList<>());
         recetaValida.setVideos(new ArrayList<>());
@@ -97,6 +102,60 @@ class PublicarControllerTest {
         mockMvc.perform(get("/publicar"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/login"));
+    }
+
+    @Test
+    @DisplayName("Error al publicar - Dificultad inválida")
+    @WithMockUser
+    void publicarReceta_InvalidDificultad() throws Exception {
+        Receta recetaInvalida = new Receta();
+        recetaInvalida.setNombre("Paella Valenciana");
+        recetaInvalida.setDescripcion("Receta de prueba");
+        recetaInvalida.setTipoCocina("Española");
+        recetaInvalida.setIngredientes(Arrays.asList("Ingrediente 1"));
+        recetaInvalida.setPaisOrigen("España");
+        recetaInvalida.setDetallePreparacion("Preparación");
+        recetaInvalida.setTiempoCoccion("20:30"); // Tiempo válido
+        recetaInvalida.setDificultad("Imposible"); // Dificultad inválida
+        recetaInvalida.setFotos(new ArrayList<>());
+        recetaInvalida.setVideos(new ArrayList<>());
+        recetaInvalida.setComentarios(new ArrayList<>());
+    
+        mockMvc.perform(post("/publicar")
+                .with(csrf())
+                .flashAttr("receta", recetaInvalida))
+                .andExpect(status().isOk())
+                .andExpect(view().name("publicar"))
+                .andExpect(model().attribute("error", "La dificultad debe ser Alta, Media o Baja"));
+    }
+
+    @Test
+    @DisplayName("Error al publicar - Error del servicio")
+    @WithMockUser
+    void publicarReceta_ServiceError() throws Exception {
+        doThrow(new RuntimeException("Error de servicio"))
+                .when(recetasService)
+                .publicarReceta(any(Receta.class));
+
+        mockMvc.perform(post("/publicar")
+                .with(csrf())
+                .flashAttr("receta", recetaValida))
+                .andExpect(status().isOk())
+                .andExpect(view().name("publicar"))
+                .andExpect(model().attribute("error", "Hubo un error al publicar la receta: Error de servicio"));
+    }
+
+    @Test
+    @DisplayName("Publicar receta exitosamente con redirección")
+    @WithMockUser
+    void publicarReceta_Success() throws Exception {
+        mockMvc.perform(post("/publicar")
+                .with(csrf())
+                .flashAttr("receta", recetaValida))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/home"));
+
+        verify(recetasService).publicarReceta(recetaValida);
     }
     
 }
