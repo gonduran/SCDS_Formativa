@@ -1,31 +1,26 @@
 package com.demo.web_recetas.controller;
 
-import com.demo.web_recetas.config.WebSecurityConfig;
 import com.demo.web_recetas.model.User;
 import com.demo.web_recetas.service.RecetasService;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
-import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(RegisterController.class)
-@AutoConfigureMockMvc(addFilters = true)
-@Import(WebSecurityConfig.class)
-public class RegisterControllerTest {
+@SpringBootTest
+@AutoConfigureMockMvc
+class RegisterControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -33,95 +28,104 @@ public class RegisterControllerTest {
     @MockBean
     private RecetasService recetasService;
 
-    private User user;
+    private User validUser;
 
     @BeforeEach
-    public void setUp() {
-        // Mocking a user object
-        user = new User();
-        user.setUsername("testUser");
-        user.setNombreCompleto("Juan Pérez");
-        user.setEmail("juan.perez@example.com");
-        user.setPassword("password123");
+    void setUp() {
+        validUser = new User();
+        validUser.setUsername("testUser");
+        validUser.setNombreCompleto("Test User");
+        validUser.setEmail("test@example.com");
+        validUser.setPassword("password123");
     }
 
-    // @Test
-    // @WithAnonymousUser
-    // public void testShowRegisterForm() throws Exception {
-    //     mockMvc.perform(get("/register"))
-    //             .andExpect(status().isOk())
-    //             .andExpect(view().name("register"))
-    //             .andExpect(model().attributeExists("user"));
-    // }
+    @Test
+    @DisplayName("Mostrar formulario de registro")
+    void showRegisterForm() throws Exception {
+        mockMvc.perform(get("/register"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("register"))
+                .andExpect(model().attributeExists("user"));
+    }
 
-    // @Test
-    // @WithAnonymousUser
-    // public void testRegisterUser_Success() throws Exception {
-    //     // Mocking successful registration
-    //     when(recetasService.registerUser(Mockito.any(User.class))).thenReturn("Registro exitoso.");
+    @Test
+    @DisplayName("Registro exitoso de usuario")
+    void registerUser_Success() throws Exception {
+        when(recetasService.registerUser(any(User.class)))
+                .thenReturn("Usuario registrado exitosamente");
 
-    //     mockMvc.perform(post("/register")
-    //                     .with(csrf())
-    //                     .param("username", user.getUsername())
-    //                     .param("nombreCompleto", user.getNombreCompleto())
-    //                     .param("email", user.getEmail())
-    //                     .param("password", user.getPassword())
-    //                     .param("confirmPassword", user.getPassword()))
-    //             .andExpect(status().isOk())
-    //             .andExpect(view().name("login"))
-    //             .andExpect(model().attribute("message", "Registro exitoso."));
-    // }
+        mockMvc.perform(post("/register")
+                .with(csrf())
+                .param("username", validUser.getUsername())
+                .param("nombreCompleto", validUser.getNombreCompleto())
+                .param("email", validUser.getEmail())
+                .param("password", validUser.getPassword())
+                .param("confirmPassword", validUser.getPassword()))
+                .andExpect(status().isOk())
+                .andExpect(view().name("login"))
+                .andExpect(model().attribute("message", "Usuario registrado exitosamente"));
+    }
 
-    // @Test
-    // @WithAnonymousUser
-    // public void testRegisterUser_MissingName() throws Exception {
-    //     // Name is empty
-    //     mockMvc.perform(post("/register")
-    //                     .with(csrf())
-    //                     .param("username", user.getUsername())
-    //                     .param("nombreCompleto", "")
-    //                     .param("email", user.getEmail())
-    //                     .param("password", user.getPassword())
-    //                     .param("confirmPassword", user.getPassword()))
-    //             .andExpect(status().isOk())
-    //             .andExpect(view().name("register"))
-    //             .andExpect(model().attributeExists("error"))
-    //             .andExpect(model().attribute("error", "El nombre completo es requerido."));
-    // }
+    @Test
+    @DisplayName("Registro fallido - Nombre completo vacío")
+    void registerUser_EmptyName() throws Exception {
+        mockMvc.perform(post("/register")
+                .with(csrf())
+                .param("username", validUser.getUsername())
+                .param("nombreCompleto", "")
+                .param("email", validUser.getEmail())
+                .param("password", validUser.getPassword())
+                .param("confirmPassword", validUser.getPassword()))
+                .andExpect(status().isOk())
+                .andExpect(view().name("register"))
+                .andExpect(model().attribute("error", "El nombre completo es requerido."));
+    }
 
-    // @Test
-    // @WithAnonymousUser
-    // public void testRegisterUser_PasswordMismatch() throws Exception {
-    //     // Password mismatch
-    //     mockMvc.perform(post("/register")
-    //                     .with(csrf())
-    //                     .param("username", user.getUsername())
-    //                     .param("nombreCompleto", user.getNombreCompleto())
-    //                     .param("email", user.getEmail())
-    //                     .param("password", user.getPassword())
-    //                     .param("confirmPassword", "differentPassword"))
-    //             .andExpect(status().isOk())
-    //             .andExpect(view().name("register"))
-    //             .andExpect(model().attributeExists("error"))
-    //             .andExpect(model().attribute("error", "Las contraseñas no coinciden."));
-    // }
+    @Test
+    @DisplayName("Registro fallido - Nombre completo null")
+    void registerUser_NullName() throws Exception {
+        mockMvc.perform(post("/register")
+                .with(csrf())
+                .param("username", validUser.getUsername())
+                .param("email", validUser.getEmail())
+                .param("password", validUser.getPassword())
+                .param("confirmPassword", validUser.getPassword()))
+                .andExpect(status().isOk())
+                .andExpect(view().name("register"))
+                .andExpect(model().attribute("error", "El nombre completo es requerido."));
+    }
 
-    // @Test
-    // @WithAnonymousUser
-    // public void testRegisterUser_ServiceException() throws Exception {
-    //     // Mocking a service exception
-    //     when(recetasService.registerUser(Mockito.any(User.class))).thenThrow(new Exception("Error al registrar el usuario."));
+    @Test
+    @DisplayName("Registro fallido - Contraseñas no coinciden")
+    void registerUser_PasswordMismatch() throws Exception {
+        mockMvc.perform(post("/register")
+                .with(csrf())
+                .param("username", validUser.getUsername())
+                .param("nombreCompleto", validUser.getNombreCompleto())
+                .param("email", validUser.getEmail())
+                .param("password", validUser.getPassword())
+                .param("confirmPassword", "diferentPassword"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("register"))
+                .andExpect(model().attribute("error", "Las contraseñas no coinciden."));
+    }
 
-    //     mockMvc.perform(post("/register")
-    //                     .with(csrf())
-    //                     .param("username", user.getUsername())
-    //                     .param("nombreCompleto", user.getNombreCompleto())
-    //                     .param("email", user.getEmail())
-    //                     .param("password", user.getPassword())
-    //                     .param("confirmPassword", user.getPassword()))
-    //             .andExpect(status().isOk())
-    //             .andExpect(view().name("register"))
-    //             .andExpect(model().attributeExists("error"))
-    //             .andExpect(model().attribute("error", "Error al registrar el usuario."));
-    // }
+    @Test
+    @DisplayName("Registro fallido - Error en el servicio")
+    void registerUser_ServiceError() throws Exception {
+        when(recetasService.registerUser(any(User.class)))
+                .thenThrow(new RuntimeException("Error en el registro"));
+
+        mockMvc.perform(post("/register")
+                .with(csrf())
+                .param("username", validUser.getUsername())
+                .param("nombreCompleto", validUser.getNombreCompleto())
+                .param("email", validUser.getEmail())
+                .param("password", validUser.getPassword())
+                .param("confirmPassword", validUser.getPassword()))
+                .andExpect(status().isOk())
+                .andExpect(view().name("register"))
+                .andExpect(model().attribute("error", "Error en el registro"));
+    }
+
 }
