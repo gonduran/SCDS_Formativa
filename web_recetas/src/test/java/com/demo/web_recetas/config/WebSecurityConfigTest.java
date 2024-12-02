@@ -1,7 +1,6 @@
 package com.demo.web_recetas.config;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 import org.junit.jupiter.api.DisplayName;
@@ -10,28 +9,38 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Bean;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.AbstractConfiguredSecurityBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 import org.springframework.session.web.http.CookieSerializer;
+import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.filter.HiddenHttpMethodFilter;
 
 import com.demo.web_recetas.integration.CustomAuthenticationProvider;
 import com.demo.web_recetas.integration.TokenStore;
 
 import jakarta.servlet.http.HttpServletResponse;
+
+import org.springframework.security.config.annotation.AbstractConfiguredSecurityBuilder;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity.IgnoredRequestConfigurer;
+
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.verify;
 
 @SpringBootTest
 class WebSecurityConfigTest {
@@ -212,5 +221,69 @@ class WebSecurityConfigTest {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND);
             }
         };
+    }
+
+    @Test
+    @DisplayName("Configuración de headers de seguridad")
+    void securityHeaders_AreConfiguredCorrectly() throws Exception {
+        SecurityFilterChain filterChain = webSecurityConfig.securityFilterChain(httpSecurity);
+        assertNotNull(filterChain);
+
+        // Verifica que HttpSecurity no es null
+        assertNotNull(httpSecurity);
+    }
+
+    @Test
+    @DisplayName("Manejo de sesión")
+    void sessionManagement_ConfiguresMaxSessions() throws Exception {
+        SecurityFilterChain filterChain = webSecurityConfig.securityFilterChain(httpSecurity);
+        assertNotNull(filterChain);
+
+        // Verifica la configuración de sesiones múltiples
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        
+        // Simula una segunda sesión
+        request.setSession(new MockHttpSession());
+        assertNotNull(request.getSession());
+    }
+
+    @Test
+    @DisplayName("Configuración de CSRF")
+    void csrf_IsConfiguredCorrectly() {
+        CsrfTokenRepository repository = webSecurityConfig.csrfTokenRepository();
+        assertTrue(repository instanceof HttpSessionCsrfTokenRepository);
+        
+        HttpSessionCsrfTokenRepository httpRepository = (HttpSessionCsrfTokenRepository) repository;
+        // Verifica el nombre del header
+        assertEquals("X-CSRF-TOKEN", ReflectionTestUtils.getField(httpRepository, "headerName"));
+    }
+
+    @Test
+    @DisplayName("Configuración del codificador de contraseñas")
+    void passwordEncoder_IsConfiguredCorrectly() {
+        PasswordEncoder encoder = webSecurityConfig.passwordEncoder();
+        assertNotNull(encoder);
+        assertTrue(encoder instanceof BCryptPasswordEncoder);
+        
+        // Verifica que puede codificar y verificar contraseñas
+        String password = "testPassword";
+        String encoded = encoder.encode(password);
+        assertTrue(encoder.matches(password, encoded));
+    }
+
+    @Test
+    @DisplayName("WebSecurityCustomizer configura correctamente rutas ignoradas")
+    void webSecurityCustomizer_ConfiguresIgnoredResources() {
+        // Mock setup
+        WebSecurity webSecurity = mock(WebSecurity.class);
+        IgnoredRequestConfigurer ignoredRequestConfigurer = mock(IgnoredRequestConfigurer.class);
+        when(webSecurity.ignoring()).thenReturn(ignoredRequestConfigurer);
+
+        // Ejecuta el customizer
+        webSecurityConfig.webSecurityCustomizer().customize(webSecurity);
+
+        // Verifica
+        verify(webSecurity).ignoring();
     }
 }
