@@ -37,4 +37,23 @@ public class TokenStoreTest {
         // Validar que el token ahora es nulo
         assertNull(tokenStore.getToken(), "El token debería ser nulo después de establecerlo como null");
     }
+
+    @Test
+    void testClearToken() {
+        TokenStore tokenStore = new TokenStore();
+    
+        // Establecer un token inicial
+        String testToken = "test-token";
+        tokenStore.setToken(testToken);
+    
+        // Validar que el token es igual al valor establecido
+        assertEquals(testToken, tokenStore.getToken(), "El token debería coincidir con el valor establecido");
+    
+        // Limpiar el token
+        tokenStore.clearToken();
+    
+        // Validar que el token ahora es nulo
+        assertNull(tokenStore.getToken(), "El token debería ser nulo después de llamar a clearToken");
+    }
+    
 }

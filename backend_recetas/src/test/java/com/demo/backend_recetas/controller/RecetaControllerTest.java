@@ -6,6 +6,7 @@ import com.demo.backend_recetas.service.RecetaService;
 import com.demo.backend_recetas.dto.MediaRequestDTO;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -58,7 +59,7 @@ public class RecetaControllerTest {
         List<String> videos = Arrays.asList("video1.mp4");
         testMediaRequest = new MediaRequestDTO(fotos, videos);
 
-        testComentario = new Comentario("testuser", "Muy buena receta", 5, testReceta);
+        testComentario = new Comentario("testuser", "Muy buena receta", 5, 0, testReceta);
     }
 
     @AfterEach
@@ -67,6 +68,7 @@ public class RecetaControllerTest {
     }
 
     @Test
+    @DisplayName("Publicar receta se realiza exitosamente")
     void publicarReceta_Success() {
         when(recetaService.guardarReceta(any(Receta.class))).thenReturn(testReceta);
 
@@ -78,6 +80,7 @@ public class RecetaControllerTest {
     }
 
     @Test
+    @DisplayName("Agregar media a receta existente funciona correctamente")
     void agregarMedia_RecetaExistente() {
         when(recetaService.obtenerRecetaPorId(1L)).thenReturn(testReceta);
         when(recetaService.guardarReceta(any(Receta.class))).thenReturn(testReceta);
@@ -90,6 +93,7 @@ public class RecetaControllerTest {
     }
 
     @Test
+    @DisplayName("Agregar media a receta inexistente retorna error")
     void agregarMedia_RecetaNoExistente() {
         when(recetaService.obtenerRecetaPorId(999L)).thenReturn(null);
 
@@ -101,6 +105,7 @@ public class RecetaControllerTest {
     }
 
     @Test
+    @DisplayName("Agregar comentario se realiza exitosamente")
     void agregarComentario_Success() {
         // Configurar seguridad
         SecurityContextHolder.setContext(securityContext);
@@ -118,6 +123,7 @@ public class RecetaControllerTest {
     }
 
     @Test
+    @DisplayName("Agregar comentario a receta inexistente retorna error")
     void agregarComentario_RecetaNoExistente() {
         when(recetaService.obtenerRecetaPorId(999L)).thenReturn(null);
 
@@ -129,6 +135,7 @@ public class RecetaControllerTest {
     }
 
     @Test
+    @DisplayName("Calcular promedio de valoraciones funciona correctamente")
     void agregarComentario_CalculaPromedioCorrectamente() {
         // Configurar seguridad
         SecurityContextHolder.setContext(securityContext);
@@ -150,7 +157,52 @@ public class RecetaControllerTest {
         verify(recetaService).guardarReceta(testReceta);
     }
 
+    @Test
+    @DisplayName("Manejo de excepción al agregar comentario")
+    void agregarComentario_ManejaExcepcion() {
+        // Configurar seguridad
+        SecurityContextHolder.setContext(securityContext);
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        when(authentication.getName()).thenReturn("testuser");
+
+        // Simular que recetaService lanza una excepción
+        when(recetaService.obtenerRecetaPorId(1L)).thenReturn(testReceta);
+        when(recetaService.guardarReceta(any(Receta.class)))
+            .thenThrow(new RuntimeException("Error simulado"));
+
+        // Act
+        ResponseEntity<String> response = recetaController.agregarComentario(1L, testComentario);
+
+        // Assert
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+        assertTrue(response.getBody().contains("Error al agregar el comentario"));
+    }    
+
+    @Test
+    @DisplayName("Agregar comentario inicializa lista si es null")
+    void agregarComentario_InicializaListaComentarios() {
+        // Configurar seguridad
+        SecurityContextHolder.setContext(securityContext);
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        when(authentication.getName()).thenReturn("testuser");
+
+        // Crear receta sin lista de comentarios
+        testReceta.setComentarios(null);
+        
+        when(recetaService.obtenerRecetaPorId(1L)).thenReturn(testReceta);
+        when(recetaService.guardarReceta(any(Receta.class))).thenReturn(testReceta);
+
+        // Act
+        ResponseEntity<String> response = recetaController.agregarComentario(1L, testComentario);
+
+        // Assert
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(testReceta.getComentarios());
+        assertEquals(1, testReceta.getComentarios().size());
+        verify(recetaService).guardarReceta(testReceta);
+    }    
+
     private Comentario createComentario(int valoracion) {
-        return new Comentario("testuser", "Comentario de prueba", valoracion, testReceta);
+        return new Comentario("testuser", "Comentario de prueba", valoracion, 0, testReceta);
     }
 }

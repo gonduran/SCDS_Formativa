@@ -6,17 +6,19 @@ public class Comentario {
     private String usuario; // Nombre del usuario que realiza el comentario
     private String comentario; // Texto del comentario
     private Integer valoracion; // Valoración de 1 a 5 estrellas
+    private Integer estado; // 0 = nuevo, 1 = aprobado, 2 = rechazado
 
     // Constructor vacío
     public Comentario() {
     }
 
     // Constructor con todos los campos
-    public Comentario(Long id, String usuario, String comentario, Integer valoracion) {
+    public Comentario(Long id, String usuario, String comentario, Integer valoracion, Integer estado) {
         this.id = id;
         this.usuario = usuario;
         this.comentario = comentario;
         this.valoracion = valoracion;
+        this.estado = estado;
     }
 
     // Getters y Setters
@@ -50,5 +52,13 @@ public class Comentario {
 
     public void setValoracion(Integer valoracion) {
         this.valoracion = valoracion;
+    }
+
+    public Integer getEstado() {
+        return estado;
+    }
+
+    public void setEstado(Integer estado) {
+        this.estado = estado;
     }
 }

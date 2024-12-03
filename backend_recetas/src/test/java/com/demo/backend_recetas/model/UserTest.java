@@ -4,9 +4,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.DisplayName;
+
 public class UserTest {
 
     @Test
+    @DisplayName("Constructor vacío crea instancia con valores por defecto")
     void constructorVacio_CreaInstanciaCorrecta() {
         // Act
         User user = new User();
@@ -21,6 +24,7 @@ public class UserTest {
     }
 
     @Test
+    @DisplayName("Constructor con parámetros inicializa todos los campos")
     void constructorParametrizado_CreaInstanciaCorrecta() {
         // Arrange
         String username = "testuser";
@@ -41,6 +45,7 @@ public class UserTest {
     }
 
     @Test
+    @DisplayName("Usuario normal tiene solo rol de usuario")
     void getAuthorities_UsuarioNormal_RetornaRolCorrecto() {
         // Arrange
         User user = new User();
@@ -52,6 +57,7 @@ public class UserTest {
     }
 
     @Test
+    @DisplayName("Usuario admin tiene roles de admin y usuario")
     void getAuthorities_UsuarioAdmin_RetornaRolesCorrecto() {
         // Arrange
         User user = new User();
@@ -63,6 +69,7 @@ public class UserTest {
     }
 
     @Test
+    @DisplayName("Método isAdmin retorna valor correcto según tipo de usuario")
     void isAdmin_RetornaValorCorrecto() {
         // Arrange
         User userAdmin = new User();
@@ -77,6 +84,7 @@ public class UserTest {
     }
 
     @Test
+    @DisplayName("Setters y Getters funcionan correctamente para todos los campos")
     void settersAndGetters_FuncionanCorrectamente() {
         // Arrange
         User user = new User();

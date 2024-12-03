@@ -14,8 +14,8 @@
     <!-- Main Content -->
     <div class="main-content">
         <div class="container access-denied-container">
-            <h2>Acceso Denegado</h2>
-            <p>No tienes permisos suficientes para acceder a esta página.</p>
+            <h2>Error 404</h2>
+            <p>La receta solicitada no pudo ser encontrada.</p>
             <form th:action="@{/home}" method="get">
                 <button type="submit" class="btn-volver">Volver</button>
             </form>
@@ -24,6 +24,6 @@
 
     <!-- Footer -->
     <div th:replace="~{fragments/footer :: footer}"></div>
-    <script src="/js/funtions.js"></script>
+    
 </body>
 </html>

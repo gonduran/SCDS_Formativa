@@ -9,6 +9,16 @@
             "projectName": "backend_recetas",
             "args": "",
             "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-WebRecetasApplication<web_recetas>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.demo.web_recetas.WebRecetasApplication",
+            "projectName": "web_recetas",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
         }
     ]
 }

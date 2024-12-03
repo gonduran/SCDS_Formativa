@@ -7,3 +7,10 @@ mvn clean verify sonar:sonar "-Dsonar.projectKey=SCDS_FrontEnd" "-Dsonar.project
 
 # Comando sonar saltando pruebas unitarias
 mvn clean verify sonar:sonar "-Dsonar.projectKey=SCDS_FrontEnd" "-Dsonar.projectName=SCDS_FrontEnd" "-Dsonar.host.url=http://localhost:9000" "-Dsonar.token=sqp_66f5b040abea16fd0bba02680eaa8dd469c9fabb" "-Dsonar.coverage.exclusions=**/*" "-Dsonar.coverage.enabled=false"
+
+# Limpia y ejecuta las pruebas
+mvn clean test
+
+# Ejecuta los tests con JaCoCo
+mvn clean test
+mvn jacoco:report

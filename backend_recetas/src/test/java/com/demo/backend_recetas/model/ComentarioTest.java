@@ -3,18 +3,22 @@ package com.demo.backend_recetas.model;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.DisplayName;
+
 public class ComentarioTest {
 
     @Test
+    @DisplayName("Constructor inicializa todos los campos correctamente")
     void constructor_InitializesCorrectly() {
         // Arrange
         Receta receta = new Receta();
         String usuario = "testUser";
         String comentarioText = "Excelente receta";
+        Integer estado = 0;
         Integer valoracion = 5;
 
         // Act
-        Comentario comentario = new Comentario(usuario, comentarioText, valoracion, receta);
+        Comentario comentario = new Comentario(usuario, comentarioText, valoracion, estado, receta);
 
         // Assert
         assertEquals(usuario, comentario.getUsuario());
@@ -24,10 +28,11 @@ public class ComentarioTest {
     }
 
     @Test
+    @DisplayName("Setters y Getters funcionan correctamente")
     void settersAndGetters_WorkCorrectly() {
         // Arrange
         Receta receta = new Receta();
-        Comentario comentario = new Comentario("user", "comentario", 4, receta);
+        Comentario comentario = new Comentario("user", "comentario", 4, 0, receta);
         
         // Act
         Long id = 1L;

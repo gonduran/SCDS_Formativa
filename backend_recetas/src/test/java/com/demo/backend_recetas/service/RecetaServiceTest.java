@@ -3,6 +3,7 @@ package com.demo.backend_recetas.service;
 import com.demo.backend_recetas.model.Receta;
 import com.demo.backend_recetas.repository.RecetaRepository;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -37,6 +38,7 @@ public class RecetaServiceTest {
     }
 
     @Test
+    @DisplayName("Guardar receta exitosamente")
     void guardarReceta_Success() {
         // Preparar
         when(recetaRepository.save(any(Receta.class))).thenReturn(recetaTest);
@@ -53,6 +55,7 @@ public class RecetaServiceTest {
     }
 
     @Test
+    @DisplayName("Obtener receta por ID existente")
     void obtenerRecetaPorId_Success() {
         // Preparar
         when(recetaRepository.findById(1L)).thenReturn(Optional.of(recetaTest));
@@ -67,6 +70,7 @@ public class RecetaServiceTest {
     }
 
     @Test
+    @DisplayName("Obtener receta por ID inexistente retorna null")
     void obtenerRecetaPorId_NotFound() {
         // Preparar
         when(recetaRepository.findById(999L)).thenReturn(Optional.empty());

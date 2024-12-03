@@ -10,3 +10,7 @@ mvn clean verify sonar:sonar "-Dsonar.projectKey=SCDS_BackEnd" "-Dsonar.projectN
 
 # Limpia y ejecuta las pruebas
 mvn clean test
+
+# Ejecuta los tests con JaCoCo
+mvn clean test
+mvn jacoco:report

@@ -1,6 +1,7 @@
 package com.demo.backend_recetas.model;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.DisplayName;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -9,6 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class RecetaTest {
 
     @Test
+    @DisplayName("Constructor vacío crea una instancia correcta")
     void constructorVacio_CreaInstanciaCorrecta() {
         Receta receta = new Receta();
         assertNotNull(receta);
@@ -16,6 +18,7 @@ public class RecetaTest {
     }
 
     @Test
+    @DisplayName("Constructor completo inicializa todos los campos correctamente")
     void constructorCompleto_CreaInstanciaCorrecta() {
         // Arrange
         Long id = 1L;
@@ -57,6 +60,7 @@ public class RecetaTest {
     }
 
     @Test
+    @DisplayName("Setters y Getters funcionan correctamente")
     void settersAndGetters_FuncionanCorrectamente() {
         // Arrange
         Receta receta = new Receta();
@@ -88,10 +92,11 @@ public class RecetaTest {
     }
 
     @Test
+    @DisplayName("Manipulación de comentarios funciona correctamente")
     void comentarios_ManipulacionCorrecta() {
         // Arrange
         Receta receta = new Receta();
-        Comentario comentario = new Comentario("usuario", "Buen plato", 5, receta);
+        Comentario comentario = new Comentario("usuario", "Buen plato", 5, 0, receta);
         List<Comentario> comentarios = new ArrayList<>();
         comentarios.add(comentario);
 
@@ -101,5 +106,19 @@ public class RecetaTest {
         // Assert
         assertEquals(1, receta.getComentarios().size());
         assertEquals(comentario, receta.getComentarios().get(0));
+    }
+
+    @Test
+    @DisplayName("SetImagen y GetImagen funcionan correctamente")
+    void setImagen_GetImagen_FuncionanCorrectamente() {
+        // Arrange
+        Receta receta = new Receta();
+        String imagen = "paella.jpg";
+
+        // Act
+        receta.setImagen(imagen);
+
+        // Assert
+        assertEquals(imagen, receta.getImagen());
     }
 }

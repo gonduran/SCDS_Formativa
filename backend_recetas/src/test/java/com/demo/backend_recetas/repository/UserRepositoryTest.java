@@ -1,6 +1,8 @@
 package com.demo.backend_recetas.repository;
 
 import com.demo.backend_recetas.model.User;
+
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -18,6 +20,7 @@ public class UserRepositoryTest {
     private UserRepository userRepository;
 
     @Test
+    @DisplayName("Encuentra usuario por nombre de usuario")
     void buscarPorUsername() {
         // Crear usuario
         User user = new User();
@@ -37,6 +40,7 @@ public class UserRepositoryTest {
     }
 
     @Test
+    @DisplayName("Encuentra usuarios por tipo de usuario")
     void buscarPorUserType() {
         // Crear usuario
         User user1 = new User();
@@ -62,6 +66,7 @@ public class UserRepositoryTest {
     }
 
     @Test
+    @DisplayName("Verifica existencia de usuario por nombre de usuario")
     void verificarExistenciaPorUsername() {
         // Crear usuario
         User user = new User();
@@ -80,6 +85,7 @@ public class UserRepositoryTest {
     }
 
     @Test
+    @DisplayName("Verifica existencia de usuario por email")
     void verificarExistenciaPorEmail() {
         // Crear usuario
         User user = new User();
@@ -98,6 +104,7 @@ public class UserRepositoryTest {
     }
     
     @Test
+    @DisplayName("Retorna null cuando no encuentra usuario por nombre")
     void buscarPorUsername_NoEncontrado() {
         // Buscar usuario que no existe
         User resultado = userRepository.findByUsername("usuarioInexistente");

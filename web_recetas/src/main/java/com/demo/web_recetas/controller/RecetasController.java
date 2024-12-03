@@ -15,7 +15,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/recetas")
@@ -35,8 +37,15 @@ public class RecetasController {
 
         // Verificar si la receta está presente
         if (recetaOptional.isPresent()) {
+            Receta receta = recetaOptional.get();
+
+                    // Filtrar solo los comentarios aprobados
+            List<Comentario> comentariosAprobados = receta.getComentarios().stream()
+                .filter(c -> c.getEstado() != null && c.getEstado() == 1)
+                .collect(Collectors.toList());
+
             model.addAttribute("receta", recetaOptional.get());
-            model.addAttribute("comentarios", recetaOptional.get().getComentarios());
+            model.addAttribute("comentarios", comentariosAprobados);
             model.addAttribute("fotos", recetaOptional.get().getFotos());
             model.addAttribute("videos", recetaOptional.get().getVideos());
 

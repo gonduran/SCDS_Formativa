@@ -12,6 +12,7 @@ public class ComentarioTest {
         assertNull(comentario.getUsuario());
         assertNull(comentario.getComentario());
         assertNull(comentario.getValoracion());
+        assertNull(comentario.getEstado());
     }
 
     @Test
@@ -20,13 +21,15 @@ public class ComentarioTest {
         String usuario = "usuarioTest";
         String textoComentario = "Este es un comentario de prueba.";
         Integer valoracion = 5;
+        Integer estado = 0;
 
-        Comentario comentario = new Comentario(id, usuario, textoComentario, valoracion);
+        Comentario comentario = new Comentario(id, usuario, textoComentario, valoracion, estado);
 
         assertEquals(id, comentario.getId());
         assertEquals(usuario, comentario.getUsuario());
         assertEquals(textoComentario, comentario.getComentario());
         assertEquals(valoracion, comentario.getValoracion());
+        assertEquals(estado, comentario.getEstado());
     }
 
     @Test
@@ -48,4 +51,15 @@ public class ComentarioTest {
         assertEquals(textoComentario, comentario.getComentario());
         assertEquals(valoracion, comentario.getValoracion());
     }
+
+    @Test
+    void testSetEstado() {
+        Comentario comentario = new Comentario();
+
+        Integer estado = 1; // Por ejemplo, aprobado
+        comentario.setEstado(estado);
+
+        assertEquals(estado, comentario.getEstado());
+    }
+
 }

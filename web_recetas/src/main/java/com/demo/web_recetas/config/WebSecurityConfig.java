@@ -1,8 +1,10 @@
 package com.demo.web_recetas.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean; 
-import org.springframework.context.annotation.Configuration; 
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager; 
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder; 
 import org.springframework.security.config.annotation.web.builders.HttpSecurity; 
@@ -18,11 +20,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder; 
 import org.springframework.session.web.http.CookieSerializer;
 import org.springframework.session.web.http.DefaultCookieSerializer;
+import org.springframework.web.filter.HiddenHttpMethodFilter;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 import org.springframework.security.web.header.writers.XXssProtectionHeaderWriter;
 import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.security.web.header.writers.ReferrerPolicyHeaderWriter;
-
  
 @Configuration 
 @EnableWebSecurity(debug = true) 
@@ -61,13 +63,20 @@ public class WebSecurityConfig {
     @Value("${app.security.paths.accesodenegado}")
     private String pathAccesoDenegado;
 
-    @Bean 
-    public TokenStore tokenStore() {
-        return new TokenStore();
-    }
+    @Value("${app.security.paths.404}")
+    private String path404;
+
+    @Value("${app.security.paths.listarcomentarios}")
+    private String pathListarComentarios;
+
+    @Value("${app.security.paths.editarcomentario}")
+    private String pathEditarComentario;
+
+    @Autowired
+    private TokenStore tokenStore;
 
     @Bean 
-    public CustomAuthenticationProvider customAuthenticationProvider(TokenStore tokenStore) {
+    public CustomAuthenticationProvider customAuthenticationProvider() {
         return new CustomAuthenticationProvider(tokenStore);
     }
 
@@ -110,6 +119,7 @@ public class WebSecurityConfig {
                 .requestMatchers(pathBuscar).permitAll()
                 .requestMatchers(pathRegister).permitAll()
                 .requestMatchers(pathAccesoDenegado).permitAll()
+                .requestMatchers(path404).permitAll()
                 // Endpoints privados que requiere autenticación
                 .requestMatchers(pathRecetas).authenticated()
                 .requestMatchers(pathPublicar).authenticated()
@@ -118,6 +128,14 @@ public class WebSecurityConfig {
                 // Endpoints privados para administración de usuarios
                 .requestMatchers(pathListarUsuarios).hasRole("ADMIN") // Listar usuarios
                 .requestMatchers(pathEditarUsuario).hasRole("ADMIN") // Editar usuario
+                // Endpoints privados para administración de comentarios
+                .requestMatchers(pathListarComentarios).hasRole("ADMIN") // Listar comentarios
+                .requestMatchers(pathEditarComentario).hasRole("ADMIN") // Editar comentario
+                .requestMatchers(HttpMethod.GET, "/comentarios/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.POST, "/comentarios/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/comentarios/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/comentarios/**").hasRole("ADMIN")
+                
                 // Cualquier otra ruta será denegada
                 .anyRequest().denyAll()
             )
@@ -149,7 +167,7 @@ public class WebSecurityConfig {
             )
             .sessionManagement(session -> session
                 .maximumSessions(1)
-                .maxSessionsPreventsLogin(true)
+                .maxSessionsPreventsLogin(false)
             )
             .csrf(csrf -> csrf
                 .csrfTokenRepository(csrfTokenRepository())
@@ -221,5 +239,10 @@ public class WebSecurityConfig {
         HttpSessionCsrfTokenRepository repository = new HttpSessionCsrfTokenRepository();
         repository.setHeaderName("X-CSRF-TOKEN");
         return repository;
+    }
+
+    @Bean
+    public HiddenHttpMethodFilter hiddenHttpMethodFilter() {
+        return new HiddenHttpMethodFilter();
     }
 }
