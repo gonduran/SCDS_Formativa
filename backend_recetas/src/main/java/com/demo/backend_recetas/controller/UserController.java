@@ -4,6 +4,7 @@ import com.demo.backend_recetas.model.User;
 import com.demo.backend_recetas.repository.UserRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -54,42 +55,46 @@ public class UserController {
     //Endpoint para obtener un usuario específico por ID (solo admin)
     @GetMapping("/admin/users/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> getUserById(@PathVariable Integer id) {
-        return userRepository.findById(id)
-            .map(ResponseEntity::ok)
-            .orElseGet(() -> ResponseEntity.notFound().build());
-    }    
+    public ResponseEntity<User> getUserById(@PathVariable Integer id) {
+        Optional<User> user = userRepository.findById(id);
+        return user.map(ResponseEntity::ok)
+                  .orElseGet(() -> ResponseEntity.notFound().build());
+    }   
 
     //Endpoint para actualización administrativa de usuarios
     @PutMapping("/admin/users/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> adminUpdateUser(@PathVariable Integer id, @RequestBody User userDetails) {
-        return userRepository.findById(id)
-            .map(user -> {
-                // Validar username único si se está cambiando
-                if (!user.getUsername().equals(userDetails.getUsername())) {
-                    User existingUser = userRepository.findByUsername(userDetails.getUsername());
-                    if (existingUser != null) {
-                        return ResponseEntity.badRequest()
-                            .body("Error: El nombre de usuario ya está en uso.");
-                    }
-                }
+    public ResponseEntity<String> adminUpdateUser(@PathVariable Integer id, @RequestBody User userDetails) {
+        Optional<User> optionalUser = userRepository.findById(id);
+        
+        if (optionalUser.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        
+        User user = optionalUser.get();
+        
+        // Validar username único si se está cambiando
+        if (!user.getUsername().equals(userDetails.getUsername())) {
+            User existingUser = userRepository.findByUsername(userDetails.getUsername());
+            if (existingUser != null) {
+                return ResponseEntity.badRequest()
+                    .body("Error: El nombre de usuario ya está en uso.");
+            }
+        }
 
-                // Actualizar todos los campos
-                user.setUsername(userDetails.getUsername());
-                user.setEmail(userDetails.getEmail());
-                user.setNombreCompleto(userDetails.getNombreCompleto());
-                user.setUserType(userDetails.getUserType());
-                user.setEnabled(userDetails.isEnabled());
+        // Actualizar todos los campos
+        user.setUsername(userDetails.getUsername());
+        user.setEmail(userDetails.getEmail());
+        user.setNombreCompleto(userDetails.getNombreCompleto());
+        user.setUserType(userDetails.getUserType());
+        user.setEnabled(userDetails.isEnabled());
 
-                // Actualizar contraseña solo si se proporciona una nueva
-                if (userDetails.getPassword() != null && !userDetails.getPassword().isEmpty()) {
-                    user.setPassword(passwordEncoder.encode(userDetails.getPassword()));
-                }
+        // Actualizar contraseña solo si se proporciona una nueva
+        if (userDetails.getPassword() != null && !userDetails.getPassword().isEmpty()) {
+            user.setPassword(passwordEncoder.encode(userDetails.getPassword()));
+        }
 
-                User updatedUser = userRepository.save(user);
-                return ResponseEntity.ok(updatedUser);
-            })
-            .orElse(ResponseEntity.notFound().build());
+        userRepository.save(user);
+        return ResponseEntity.ok("Usuario actualizado exitosamente");
     }
 }
