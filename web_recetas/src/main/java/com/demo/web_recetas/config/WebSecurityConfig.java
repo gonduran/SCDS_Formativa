@@ -78,11 +78,8 @@ public class WebSecurityConfig {
     @Value("${app.security.paths.roladmin}")
     private String pathRolAdmin;
 
-    @Autowired
-    private TokenStore tokenStore;
-
     @Bean 
-    public CustomAuthenticationProvider customAuthenticationProvider() {
+    public CustomAuthenticationProvider customAuthenticationProvider(TokenStore tokenStore) {
         return new CustomAuthenticationProvider(tokenStore);
     }
 
