@@ -14,6 +14,7 @@ import java.util.Optional;
 @RequestMapping("/usuarios")
 public class UsuariosController {
 
+    private static final String PARAM_ERROR = "error";
     @Autowired
     private RecetasService recetasService;
 
@@ -27,8 +28,8 @@ public class UsuariosController {
             model.addAttribute("usuarios", usuarios);
             return "listarusuarios"; // Nombre del template Thymeleaf para listar usuarios
         } catch (Exception e) {
-            model.addAttribute("error", "Error al obtener la lista de usuarios: " + e.getMessage());
-            return "error"; // Página de error
+            model.addAttribute(PARAM_ERROR, "Error al obtener la lista de usuarios: " + e.getMessage());
+            return PARAM_ERROR; // Página de error
         }
     }
 
@@ -43,12 +44,12 @@ public class UsuariosController {
                 model.addAttribute("usuario", usuarioOpt.get());
                 return "editarusuario"; // Nombre del template Thymeleaf para editar usuarios
             } else {
-                model.addAttribute("error", "Usuario no encontrado");
-                return "error"; // Página de error
+                model.addAttribute(PARAM_ERROR, "Usuario no encontrado");
+                return PARAM_ERROR; // Página de error
             }
         } catch (Exception e) {
-            model.addAttribute("error", "Error al obtener los datos del usuario: " + e.getMessage());
-            return "error"; // Página de error
+            model.addAttribute(PARAM_ERROR, "Error al obtener los datos del usuario: " + e.getMessage());
+            return PARAM_ERROR; // Página de error
         }
     }
 
@@ -62,11 +63,12 @@ public class UsuariosController {
             Model model) {
         try {
             usuario.setId(id); // Asegurar que el ID coincide con el usuario que se edita
+            @SuppressWarnings("unused")
             String resultado = recetasService.actualizarUsuario(usuario);
             model.addAttribute("mensaje", "Usuario actualizado exitosamente");
             return "redirect:/usuarios"; // Redirigir a la lista de usuarios
         } catch (Exception e) {
-            model.addAttribute("error", "Error al actualizar el usuario: " + e.getMessage());
+            model.addAttribute(PARAM_ERROR, "Error al actualizar el usuario: " + e.getMessage());
             return "editarusuario"; // Volver a la página de edición en caso de error
         }
     }

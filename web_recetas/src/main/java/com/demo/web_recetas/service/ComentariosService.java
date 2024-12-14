@@ -24,6 +24,12 @@ public class ComentariosService {
 
     private static final String PATH_TOKEN_EXCEPTION = "Token de autenticación no disponible";
     private static final String HEADER_AUTH = "Authorization";
+    private static final String HEADER_PARAM = "parameters";
+    private static final String PARAM_ESTADO = "estado";
+    private static final String PATH_BACKEND = "/api/admin/comentarios";
+    private static final String PATH_BACKEND_COMENTARIO = "/api/admin/comentarios/";
+    private static final String PATH_BACKEND_ESTADO = "/api/admin/comentarios/estado/";
+    private static final String PATH_BACKEND_UPD_ESTADO = "/estado";
 
     @Value("${backend.url}")
     private String backendUrl;
@@ -71,10 +77,10 @@ public class ComentariosService {
      * Obtiene todos los comentarios.
      */
     public List<Comentario> listarTodos() {
-        String url = backendUrl + "/api/admin/comentarios";
+        String url = backendUrl + PATH_BACKEND;
 
         HttpHeaders headers = crearHeadersConToken();
-        HttpEntity<String> entity = new HttpEntity<>("parameters", headers);
+        HttpEntity<String> entity = new HttpEntity<>(HEADER_PARAM, headers);
 
         ResponseEntity<Comentario[]> response = restTemplate.exchange(
             url,
@@ -90,10 +96,10 @@ public class ComentariosService {
      * Obtiene comentarios por estado.
      */
     public List<Comentario> listarPorEstado(Integer estado) {
-        String url = backendUrl + "/api/admin/comentarios/estado/" + estado;
+        String url = backendUrl + PATH_BACKEND_ESTADO + estado;
 
         HttpHeaders headers = crearHeadersConToken();
-        HttpEntity<String> entity = new HttpEntity<>("parameters", headers);
+        HttpEntity<String> entity = new HttpEntity<>(HEADER_PARAM, headers);
 
         ResponseEntity<Comentario[]> response = restTemplate.exchange(
             url,
@@ -109,10 +115,10 @@ public class ComentariosService {
      * Obtiene un comentario por su ID.
      */
     public Optional<Comentario> obtenerPorId(Long id) {
-        String url = backendUrl + "/api/admin/comentarios/" + id;
+        String url = backendUrl + PATH_BACKEND_COMENTARIO + id;
 
         HttpHeaders headers = crearHeadersConToken();
-        HttpEntity<String> entity = new HttpEntity<>("parameters", headers);
+        HttpEntity<String> entity = new HttpEntity<>(HEADER_PARAM, headers);
 
         ResponseEntity<Comentario> response = restTemplate.exchange(
             url,
@@ -128,10 +134,10 @@ public class ComentariosService {
      * Actualiza el estado de un comentario.
      */
     public void actualizarEstadoComentario(Long id, Integer estado) {
-        String url = backendUrl + "/api/admin/comentarios/" + id + "/estado";
+        String url = backendUrl + PATH_BACKEND_COMENTARIO + id + PATH_BACKEND_UPD_ESTADO;
 
         Map<String, Integer> requestBody = new HashMap<>();
-        requestBody.put("estado", estado);  // Cambio de "nuevoEstado" a "estado" para coincidir con EstadoComentarioDTO
+        requestBody.put(PARAM_ESTADO, estado);  // Cambio de "nuevoEstado" a "estado" para coincidir con EstadoComentarioDTO
 
         HttpHeaders headers = crearHeadersConToken();
         HttpEntity<Map<String, Integer>> entity = new HttpEntity<>(requestBody, headers);
@@ -143,10 +149,10 @@ public class ComentariosService {
      * Elimina un comentario por su ID.
      */
     public void eliminarComentario(Long id) {
-        String url = backendUrl + "/api/admin/comentarios/" + id;
+        String url = backendUrl + PATH_BACKEND_COMENTARIO + id;
 
         HttpHeaders headers = crearHeadersConToken();
-        HttpEntity<String> entity = new HttpEntity<>("parameters", headers);
+        HttpEntity<String> entity = new HttpEntity<>(HEADER_PARAM, headers);
 
         restTemplate.exchange(url, HttpMethod.DELETE, entity, Void.class);
     }

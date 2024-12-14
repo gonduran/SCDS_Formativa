@@ -25,6 +25,7 @@ public class RecetasService {
 
     private static final String PATH_TOKEN_EXCEPTION = "Token de autenticación no disponible";
     private static final String HEADER_AUTH = "Authorization";
+    private static final String HEADER_PARAM = "parameters";
 
     @Value("${backend.url}")
     private String backendUrl;
@@ -78,7 +79,7 @@ public class RecetasService {
     public Optional<Receta> obtenerRecetaPorId(Long id) {
         String url = backendUrl + "/api/recetas_detalle/" + id;
         HttpHeaders headers = crearHeadersConToken();
-        HttpEntity<String> entity = new HttpEntity<>("parameters", headers);
+        HttpEntity<String> entity = new HttpEntity<>(HEADER_PARAM, headers);
 
         // Agregar parámetros a la URL
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
@@ -170,7 +171,7 @@ public class RecetasService {
     public List<User> listarUsuarios() {
         String url = backendUrl + "/api/admin/users";
         HttpHeaders headers = crearHeadersConToken();
-        HttpEntity<String> entity = new HttpEntity<>("parameters", headers);
+        HttpEntity<String> entity = new HttpEntity<>(HEADER_PARAM, headers);
 
         ResponseEntity<User[]> response = restTemplate.exchange(
             url,
@@ -188,7 +189,7 @@ public class RecetasService {
     public Optional<User> obtenerUsuarioPorId(Long userId) {
         String url = backendUrl + "/api/admin/users/" + userId;
         HttpHeaders headers = crearHeadersConToken();
-        HttpEntity<String> entity = new HttpEntity<>("parameters", headers);
+        HttpEntity<String> entity = new HttpEntity<>(HEADER_PARAM, headers);
 
         ResponseEntity<User> response = restTemplate.exchange(
             url,

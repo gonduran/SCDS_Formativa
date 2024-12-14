@@ -72,6 +72,12 @@ public class WebSecurityConfig {
     @Value("${app.security.paths.editarcomentario}")
     private String pathEditarComentario;
 
+    @Value("${app.security.paths.comentariosmethod}")
+    private String pathComentarioMethod;
+
+    @Value("${app.security.paths.roladmin}")
+    private String pathRolAdmin;
+
     @Autowired
     private TokenStore tokenStore;
 
@@ -126,15 +132,15 @@ public class WebSecurityConfig {
                 .requestMatchers(pathComentarios).authenticated()
                 .requestMatchers(pathMedia).authenticated()
                 // Endpoints privados para administración de usuarios
-                .requestMatchers(pathListarUsuarios).hasRole("ADMIN") // Listar usuarios
-                .requestMatchers(pathEditarUsuario).hasRole("ADMIN") // Editar usuario
+                .requestMatchers(pathListarUsuarios).hasRole(pathRolAdmin) // Listar usuarios
+                .requestMatchers(pathEditarUsuario).hasRole(pathRolAdmin) // Editar usuario
                 // Endpoints privados para administración de comentarios
-                .requestMatchers(pathListarComentarios).hasRole("ADMIN") // Listar comentarios
-                .requestMatchers(pathEditarComentario).hasRole("ADMIN") // Editar comentario
-                .requestMatchers(HttpMethod.GET, "/comentarios/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.POST, "/comentarios/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.PUT, "/comentarios/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/comentarios/**").hasRole("ADMIN")
+                .requestMatchers(pathListarComentarios).hasRole(pathRolAdmin) // Listar comentarios
+                .requestMatchers(pathEditarComentario).hasRole(pathRolAdmin) // Editar comentario
+                .requestMatchers(HttpMethod.GET, pathComentarioMethod).hasRole(pathRolAdmin)
+                .requestMatchers(HttpMethod.POST, pathComentarioMethod).hasRole(pathRolAdmin)
+                .requestMatchers(HttpMethod.PUT, pathComentarioMethod).hasRole(pathRolAdmin)
+                .requestMatchers(HttpMethod.DELETE, pathComentarioMethod).hasRole(pathRolAdmin)
                 
                 // Cualquier otra ruta será denegada
                 .anyRequest().denyAll()
