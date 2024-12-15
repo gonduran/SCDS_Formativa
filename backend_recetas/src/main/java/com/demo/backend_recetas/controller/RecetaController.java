@@ -78,7 +78,7 @@ public class RecetaController {
 
             return ResponseEntity.ok("Comentario agregado exitosamente. Valoración promedio actualizada a: " + promedio);
         } catch (Exception e) {
-            e.printStackTrace();
+            //e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error al agregar el comentario: " + e.getMessage());
         }
