@@ -26,7 +26,7 @@ public class RegisterController {
     @GetMapping("/" + PATH_REGISTER)
     public String showRegisterForm(Model model) {
         model.addAttribute(ATTR_USER, new User());
-        return "register";
+        return VIEW_REGISTER;
     }
 
     @PostMapping("/" + PATH_REGISTER)

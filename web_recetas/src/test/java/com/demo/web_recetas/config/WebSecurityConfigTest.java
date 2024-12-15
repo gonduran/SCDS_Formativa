@@ -5,6 +5,7 @@ import static org.mockito.Mockito.*;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -56,14 +57,14 @@ class WebSecurityConfigTest {
     @Test
     @DisplayName("AuthenticationProvider se configura correctamente")
     void customAuthenticationProvider_IsConfiguredCorrectly() {
-        CustomAuthenticationProvider provider = webSecurityConfig.customAuthenticationProvider();
+        CustomAuthenticationProvider provider = webSecurityConfig.customAuthenticationProvider(tokenStore);
         assertNotNull(provider);
     }
 
     @Test
     @DisplayName("AuthenticationManager se configura correctamente")
     void authenticationManager_IsConfiguredCorrectly() throws Exception {
-        CustomAuthenticationProvider provider = webSecurityConfig.customAuthenticationProvider();
+        CustomAuthenticationProvider provider = webSecurityConfig.customAuthenticationProvider(tokenStore);
         assertNotNull(provider);
     }
 
@@ -166,7 +167,7 @@ class WebSecurityConfigTest {
     @DisplayName("AuthenticationManager se configura correctamente con proveedor personalizado")
     void authenticationManager_ConfiguresWithCustomProvider() throws Exception {
         // Verificamos que se puede crear el provider
-        CustomAuthenticationProvider provider = webSecurityConfig.customAuthenticationProvider();
+        CustomAuthenticationProvider provider = webSecurityConfig.customAuthenticationProvider(tokenStore);
         assertNotNull(provider);
     }
 

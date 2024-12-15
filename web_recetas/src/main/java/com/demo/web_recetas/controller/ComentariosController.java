@@ -16,6 +16,9 @@ import java.util.List;
 @Controller
 @RequestMapping("/comentarios")
 public class ComentariosController {
+
+    private static final String REDIRECT_COMENTARIOS = "redirect:/comentarios";
+
     @Autowired
     private ComentariosService comentariosService;
 
@@ -34,18 +37,18 @@ public class ComentariosController {
     @PostMapping("/{id}/aprobar")
     public String aprobarComentario(@PathVariable Long id) {
         comentariosService.actualizarEstadoComentario(id, 1); // Aprobado
-        return "redirect:/comentarios";
+        return REDIRECT_COMENTARIOS;
     }
 
     @PostMapping("/{id}/rechazar")
     public String rechazarComentario(@PathVariable Long id) {
         comentariosService.actualizarEstadoComentario(id, 2); // Rechazado
-        return "redirect:/comentarios";
+        return REDIRECT_COMENTARIOS;
     }
 
     @PostMapping("/{id}/eliminar")
     public String eliminarComentario(@PathVariable Long id) {
         comentariosService.eliminarComentario(id);
-        return "redirect:/comentarios";
+        return REDIRECT_COMENTARIOS;
     }
 }
